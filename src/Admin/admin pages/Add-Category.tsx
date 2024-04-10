@@ -41,7 +41,7 @@ const AddCategory = ({ redirect }: any) => {
     <div className="max-h-screen">
       <div className="h-[600px] flex border-2 border-black w-9/12 rounded-md bg-white justify-center items-center mx-auto p-10 my-4">
         <div className="text-3xl font-bold relative -top-64 right-20">
-          Add Category:
+          Add Category
         </div>
         <div>
           <div>

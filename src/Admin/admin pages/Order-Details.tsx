@@ -22,7 +22,7 @@ const AdminOrderDetails= () => {
 
   return (
     <div className="bg-white">
-      <div className=" m-10 my-10 text-3xl font-bold">Order Details:</div>
+      <div className=" m-10 my-10 text-3xl font-bold">Order Details</div>
       <div>
         <DataTable columns={columns} data={data} />
       </div>

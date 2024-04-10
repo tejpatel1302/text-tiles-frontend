@@ -17,6 +17,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
 import { Link, useNavigate } from "react-router-dom";
+import { LockIcon, Mail, UserRound } from "lucide-react";
 
 const Login = ({ redirect }: any) => {
   const navigate = useNavigate();
@@ -50,7 +51,7 @@ const Login = ({ redirect }: any) => {
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(submitData)}
-                className="space-y-4"
+                className=""
               >
                 <div className="">
                   <FormField
@@ -58,6 +59,7 @@ const Login = ({ redirect }: any) => {
                     name="email"
                     render={({ field }) => (
                       <FormItem>
+                        <Mail className="relative top-16 left-2 text-purple-400" />
                         <FormLabel>Email</FormLabel>
                         <FormControl>
                           <Input
@@ -74,8 +76,10 @@ const Login = ({ redirect }: any) => {
                     control={form.control}
                     name="password"
                     render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Password</FormLabel>
+                      <FormItem className="relative bottom-4">
+                        <LockIcon className="relative top-16 left-2 text-purple-400" />
+                         <FormLabel>Password</FormLabel>
+
                         <FormControl>
                           <Input
                             {...field}
@@ -90,9 +94,9 @@ const Login = ({ redirect }: any) => {
                             className="px-7"
                             variant={"purple"}
                           >
-                            Login           
+                            Login
                           </Button>
-                          <Button variant={"outline"} className="px-2">
+                          <Button variant={"purple"} className="px-2" >
                             <Link to="/reset">Forgot Password ?</Link>
                           </Button>
                         </div>
