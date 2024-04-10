@@ -7,10 +7,11 @@ interface BackButtonProps{
 }
 
 const BackButton = ({label,href}: BackButtonProps) => {
+  const part2 = label.split("?")[1]
   return (
     <Button>
         <Link to={href}>
-            {label}
+          <span className="text-purple-200">{part2}</span>
         </Link>
     </Button>
   )
