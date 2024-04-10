@@ -20,7 +20,7 @@ const OrderList = () => {
 
   return (
     <div >
-       <div className=" m-10 my-10 text-3xl font-bold">Orders:</div>
+       <div className=" m-10 my-10 text-3xl font-bold">Orders</div>
       <div>
         <DataTable columns={columns} data={data} />
       </div>
