@@ -12,21 +12,16 @@ const UserWishList = () => {
       name: product.name,
       price : product.price,
       category : product.category,
-      image: product.image,
+      images: product.image,
       
-
-    
-   
-   
-
   }));
 
 
 
   return (
     <div className="w-[95%] mx-auto">
-       <div className=" text-3xl font-bold">Products:</div>
-      <div className="flex flex-col justify-center w-[95%] mx-auto">
+       <div className=" text-3xl font-bold">Wish List:</div>
+      <div className="flex flex-col justify-center w-[95%] mx-auto my-10">
         <DataTable columns={columns} data={data} />
       </div>
     </div>

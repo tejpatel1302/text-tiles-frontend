@@ -120,7 +120,12 @@ export function DataTable<TData, TValue>({
   const isCategory = location.pathname === "/admin/manage-category";
   const isSubCategory = location.pathname === "/admin/manage-sub-category";
 
+const isCart  = location.pathname === "/user/cart";
+ 
+
+
   const [placeholder, setPlaceholder] = useState(isUser ? "Search Order History" : isWishList ? "Search Wishlist" : isAdminProducts ? "Search Products" : isAdminOrders ? "Search Orders" : isOrderDetails ? "Search Order Details" : isCategory ? "Search Categories" : isSubCategory ? "Search Sub-Categories" : "");
+
 
   function clickHandler() {
     if (isAdminOrders) {
@@ -205,9 +210,11 @@ export function DataTable<TData, TValue>({
                     className={`${isWishList ? 'flex space-x-[80px]' : ''}`}
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id} className={`${isWishList ? 'w-[150px]' : ''}`}>
-                        {isAdminProducts &&
-                          cell.column.columnDef.header === "images" ? (
+
+                      <TableCell key={cell.id}  className={`${isWishList ? 'w-[150px]' : ''}`}>
+                        {(isAdminProducts || isCart )&& 
+                        cell.column.columnDef.header === "images" ? (
+
                           <img
                             src={
                               (cell.row.original as { images: string })

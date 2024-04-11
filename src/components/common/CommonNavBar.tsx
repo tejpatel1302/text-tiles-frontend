@@ -32,6 +32,12 @@ const CommonNavBar = () => {
   function clickHandler() {
     navigate("/user/products");
   }
+  // function navigateClickHandler(){
+  //   navigate('/user/order-history')
+  // }
+  function clickHandler2(){
+    navigate('/user/cart')
+  }
 
 
   return (
@@ -90,6 +96,7 @@ const CommonNavBar = () => {
                 </div>
               </div>
             )}
+
             <div className="flex items-center gap-5">
 
               <div className="flex gap-8 ">
@@ -103,6 +110,7 @@ const CommonNavBar = () => {
               </div>
 
             </div>
+
           </div>
         )
       }

@@ -10,7 +10,7 @@ export type WishList = {
   category: string; 
   name: string;
   price: string;
-  image: string
+  images: string
   productId:string
 };
 const EditCell = ({ row, table }: any) => {
@@ -41,7 +41,7 @@ const EditCell = ({ row, table }: any) => {
           <div className="edit-cell-action flex">
            
             <Button onClick={removeRow} name="remove" variant={'red'}>
-              Delete
+              Remove
             </Button>
           </div>
         )}
@@ -57,8 +57,8 @@ export const columns = [
         header: "Product ID",
         
     }),
-    columnHelper.accessor("image", {
-        header: "Image",
+    columnHelper.accessor("images", {
+        header: "images",
         
     }),
     columnHelper.accessor("name", {

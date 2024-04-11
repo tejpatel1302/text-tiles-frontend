@@ -104,6 +104,10 @@ const appRoutes = createBrowserRouter([
         element: <Products/>,
       },
       {
+        path: "user/cart",
+        element: <Cart/>,
+      },
+      {
         path: "admin/add-products",
         element: <AddProducts/>,
       },

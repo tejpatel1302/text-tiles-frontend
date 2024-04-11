@@ -5,8 +5,11 @@ import { Button } from '@/components/ui/button'
 import { Heart } from 'lucide-react'
 import Accordian from '@/components/common/Accordian'
 import UserWebsite from './UserWebsite'
+import { useDispatch } from 'react-redux'
+import { add } from '@/redux_toolkit/cartSlice'
 
 const ProductInDetail = () => {
+   const dispatch = useDispatch();
    const [product, setProduct]:any = useState(null)
    const params = useParams()
    const { productId } = params
@@ -19,7 +22,16 @@ const ProductInDetail = () => {
 
    useEffect(() => {
       fetchData()
-   }, [params])
+   }, [productId])
+
+   function clickHandler(){
+    if(product){
+      dispatch(add(product))
+    }
+   }
+
+
+
 
    return (
       <div>
@@ -52,7 +64,7 @@ const ProductInDetail = () => {
                      </select>
                   </div>
                   <div className='flex gap-4'>
-                     <Button variant='purple'>Add to Cart</Button>
+                     <Button variant='purple' onClick={clickHandler}>Add to Cart</Button>
                      <div className='w-10 h-10 flex items-center justify-center rounded-full bg-gray-300 hover:bg-gray-400'>
                         <Heart className='h-6 w-6 text-gray-600' />
                      </div>
