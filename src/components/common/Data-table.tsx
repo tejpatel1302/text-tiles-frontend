@@ -101,7 +101,7 @@ export function DataTable<TData, TValue>({
   const isOrderDetails = location.pathname === "/user/order-details";
   const isCategory = location.pathname === "/admin/manage-category";
   const isSubCategory = location.pathname === "/admin/manage-sub-category";
-
+const isCart  = location.pathname === "/user/cart";
  
   function clickHandler() {
     if (isAdminOrders) {
@@ -175,7 +175,7 @@ export function DataTable<TData, TValue>({
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell key={cell.id}  className={`${isWishList ? 'w-[150px]' : ''}`}>
-                        {isAdminProducts &&
+                        {(isAdminProducts || isCart )&& 
                         cell.column.columnDef.header === "images" ? (
                           <img
                             src={

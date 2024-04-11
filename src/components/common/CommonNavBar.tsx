@@ -34,9 +34,9 @@ const CommonNavBar = () => {
   // function navigateClickHandler(){
   //   navigate('/user/order-history')
   // }
-  // function clickHandler2(){
-  //   navigate('/user/cart')
-  // }
+  function clickHandler2(){
+    navigate('/user/cart')
+  }
 
   return (
     <div className="flex justify-between w-9/12 mx-auto p-3  ">
@@ -85,7 +85,7 @@ const CommonNavBar = () => {
                 <Heart size={35} />
               </div>
             )}
-            <ShoppingCart size={35} />
+            <ShoppingCart size={35}  onClick={clickHandler2}/>
           </div>
         )}
       </div>

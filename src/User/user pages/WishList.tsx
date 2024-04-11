@@ -12,7 +12,7 @@ const UserWishList = () => {
       name: product.name,
       price : product.price,
       category : product.category,
-      image: product.image,
+      images: product.image,
       
   }));
 
