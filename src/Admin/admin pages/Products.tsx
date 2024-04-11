@@ -26,7 +26,7 @@ const Products = () => {
 
   return (
     <div >
-       <div className=" my-10 text-3xl font-bold">Products</div>
+       <div className="  text-3xl font-bold">Products</div>
       <div>
         <DataTable columns={columns} data={data} />
       </div>
