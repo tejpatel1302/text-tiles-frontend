@@ -53,7 +53,7 @@ const Login = ({ redirect }: any) => {
                 onSubmit={form.handleSubmit(submitData)}
                 className=""
               >
-                <div className="">
+                <div className=" flex flex-col gap-1">
                   <FormField
                     control={form.control}
                     name="email"

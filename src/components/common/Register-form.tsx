@@ -48,19 +48,19 @@ const Register = ({ redirect }: any) => {
         showSocial
       >
         <div className="flex flex-col">
-          <div  >
+          <div >
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(submitData)}
-                className="space-y-4"
+                className=""
               >
-                <div className="flex justify-center gap-14">
-                  <div className="space-y-4">
+                <div className="flex justify-center gap-16 ">
+                  <div className="space-y-2">
                     <FormField
                       control={form.control}
                       name="email"
                       render={({ field }) => (
-                        <FormItem className="flex items-center ">
+                        <FormItem className=" items-center ">
                           <FormLabel className="w-[30%]">First Name</FormLabel>
                           <FormControl>
                             <Input
@@ -76,7 +76,7 @@ const Register = ({ redirect }: any) => {
                       control={form.control}
                       name="email"
                       render={({ field }) => (
-                        <FormItem className="flex items-center ">
+                        <FormItem className=" items-center ">
                           <FormLabel className="w-[30%]">Phone</FormLabel>
                           <FormControl>
                             <Input
@@ -93,7 +93,7 @@ const Register = ({ redirect }: any) => {
                       control={form.control}
                       name="email"
                       render={({ field }) => (
-                        <FormItem className="flex items-center ">
+                        <FormItem className=" items-center ">
                           <FormLabel className="w-[30%]">Date of Birth</FormLabel>
                           <div className="px-12 py-2 mr-[1px] border-[2px] border-black rounded-sm">
                             <input type="date" name="" id="" className="border-none " />
@@ -106,7 +106,7 @@ const Register = ({ redirect }: any) => {
                       control={form.control}
                       name="password"
                       render={({ field }) => (
-                        <FormItem className="flex items-center ">
+                        <FormItem className=" items-center ">
                           <FormLabel className="w-[30%]">Password</FormLabel>
                           <FormControl>
                             <Input
@@ -120,13 +120,13 @@ const Register = ({ redirect }: any) => {
                       )}
                     />
                   </div>
-                  <div className="space-y-4">
+                  <div className="space-y-2">
                     <FormField
 
                       control={form.control}
                       name="email"
                       render={({ field }) => (
-                        <FormItem className="flex items-center ">
+                        <FormItem className=" items-center ">
                           <FormLabel className="w-[30%]">Last Name</FormLabel>
                           <FormControl>
                             <Input
@@ -142,7 +142,7 @@ const Register = ({ redirect }: any) => {
                       control={form.control}
                       name="email"
                       render={({ field }) => (
-                        <FormItem className="flex items-center ">
+                        <FormItem className=" items-center ">
                           <FormLabel className="w-[30%]">Email</FormLabel>
                           <FormControl >
                             <Input
@@ -159,9 +159,10 @@ const Register = ({ redirect }: any) => {
                       control={form.control}
                       name="email"
                       render={({ field }) => (
-                        <FormItem className="flex items-center ">
+                        <FormItem className=" items-center ">
                           <FormLabel className="w-[30%]">Gender</FormLabel>
-                          <select className="px-24 py-2 mr-[1px] border-[2px] border-black rounded-sm">
+                          <br />
+                          <select className="px-24 py-2 mr-[1px] border-[2px] border-black rounded-sm bg-white">
                             <option value="">Male</option>
                             <option value="">Female</option>
                             <option value="">Others</option>
@@ -174,7 +175,7 @@ const Register = ({ redirect }: any) => {
                       control={form.control}
                       name="password"
                       render={({ field }) => (
-                        <FormItem className="flex items-center ">
+                        <FormItem className=" items-center ">
                           <FormLabel className="w-[30%]">Confirm Password</FormLabel>
                           <FormControl>
                             <Input
@@ -190,7 +191,7 @@ const Register = ({ redirect }: any) => {
                   </div>
                 </div>
                 <div>
-                  <Button className="px-10 relative left-72 " variant={'purple'}>
+                  <Button className="px-10 relative left-72 top-5 " variant={'purple'}>
                     Register
                   </Button>
                 </div>

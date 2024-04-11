@@ -9,6 +9,7 @@ const ManageCategory = () => {
     categoryDescription: item.categoryDescription,
     image: item.image,
     
+
   }));
 
 
