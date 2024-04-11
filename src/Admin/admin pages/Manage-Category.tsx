@@ -7,8 +7,8 @@ const ManageCategory = () => {
     categoryID: item.categoryID,
     categoryName: item.categoryName,
     categoryDescription: item.categoryDescription
-     
-    
+
+
   }));
 
 

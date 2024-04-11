@@ -18,7 +18,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import { DatePickerForm } from "./DatePicker";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -33,14 +33,30 @@ export function DataTable<TData, TValue>({
   data,
 }: DataTableProps<TData, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
-  const [d, setD] = useState(() => [...data]);
   const [editedRows, setEditedRows] = useState({});
   const [originalData, setOriginalData] = useState(() => [...data]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+  const [globalFilter, setGlobalFilter] = useState(""); // Added state for global filter
+  const [startDate, setStartDateState] = useState<Date | null>(null);
+  const [endDate, setEndDateState] = useState<Date | null>(null);
+
+  const filteredData = useMemo(() => {
+    if (!startDate || !endDate) return data;
+    const start = startDate.getTime();
+    const end = endDate.getTime();
+    return data.filter((item: any) => {
+      const itemDate = new Date(item.orderDate).getTime();
+      return itemDate >= start && itemDate <= end;
+    });
+  }, [data, startDate, endDate]);
+
+  const [d, setD] = useState(() => [...filteredData]);
+
   const table = useReactTable({
     state: {
       sorting,
       columnFilters,
+      globalFilter, // Added globalFilter to state
     },
     data: d, // Use 'd' state variable as data
     columns,
@@ -51,6 +67,7 @@ export function DataTable<TData, TValue>({
     getPaginationRowModel: getPaginationRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
+    onGlobalFilterChange: setGlobalFilter, // Added handler for global filter change
     meta: {
       editedRows,
       setEditedRows,
@@ -92,6 +109,7 @@ export function DataTable<TData, TValue>({
       },
     },
   });
+
   const location = useLocation();
   const navigate = useNavigate();
   const isUser = location.pathname === "/user/order-history";
@@ -102,7 +120,8 @@ export function DataTable<TData, TValue>({
   const isCategory = location.pathname === "/admin/manage-category";
   const isSubCategory = location.pathname === "/admin/manage-sub-category";
 
- 
+  const [placeholder, setPlaceholder] = useState(isUser ? "Search Order History" : isWishList ? "Search Wishlist" : isAdminProducts ? "Search Products" : isAdminOrders ? "Search Orders" : isOrderDetails ? "Search Order Details" : isCategory ? "Search Categories" : isSubCategory ? "Search Sub-Categories" : "");
+
   function clickHandler() {
     if (isAdminOrders) {
       navigate("/admin/order-details");
@@ -111,21 +130,30 @@ export function DataTable<TData, TValue>({
     }
   }
 
+  function handleDatePickerApply(): void {
+    console.log(`Date range applied from ${startDate?.getTime()} to ${endDate?.toISOString()}`);
+    setD(() => [...filteredData]); // Apply the date filter upon date picker apply
+  }
+
+  function setStartDate(date: Date | null): void {
+    setStartDateState(date);
+  }
+
+  function setEndDate(date: Date | null): void {
+    setEndDateState(date);
+  }
+
   return (
     <>
       <div className={`${isWishList ? 'rounded-md ml-10' : 'rounded-md'}`}>
         <div className="text-3xl font-bold flex items-center gap-5 ">
-          {!isUser && !isOrderDetails && !isWishList && (
+          {!isOrderDetails && !isWishList && (
             <div className="flex justify-between relative -top-[200px] left-[160px]  py-4">
               <Input
-                placeholder="Search Order"
-                value={
-                  (table.getColumn("OrderID")?.getFilterValue() as string) ?? ""
-                }
-                onChange={(event: any) =>
-                  table.getColumn("OrderID")?.setFilterValue(event.target.value)
-                }
-                className=" bg-[#f2f2f2] w-[500px] rounded-full "
+                placeholder={placeholder}
+                value={globalFilter} // Changed to use globalFilter state
+                onChange={(event: any) => setGlobalFilter(event.target.value)} // Changed to update globalFilter state
+                className=" bg-[#f2f2f2] w-[500px] rounded-full  border-none p-2 pl-5 focus:outline-none  focus:ring-purple-600 focus:ring-opacity-10"
               />
             </div>
           )}
@@ -133,21 +161,24 @@ export function DataTable<TData, TValue>({
             !isSubCategory &&
             !isCategory &&
             !isAdminProducts &&
-          !isWishList) && (
-            <div
-              className={`${
-                isUser ? "mb-10 mx-10" : "relative -top-[35px] right-[50px]"
-              } `}
-            >
-              <DatePickerForm />
-            </div>
-          )}
+            !isWishList) && (
+              <div
+                className={`${isUser ? "mb-10 mx-10" : "relative -top-[35px] right-[50px]"
+                  } `}
+              >
+                <DatePickerForm
+                  setStartDate={(date: Date | null) => setStartDate(date)}
+                  setEndDate={(date: Date | null) => setEndDate(date)}
+                  onApply={handleDatePickerApply}
+                />
+              </div>
+            )}
         </div>
         <div className="">
           <Table className="">
             <TableHeader >
               {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id} className={`${isWishList ? 'flex space-x-[155px]' : ''}`}>  
+                <TableRow key={headerGroup.id} className={`${isWishList ? 'flex space-x-[155px]' : ''}`}>
                   {headerGroup.headers.map((header) => {
                     return (
                       <TableHead key={header.id}>
@@ -174,9 +205,9 @@ export function DataTable<TData, TValue>({
                     className={`${isWishList ? 'flex space-x-[80px]' : ''}`}
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}  className={`${isWishList ? 'w-[150px]' : ''}`}>
+                      <TableCell key={cell.id} className={`${isWishList ? 'w-[150px]' : ''}`}>
                         {isAdminProducts &&
-                        cell.column.columnDef.header === "images" ? (
+                          cell.column.columnDef.header === "images" ? (
                           <img
                             src={
                               (cell.row.original as { images: string })
