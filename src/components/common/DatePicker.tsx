@@ -1,4 +1,3 @@
-
 import { zodResolver } from "@hookform/resolvers/zod"
 import { format } from "date-fns"
 import { CalendarIcon } from "lucide-react"
@@ -25,22 +24,24 @@ import {
 import { toast } from "@/components/ui/use-toast"
 
 const FormSchema = z.object({
-  dob: z.date({
-    required_error: "A date of birth is required.",
-  }),
+  startDate: z.date().optional(),
+  endDate: z.date().optional(),
 })
 
-export function DatePickerForm() {
+export function DatePickerForm({ setStartDate, setEndDate, onApply }: { setStartDate: (date: Date | null) => void, setEndDate: (date: Date | null) => void, onApply: () => void }) {
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   })
 
   function onSubmit(data: z.infer<typeof FormSchema>) {
+    setStartDate(data.startDate ?? null);
+    setEndDate(data.endDate ?? null);
+    onApply();
     toast({
-      title: "You submitted the following values:",
+      title: "Date range applied:",
       description: (
         <pre className="mt-2 w-[340px] rounded-md bg-slate-950 p-4">
-          <code className="text-white">{JSON.stringify(data, null, 2)}</code>
+          <code className="text-white">{`From: ${data.startDate ? format(data.startDate, "PPP") : "Not set"}, To: ${data.endDate ? format(data.endDate, "PPP") : "Not set"}`}</code>
         </pre>
       ),
     })
@@ -48,21 +49,21 @@ export function DatePickerForm() {
 
   return (
     <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center">
+      <form onSubmit={form.handleSubmit(onSubmit)} className="flex items-center gap-5">
         <FormField
           control={form.control}
-          name="dob"
+          name="startDate"
           render={({ field }) => (
-            <FormItem className="flex items-center">
+            <FormItem className="flex items-center gap-2">
               <FormLabel>From:</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
                     <Button
-                      variant={"outline"}
+                      variant="outline"
                       className={cn(
-                        "w-[240px] pl-3 text-left font-normal bg-[#f2f2f2]",
-                        !field.value && "text-muted-foreground"
+                        "w-[240px] pl-3 text-left font-normal bg-gray-200",
+                        !field.value && "text-gray-500"
                       )}
                     >
                       {field.value ? (
@@ -78,7 +79,7 @@ export function DatePickerForm() {
                   <Calendar
                     mode="single"
                     selected={field.value}
-                    onSelect={field.onChange}
+                    onSelect={(date) => field.onChange(date || undefined)}
                     disabled={(date) =>
                       date > new Date() || date < new Date("1900-01-01")
                     }
@@ -86,28 +87,28 @@ export function DatePickerForm() {
                   />
                 </PopoverContent>
               </Popover>
-              
+
               <FormDescription>
-               
+
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-         <FormField
+        <FormField
           control={form.control}
-          name="dob"
+          name="endDate"
           render={({ field }) => (
-            <FormItem className="flex items-center gap-5">
+            <FormItem className="flex items-center gap-2">
               <FormLabel>To:</FormLabel>
               <Popover>
                 <PopoverTrigger asChild>
                   <FormControl>
                     <Button
-                      variant={"outline"}
+                      variant="outline"
                       className={cn(
-                        "w-[240px] pl-3 text-left font-normal bg-[#f2f2f2]",
-                        !field.value && "text-muted-foreground"
+                        "w-[240px] pl-3 text-left font-normal bg-gray-200",
+                        !field.value && "text-gray-500"
                       )}
                     >
                       {field.value ? (
@@ -123,7 +124,7 @@ export function DatePickerForm() {
                   <Calendar
                     mode="single"
                     selected={field.value}
-                    onSelect={field.onChange}
+                    onSelect={(date) => field.onChange(date || undefined)}
                     disabled={(date) =>
                       date > new Date() || date < new Date("1900-01-01")
                     }
@@ -131,15 +132,15 @@ export function DatePickerForm() {
                   />
                 </PopoverContent>
               </Popover>
-              
+
               <FormDescription>
-               
+
               </FormDescription>
               <FormMessage />
             </FormItem>
           )}
         />
-        <Button type="submit" variant={'default'}>Apply</Button>
+        <Button type="submit" variant="default" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Apply</Button>
       </form>
     </Form>
   )

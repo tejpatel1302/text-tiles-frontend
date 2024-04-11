@@ -31,6 +31,8 @@ export const OrderHistory = [
     address: "789 Pine St",
     orderdetails: "View",
     status: "Processing",
+
+    createdAt: "2024-03-17T00:00:00.000Z",
   },
   {
     ordernumber: "ORD004",
