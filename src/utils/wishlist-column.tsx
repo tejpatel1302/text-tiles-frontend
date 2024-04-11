@@ -41,7 +41,7 @@ const EditCell = ({ row, table }: any) => {
           <div className="edit-cell-action flex">
            
             <Button onClick={removeRow} name="remove" variant={'red'}>
-              Delete
+              Remove
             </Button>
           </div>
         )}
