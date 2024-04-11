@@ -23,6 +23,7 @@ export default function SideBar({}: Props) {
   const userSelected = location.pathname === "/user/selected-categories"
   const userHistory = location.pathname === "/user/order-history"
   const isOrderDetails = location.pathname === "/user/order-details";
+
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   function toggleSideBar() {

@@ -8,15 +8,15 @@ const ManageSubCategory = () => {
     subcategoryName: item.subcategoryName,
     subcategoryDescription: item.subcategoryDescription,
     mainCategoryName: item.mainCategoryName
-
-
+    
+    
   }));
 
 
 
   return (
     <div className="bg-white">
-      <div className=" m-10 my-10 text-3xl font-bold">Manage Sub-Category</div>
+      <div className=" m-10 my-10 text-3xl font-bold">Order Details:</div>
       <div>
         <DataTable columns={columns} data={data} />
       </div>

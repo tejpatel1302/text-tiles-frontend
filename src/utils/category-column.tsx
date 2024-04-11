@@ -1,6 +1,8 @@
 import { Button } from "@/components/ui/button";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
+import { Cross, Save, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { IconRight } from "react-day-picker";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -8,6 +10,7 @@ export type Category = {
   categoryID: number;
   categoryName: string;
   categoryDescription: string;
+  image: string
 };
 const EditCell = ({ row, table }: any) => {
     const meta = table.options.meta;
@@ -22,24 +25,25 @@ const EditCell = ({ row, table }: any) => {
       };
     //   meta?.editedRows[row.id] ? 
     return (
-        <div className="edit-cell-container">
+        <div className="edit-cell-container mr-32">
+        
         {meta?.editedRows[row.id] ? (
-          <div className="edit-cell-action">
-            <button onClick={setEditedRows} name="cancel">
-              ⚊
-            </button>{" "}
-            <button onClick={setEditedRows} name="done">
-              ✔
-            </button>
+          <div className="edit-cell-action flex gap-4">
+            <Button onClick={setEditedRows} name="cancel" variant={'ghost'} className="text-red-500" >
+              <X/>
+            </Button>{" "}
+            <Button onClick={setEditedRows} name="done" variant={'ghost'} className="text-green-500">
+              <Save/>
+            </Button>
           </div>
         ) : (
-          <div className="edit-cell-action">
-            <button onClick={setEditedRows} name="edit">
-              ✐
-            </button>
-            <button onClick={removeRow} name="remove">
-              X
-            </button>
+          <div className="edit-cell-action flex gap-4">
+            <Button onClick={setEditedRows} name="edit" variant={'green'}>
+              Edit
+            </Button>
+            <Button onClick={removeRow} name="remove" variant={'red'}>
+              Delete
+            </Button>
           </div>
         )}
       </div>
@@ -76,6 +80,7 @@ const EditCell = ({ row, table }: any) => {
           onChange={e => setValue(e.target.value)}
           onBlur={onBlur}
           type={columnMeta?.type || "text"}
+          className="border-2 border-black w-8/12 p-4"
         />
       )
     }
@@ -86,21 +91,26 @@ const columnHelper = createColumnHelper<Category>();
 export const columns = [
   columnHelper.accessor("categoryID", {
     header: "Category ID",
-    cell: TableCell,
+   
     meta: {
       type: "number",
     },
   }),
+  columnHelper.accessor("image", {
+    header: "Category Image",
+   
+  }),
   columnHelper.accessor("categoryName", {
     header: "Category Name",
+    cell: TableCell
   }),
   columnHelper.accessor("categoryDescription", {
     header: "Category Description",
+    cell: TableCell
   }),
-  columnHelper.accessor("actions", {
-    header: "Actions",
-  }),
+  
   columnHelper.display({
+    header:'Actions',
     id: "edit",
     cell: EditCell,
   }),
