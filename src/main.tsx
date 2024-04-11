@@ -27,6 +27,8 @@ import UserRegister from './User/user pages/User-Register.tsx';
 import AdminOrderDetails from './Admin/admin pages/Order-Details.tsx';
 import UserOrderDetails from './User/user pages/UserOrderDetails.tsx';
 import ProductInDetail from './User/user pages/ProductsInDetail.tsx';
+import WishList from './User/user pages/WishList.tsx';
+import UserWishList from './User/user pages/WishList.tsx';
 
 
 
@@ -81,6 +83,12 @@ const appRoutes = createBrowserRouter([
         path:'/user/products/:productId',
 
         element:<ProductInDetail/>
+        
+      },
+      {
+        path:'/user/wishlist',
+
+        element:<UserWishList/>
         
       },
       {

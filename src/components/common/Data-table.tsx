@@ -22,7 +22,6 @@ import { useState } from "react";
 import { Input } from "@/components/ui/input";
 import { DatePickerForm } from "./DatePicker";
 import { useLocation, useNavigate } from "react-router-dom";
-// import { category } from "@/utils/category";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -40,97 +39,10 @@ export function DataTable<TData, TValue>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const table = useReactTable({
     state: {
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      
       sorting,
       columnFilters,
     },
-    data,
+    data: d, // Use 'd' state variable as data
     columns,
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
@@ -155,7 +67,6 @@ export function DataTable<TData, TValue>({
           );
         }
       },
-      
       updateData: (rowIndex: number, columnId: string, value: string) => {
         setD((old) =>
           old.map((row, index) => {
@@ -170,32 +81,28 @@ export function DataTable<TData, TValue>({
         );
       },
       removeRow: (rowIndex: number) => {
-        const setFilterFunc = (old: any) =>
-          old.filter((_row: any, index: number) => index !== rowIndex);
-        setD(setFilterFunc);
-        setOriginalData(setFilterFunc);
+        const newData = [...d];
+        newData.splice(rowIndex, 1); // Remove the row at the specified index
+
+        // Update the state using the setD function
+        setD(newData);
+
+        // If you also want to update the original data, do it here as well
+        setOriginalData(newData);
       },
-    }
+    },
   });
   const location = useLocation();
   const navigate = useNavigate();
   const isUser = location.pathname === "/user/order-history";
+  const isWishList = location.pathname === "/user/wishlist";
   const isAdminProducts = location.pathname === "/admin/products";
   const isAdminOrders = location.pathname === "/admin/orders";
   const isOrderDetails = location.pathname === "/user/order-details";
   const isCategory = location.pathname === "/admin/manage-category";
   const isSubCategory = location.pathname === "/admin/manage-sub-category";
 
-  function editHandler(id: any) {
-    // Handle edit logic here, you can navigate to edit page or show a modal
-    console.log("Editing item with id:", id);
-  }
-
-  function deleteHandler(id: any) {
-    // Handle delete logic here, you can show a confirmation modal and then delete the item
-    console.log("Deleting item with id:", id);
-  }
-
+ 
   function clickHandler() {
     if (isAdminOrders) {
       navigate("/admin/order-details");
@@ -206,39 +113,41 @@ export function DataTable<TData, TValue>({
 
   return (
     <>
-      <div className="rounded-md">
-        <div className="text-3xl font-bold flex items-center gap-5">
-          {!isUser && !isOrderDetails && (
-            <div className="flex justify-between relative -top-[210px] left-[160px]  py-4">
+      <div className={`${isWishList ? 'rounded-md ml-10' : 'rounded-md'}`}>
+        <div className="text-3xl font-bold flex items-center gap-5 ">
+          {!isUser && !isOrderDetails && !isWishList && (
+            <div className="flex justify-between relative -top-[200px] left-[160px]  py-4">
               <Input
                 placeholder="Search Order"
                 value={
-                  (table.getColumn("Name")?.getFilterValue() as string) ?? ""
+                  (table.getColumn("OrderID")?.getFilterValue() as string) ?? ""
                 }
                 onChange={(event: any) =>
-                  table.getColumn("Name")?.setFilterValue(event.target.value)
+                  table.getColumn("OrderID")?.setFilterValue(event.target.value)
                 }
                 className=" bg-[#f2f2f2] w-[500px] rounded-full "
               />
             </div>
           )}
-          {(!isOrderDetails && !isSubCategory && !isCategory && !isAdminProducts )&& (
+          {(!isOrderDetails &&
+            !isSubCategory &&
+            !isCategory &&
+            !isAdminProducts &&
+          !isWishList) && (
             <div
               className={`${
-                isUser
-                  ? "mb-10 mx-10"
-                  : "relative -top-[90px] right-[50px]"
+                isUser ? "mb-10 mx-10" : "relative -top-[35px] right-[50px]"
               } `}
             >
               <DatePickerForm />
             </div>
           )}
         </div>
-        <div>
-          <Table>
-            <TableHeader>
+        <div className="">
+          <Table className="">
+            <TableHeader >
               {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id}>
+                <TableRow key={headerGroup.id} className={`${isWishList ? 'flex space-x-[155px]' : ''}`}>  
                   {headerGroup.headers.map((header) => {
                     return (
                       <TableHead key={header.id}>
@@ -262,9 +171,10 @@ export function DataTable<TData, TValue>({
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
+                    className={`${isWishList ? 'flex space-x-[80px]' : ''}`}
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
+                      <TableCell key={cell.id}  className={`${isWishList ? 'w-[150px]' : ''}`}>
                         {isAdminProducts &&
                         cell.column.columnDef.header === "images" ? (
                           <img
@@ -277,28 +187,9 @@ export function DataTable<TData, TValue>({
                           />
                         ) : (isAdminOrders || isUser) &&
                           cell.column.columnDef.header === "Order Details" ? (
-                          <Button
-                            variant={"purple"}
-                            onClick={clickHandler}
-                          >
+                          <Button variant={"purple"} onClick={clickHandler}>
                             {row.getValue("orderDetails")}
                           </Button>
-                        ) : (isCategory || isSubCategory) &&
-                          cell.column.columnDef.header === "Actions" ? (
-                          <div className="flex gap-3">
-                            <Button
-                              variant={"green"}
-                              onClick={() => editHandler(row.id)}
-                            >
-                              Edit
-                            </Button>
-                            <Button
-                              variant={"red"}
-                              onClick={() => deleteHandler(row.id)}
-                            >
-                              Delete
-                            </Button>
-                          </div>
                         ) : (
                           // For any other paths or headers, display cell content using flexRender
                           flexRender(

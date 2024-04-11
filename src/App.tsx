@@ -14,12 +14,14 @@ function App() {
   const isUserRegisterPage = location.pathname === "/user/register";
   const isUser = location.pathname === "/user/order-history";
   const isUserWebsite = location.pathname === "/user/products";
+  const isWishList = location.pathname === "/user/wishlist";
   const isUserCategory = location.pathname === "/user/category";
   const isUserSubCategory = location.pathname === "/user/sub-category";
   const selectedCategories =  location.pathname === "/user/selected-categories";
   const cart =  location.pathname === "/user/cart";
   const isOrderDetails = location.pathname === "/user/order-details";
   const isProducts = location.pathname === `/user/products/${productId}`;
+
   
   return (
     <>
@@ -30,7 +32,7 @@ function App() {
         </div>}
         <div className="flex">
           {/* border dynamic */}
-         {(!isAdminLoginPage  && !isUserWebsite && !isUserLoginPage  && !isUserCategory && !isUserSubCategory  && !selectedCategories && !cart && !isUserRegisterPage && !isProducts) && <div className={`${isUser ? 'bg-white':'bg-white'}`}>
+         {(!isAdminLoginPage  && !isUserWebsite && !isUserLoginPage  && !isUserCategory && !isUserSubCategory  && !selectedCategories && !cart && !isUserRegisterPage && !isProducts && !isWishList) && <div className={`${isUser ? 'bg-white':'bg-white'}`}>
             {" "}
             <SideBar />
           </div>}

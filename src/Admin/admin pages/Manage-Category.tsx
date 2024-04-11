@@ -7,15 +7,15 @@ const ManageCategory = () => {
     categoryID: item.categoryID,
     categoryName: item.categoryName,
     categoryDescription: item.categoryDescription
-
-
+     
+    
   }));
 
 
 
   return (
     <div className="bg-white">
-      <div className=" m-10 my-10 text-3xl font-bold">Manage Category</div>
+      <div className=" m-10 my-10 text-3xl font-bold">Order Details:</div>
       <div>
         <DataTable columns={columns} data={data} />
       </div>
