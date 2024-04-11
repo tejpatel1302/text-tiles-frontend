@@ -6,8 +6,8 @@ const ManageCategory = () => {
   const data: Category[] = category.map((item: any) => ({
     categoryID: item.categoryID,
     categoryName: item.categoryName,
-    categoryDescription: item.categoryDescription
-     
+    categoryDescription: item.categoryDescription,
+    image: item.image,
     
   }));
 

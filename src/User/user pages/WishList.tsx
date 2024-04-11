@@ -14,11 +14,6 @@ const UserWishList = () => {
       category : product.category,
       image: product.image,
       
-
-    
-   
-   
-
   }));
 
 

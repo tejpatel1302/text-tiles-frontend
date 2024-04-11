@@ -7,7 +7,8 @@ const ManageSubCategory = () => {
     subcategoryID: item.subcategoryID,
     subcategoryName: item.subcategoryName,
     subcategoryDescription: item.subcategoryDescription,
-    mainCategoryName: item.mainCategoryName
+    mainCategoryName: item.mainCategoryName,
+    image: item.image,
     
     
   }));
