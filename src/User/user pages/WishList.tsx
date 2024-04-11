@@ -24,9 +24,9 @@ const UserWishList = () => {
 
 
   return (
-    <div >
+    <div className="w-[95%] mx-auto">
        <div className=" text-3xl font-bold">Products:</div>
-      <div className="flex flex-col justify-center">
+      <div className="flex flex-col justify-center w-[95%] mx-auto">
         <DataTable columns={columns} data={data} />
       </div>
     </div>

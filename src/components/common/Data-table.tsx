@@ -95,6 +95,7 @@ export function DataTable<TData, TValue>({
   const location = useLocation();
   const navigate = useNavigate();
   const isUser = location.pathname === "/user/order-history";
+  const isWishList = location.pathname === "/user/wishlist";
   const isAdminProducts = location.pathname === "/admin/products";
   const isAdminOrders = location.pathname === "/admin/orders";
   const isOrderDetails = location.pathname === "/user/order-details";
@@ -112,10 +113,10 @@ export function DataTable<TData, TValue>({
 
   return (
     <>
-      <div className="rounded-md">
+      <div className={`${isWishList ? 'rounded-md ml-10' : 'rounded-md'}`}>
         <div className="text-3xl font-bold flex items-center gap-5 ">
-          {!isUser && !isOrderDetails && (
-            <div className="flex justify-between relative -top-[120px] left-[160px]  py-4">
+          {!isUser && !isOrderDetails && !isWishList && (
+            <div className="flex justify-between relative -top-[200px] left-[160px]  py-4">
               <Input
                 placeholder="Search Order"
                 value={
@@ -131,7 +132,8 @@ export function DataTable<TData, TValue>({
           {(!isOrderDetails &&
             !isSubCategory &&
             !isCategory &&
-            !isAdminProducts) && (
+            !isAdminProducts &&
+          !isWishList) && (
             <div
               className={`${
                 isUser ? "mb-10 mx-10" : "relative -top-[35px] right-[50px]"
@@ -141,11 +143,11 @@ export function DataTable<TData, TValue>({
             </div>
           )}
         </div>
-        <div >
-          <Table >
+        <div className="">
+          <Table className="">
             <TableHeader >
               {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id} className="flex space-x-48">  
+                <TableRow key={headerGroup.id} className={`${isWishList ? 'flex space-x-[155px]' : ''}`}>  
                   {headerGroup.headers.map((header) => {
                     return (
                       <TableHead key={header.id}>
@@ -169,10 +171,10 @@ export function DataTable<TData, TValue>({
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
-                    className="flex space-x-44  relative left-[80px]"
+                    className={`${isWishList ? 'flex space-x-[80px]' : ''}`}
                   >
                     {row.getVisibleCells().map((cell) => (
-                      <TableCell key={cell.id}>
+                      <TableCell key={cell.id}  className={`${isWishList ? 'w-[150px]' : ''}`}>
                         {isAdminProducts &&
                         cell.column.columnDef.header === "images" ? (
                           <img
