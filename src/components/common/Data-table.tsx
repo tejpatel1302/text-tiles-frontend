@@ -22,6 +22,7 @@ import { useState, useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import { DatePickerForm } from "./DatePicker";
 import { useLocation, useNavigate } from "react-router-dom";
+import { Divide } from "lucide-react";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -121,10 +122,11 @@ export function DataTable<TData, TValue>({
   const isSubCategory = location.pathname === "/admin/manage-sub-category";
 
 const isCart  = location.pathname === "/user/cart";
+const isCheckout  = location.pathname === "/user/checkout";
  
 
 
-  const [placeholder, setPlaceholder] = useState(isUser ? "Search Order History" : isWishList ? "Search Wishlist" : isAdminProducts ? "Search Products" : isAdminOrders ? "Search Orders" : isOrderDetails ? "Search Order Details" : isCategory ? "Search Categories" : isSubCategory ? "Search Sub-Categories" : "");
+  const [placeholder, setPlaceholder] = useState(isUser ? "Search Order History" : isWishList ? "Search Wishlist" : isAdminProducts ? "Search Products" : isAdminOrders ? "Search Orders" : isOrderDetails ? "Search Order Details" : isCategory ? "Search Categories" : isSubCategory ? "Search Sub-Categories" : isCart ? "Search Order" : '');
 
 
   function clickHandler() {
@@ -150,15 +152,15 @@ const isCart  = location.pathname === "/user/cart";
 
   return (
     <>
-      <div className={`${isWishList ? 'rounded-md ml-10' : 'rounded-md'}`}>
+      <div className={`${isWishList || isCart ? 'rounded-md ml-10' : 'rounded-md'}`}>
         <div className="text-3xl font-bold flex items-center gap-5 ">
-          {!isOrderDetails && !isWishList && (
-            <div className="flex justify-between relative -top-[200px] left-[160px]  py-4">
+          {!isOrderDetails && !isWishList && !isCheckout && (
+            <div className={`flex justify-between relative ${isAdminOrders || isUser ? '-top-[220px]': isCart ? '-top-[165px] left-[350px]' : '-top-[120px]'} left-[160px]  py-4`}>
               <Input
                 placeholder={placeholder}
                 value={globalFilter} // Changed to use globalFilter state
                 onChange={(event: any) => setGlobalFilter(event.target.value)} // Changed to update globalFilter state
-                className=" bg-[#f2f2f2] w-[500px] rounded-full  border-none p-2 pl-5 focus:outline-none  focus:ring-purple-600 focus:ring-opacity-10"
+                className=" bg-[#f2f2f2] w-[500px] rounded-full  border border-black p-2 pl-5 focus:outline-none  focus:ring-purple-600 focus:ring-opacity-10"
               />
             </div>
           )}
@@ -166,9 +168,13 @@ const isCart  = location.pathname === "/user/cart";
             !isSubCategory &&
             !isCategory &&
             !isAdminProducts &&
-            !isWishList) && (
+            !isWishList &&
+          !isCart &&
+          !isCheckout
+        
+        ) && (
               <div
-                className={`${isUser ? "mb-10 mx-10" : "relative -top-[35px] right-[50px]"
+                className={`${isUser ? "mb-10 " : "relative -top-[35px] right-[50px]"
                   } `}
               >
                 <DatePickerForm
@@ -183,7 +189,7 @@ const isCart  = location.pathname === "/user/cart";
           <Table className="">
             <TableHeader >
               {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id} className={`${isWishList ? 'flex space-x-[155px]' : ''}`}>
+                <TableRow key={headerGroup.id} className={`${isWishList || isCart ? 'flex space-x-[155px]' : ''}`}>
                   {headerGroup.headers.map((header) => {
                     return (
                       <TableHead key={header.id}>
@@ -207,12 +213,12 @@ const isCart  = location.pathname === "/user/cart";
                   <TableRow
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
-                    className={`${isWishList ? 'flex space-x-[80px]' : ''}`}
+                    className={`${isWishList || isCart ? 'flex space-x-[80px]' : ''}`}
                   >
                     {row.getVisibleCells().map((cell) => (
 
-                      <TableCell key={cell.id}  className={`${isWishList ? 'w-[150px]' : ''}`}>
-                        {(isAdminProducts || isCart )&& 
+                      <TableCell key={cell.id}  className={`${isWishList || isCart ? 'w-[150px]' : ''}`}>
+                        {(isAdminProducts || isCart || isCheckout)&& 
                         cell.column.columnDef.header === "images" ? (
 
                           <img
@@ -228,7 +234,9 @@ const isCart  = location.pathname === "/user/cart";
                           <Button variant={"purple"} onClick={clickHandler}>
                             {row.getValue("orderDetails")}
                           </Button>
-                        ) : (
+                        ) 
+                        
+                        : (
                           // For any other paths or headers, display cell content using flexRender
                           flexRender(
                             cell.column.columnDef.cell,
@@ -253,7 +261,7 @@ const isCart  = location.pathname === "/user/cart";
           </Table>
         </div>
       </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
+     {!isCheckout ? <div className="flex items-center justify-end space-x-2 py-4">
         <Button
           variant="default"
           size="sm"
@@ -270,7 +278,7 @@ const isCart  = location.pathname === "/user/cart";
         >
           Next
         </Button>
-      </div>
+      </div> :  <div></div>}
     </>
   );
 }
