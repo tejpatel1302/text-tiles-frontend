@@ -21,22 +21,23 @@ function App() {
   const cart =  location.pathname === "/user/cart";
   const isOrderDetails = location.pathname === "/user/order-details";
   const isProducts = location.pathname === `/user/products/${productId}`;
+  const isPTB = location.pathname === "/user/checkout";
 
   
   return (
     <>
-      <div className="border-4">
+      <div className="border-4 ">
         {/* bg- dynamic */}
        {(!isAdminLoginPage  && !isUserLoginPage && !isUserRegisterPage) &&  <div className={`${(isUser || isOrderDetails) ? 'bg-white':'bg-[#7346da]'}`}>
           <CommonNavBar />
         </div>}
         <div className="flex">
           {/* border dynamic */}
-         {(!isAdminLoginPage  && !isUserWebsite && !isUserLoginPage  && !isUserCategory && !isUserSubCategory  && !selectedCategories && !cart && !isUserRegisterPage && !isProducts && !isWishList) && <div className={`${isUser ? 'bg-white':'bg-white'}`}>
+         {(!isAdminLoginPage  && !isUserWebsite && !isUserLoginPage  && !isUserCategory && !isUserSubCategory  && !selectedCategories && !cart && !isUserRegisterPage && !isProducts && !isWishList && !isPTB) && <div className={`${isUser ? 'bg-white':'bg-white'}`}>
             {" "}
             <SideBar />
           </div>}
-          <div className={` w-full min-h-screen  ${(isAdminLoginPage || isUserLoginPage || isUserRegisterPage) ? 'grid-bg ba-grid anim':'min-h-screen bg-neutral-50'}` }>
+          <div className={` w-full min-h-screen  ${(isAdminLoginPage || isUserLoginPage || isUserRegisterPage) ? 'grid-bg ba-grid anim':'min-h-screen bg-white'}` }>
            {
             (isAdminLoginPage || isUserLoginPage || isUserRegisterPage) ? (<div className="inner">
               <div>

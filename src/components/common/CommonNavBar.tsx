@@ -18,6 +18,8 @@ const CommonNavBar = () => {
   const isUser = location.pathname === "/user/order-history";
   const isOrderDetails = location.pathname === "/user/order-details";
   const selectedCategories = location.pathname.startsWith("/user");
+  
+const isCart  = location.pathname === "/user/cart";
   const isAdminDashboard = location.pathname.startsWith("/admin");
 
   console.log(selectedCategories);
@@ -37,6 +39,9 @@ const CommonNavBar = () => {
   // }
   function clickHandler2(){
     navigate('/user/cart')
+  }
+  function clickHandler3(){
+    navigate('/user/wishlist')
   }
 
 
@@ -59,13 +64,13 @@ const CommonNavBar = () => {
       )
       }
       {
-        !isAdminDashboard && (
+        !isAdminDashboard  && (
           <div className="flex justify-between w-9/12 mx-auto p-3  ">
 
             <div className="h-20 w-20">
               <img src={image} alt="" />
             </div>
-            {selectedCategories && !isUser &&(
+            {selectedCategories && !isUser && !isCart &&(
               <div className="flex items-center justify-center gap-5">
                 <div>
                   <input
@@ -103,10 +108,10 @@ const CommonNavBar = () => {
                 {!isUser && !isOrderDetails && (
                   <div className="flex gap-8">
                     <UserDropDown />
-                    <Heart size={35} />
+                    <Heart size={35} onClick={clickHandler3}/>
                   </div>
                 )}
-                <ShoppingCart size={35} />
+                <ShoppingCart size={35} onClick={clickHandler2}/>
               </div>
 
             </div>

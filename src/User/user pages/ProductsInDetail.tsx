@@ -62,6 +62,11 @@ const ProductInDetail = () => {
                         <option value=''>Category 2</option>
                         <option value=''>Category 3</option>
                      </select>
+                     <div className='my-2'>
+                        <label htmlFor="" className='flex flex-col gap-y-2'> Quantity
+                        <input type="number" name="" id="" className='w-96 p-2 border border-gray-300 rounded-md' />
+                        </label>
+                     </div>
                   </div>
                   <div className='flex gap-4'>
                      <Button variant='purple' onClick={clickHandler}>Add to Cart</Button>

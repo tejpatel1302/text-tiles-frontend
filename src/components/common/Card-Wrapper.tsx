@@ -38,7 +38,7 @@ const CardWrapper = ({ children,
         <div >
           <img src={image} alt="" className="h-40 ml-10 mt-2" />
         </div>}
-      <div className={`${isUserRegisterPage ? 'w-10/12 top-[10px] left-[80px]' : 'w-4/12'} mx-auto absolute top-16 left-80`}>
+      <div className={`${isUserRegisterPage ? 'w-10/12 -top-[10px] left-[80px]' : 'w-4/12'} mx-auto absolute top-10 left-80`}>
         <CardHeader >
           <Header label={headerLabel} />
         </CardHeader>
