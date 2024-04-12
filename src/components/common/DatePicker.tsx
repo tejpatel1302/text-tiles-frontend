@@ -140,7 +140,7 @@ export function DatePickerForm({ setStartDate, setEndDate, onApply }: { setStart
             </FormItem>
           )}
         />
-        <Button type="submit" variant="default" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Apply</Button>
+        <Button type="submit" variant="purple">Apply</Button>
       </form>
     </Form>
   )

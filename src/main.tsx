@@ -29,6 +29,7 @@ import UserOrderDetails from './User/user pages/UserOrderDetails.tsx';
 import ProductInDetail from './User/user pages/ProductsInDetail.tsx';
 import WishList from './User/user pages/WishList.tsx';
 import UserWishList from './User/user pages/WishList.tsx';
+import ProceedToBuy from './User/user pages/ProceedToBuy.tsx';
 
 
 
@@ -40,6 +41,10 @@ const appRoutes = createBrowserRouter([
       {
         path: "/admin/login",
         element: <AdminLogin/>,
+      },
+      {
+        path: "/user/checkout",
+        element: <ProceedToBuy/>,
       },
       {
         path: "/user/register",
@@ -96,35 +101,35 @@ const appRoutes = createBrowserRouter([
         element: <UserHistory/>,
       },
       {
-        path: "admin/orders",
+        path: "/admin/orders",
         element: <Orders/>,
       },
       {
-        path: "admin/products",
+        path: "/admin/products",
         element: <Products/>,
       },
       {
-        path: "user/cart",
+        path: "/user/cart",
         element: <Cart/>,
       },
       {
-        path: "admin/add-products",
+        path: "/admin/add-products",
         element: <AddProducts/>,
       },
       {
-        path: "admin/add-category",
+        path: "/admin/add-category",
         element: <AddCategory/>,
       },
       {
-        path: "admin/add-sub-category",
+        path: "/admin/add-sub-category",
         element: <AddSubCategory/>,
       },
       {
-        path: "admin/manage-sub-category",
+        path: "/admin/manage-sub-category",
         element: <ManageSubCategory/>,
       },
       {
-        path: "admin/manage-category",
+        path: "/admin/manage-category",
         element: <ManageCategory/>,
       },
     ],
