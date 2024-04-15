@@ -30,6 +30,7 @@ import ProductInDetail from './User/user pages/ProductsInDetail.tsx';
 import WishList from './User/user pages/WishList.tsx';
 import UserWishList from './User/user pages/WishList.tsx';
 import ProceedToBuy from './User/user pages/ProceedToBuy.tsx';
+import Payment from './User/user pages/Payment.tsx';
 
 
 
@@ -45,6 +46,10 @@ const appRoutes = createBrowserRouter([
       {
         path: "/user/checkout",
         element: <ProceedToBuy/>,
+      },
+      {
+        path: "/user/payment",
+        element: <Payment/>,
       },
       {
         path: "/user/register",

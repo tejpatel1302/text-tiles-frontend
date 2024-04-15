@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { LoginSchema } from "@/utils/schemas";
+import { AddCategorySchema, LoginSchema } from "@/utils/schemas";
 import CardWrapper from "@/components/common/Card-Wrapper";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,6 +10,7 @@ import {
   FormLabel,
   FormField,
   FormControl,
+  FormMessage,
 } from "@/components/ui/form";
 
 import { Input } from "@/components/ui/input";
@@ -20,17 +21,20 @@ import { Divide } from "lucide-react";
 
 const AddCategory = ({ redirect }: any) => {
   const navigate = useNavigate();
-  const form = useForm<z.infer<typeof LoginSchema>>({
-    resolver: zodResolver(LoginSchema),
+  const form = useForm<z.infer<typeof AddCategorySchema>>({
     defaultValues: {
-      email: "",
-      password: "",
+      product_name: "",
+      description: "",
+      image: ""
     },
+    mode: 'all',
+    resolver: zodResolver(AddCategorySchema),
+    
   });
 
   const submitData = (data: any) => {
-    console.log(data);
-    console.log("hello");
+    console.log(JSON.stringify(data,null,4));
+    
   };
 
   const loginClickHanlder = () => {
@@ -46,30 +50,35 @@ const AddCategory = ({ redirect }: any) => {
         <div>
           <div>
             <Form {...form}>
+           
               <form
                 onSubmit={form.handleSubmit(submitData)}
                 className="space-y-4"
               >
                 <div className="space-y-4">
+                  
                   <FormField
                     control={form.control}
-                    name="email"
+                    name="product_name"
                     render={({ field }) => (
-                      <FormItem className="flex items-center">
-                        <FormLabel className="w-36">Product Name:</FormLabel>
+                      <FormItem >
+                       <div className="flex items-center">
+                       <FormLabel className="w-36">Product Name:</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
                             placeholder="Enter your Product Name"
-                            type="email"
+                            type="text"
                           />
                         </FormControl>
+                       </div>
+                        <FormMessage className="relative left-[105px]"/>
                       </FormItem>
                     )}
                   />
                   <FormField
                     control={form.control}
-                    name="email"
+                    name="description"
                     render={({ field }) => (
                       <FormItem className="flex items-center">
                         <FormLabel className="w-36">Description:</FormLabel>
@@ -77,7 +86,7 @@ const AddCategory = ({ redirect }: any) => {
                           <Input
                             {...field}
                             placeholder="Enter your Description "
-                            type="password"
+                            type="text"
                           />
                         </FormControl>
                       </FormItem>
@@ -91,7 +100,7 @@ const AddCategory = ({ redirect }: any) => {
                   
                   <FormField
                     control={form.control}
-                    name="password"
+                    name="image"
                     render={({ field }) => (
                       <div>
                         <FormItem className="flex items-center">

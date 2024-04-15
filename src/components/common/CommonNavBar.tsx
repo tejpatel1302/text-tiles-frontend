@@ -20,7 +20,9 @@ const CommonNavBar = () => {
   const selectedCategories = location.pathname.startsWith("/user");
   
 const isCart  = location.pathname === "/user/cart";
+const isCheckout  = location.pathname === "/user/checkout";
   const isAdminDashboard = location.pathname.startsWith("/admin");
+  const isPayment = location.pathname === "/user/payment";
 
   console.log(selectedCategories);
   useEffect(() => {
@@ -70,7 +72,7 @@ const isCart  = location.pathname === "/user/cart";
             <div className="h-20 w-20">
               <img src={image} alt="" />
             </div>
-            {selectedCategories && !isUser && !isCart &&(
+            {selectedCategories && !isUser && !isCart && !isCheckout && !isPayment &&(
               <div className="flex items-center justify-center gap-5">
                 <div>
                   <input

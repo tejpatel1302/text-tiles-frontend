@@ -100,3 +100,24 @@
       background-position:calc(var(--point-gap-width) / 2) calc(var(--point-gap-height) / 2 * -1);
     }
   }
+
+   /* Scrollbar */
+::-webkit-scrollbar {
+  width: 4px;
+}
+ 
+/* Track */
+::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 50px;
+}
+ 
+/* Handle on hover */
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

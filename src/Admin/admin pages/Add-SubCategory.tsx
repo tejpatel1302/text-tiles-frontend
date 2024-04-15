@@ -10,6 +10,8 @@ import {
   FormLabel,
   FormField,
   FormControl,
+  FormDescription,
+  FormMessage,
 } from "@/components/ui/form";
 
 import { Input } from "@/components/ui/input";
@@ -17,6 +19,13 @@ import { Button } from "@/components/ui/button";
 
 import { Link, useNavigate } from "react-router-dom";
 import { Divide } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 const AddSubCategory = ({ redirect }: any) => {
   const navigate = useNavigate();
@@ -52,23 +61,37 @@ const AddSubCategory = ({ redirect }: any) => {
               >
                 <div className="space-y-4">
                 <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem className="flex items-center">
-                        <FormLabel className="w-28">Category:</FormLabel>
-                        <FormControl>
-                          <div >
-                            <select name="" id="" className="w-[400px] p-2 border-2 border-black rounded-md">
-                              <option value="">Category 1</option>
-                              <option value="">Category 2</option>
-                              <option value="">Category 3</option>
-                            </select>
-                          </div>
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
+          control={form.control}
+          name="email"
+          render={({ field }) => (
+            <FormItem className="flex items-center">
+              <FormLabel className="w-36">Category:</FormLabel>
+              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a verified email to display" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  {
+                    ["Category 1","Category 2","Category 3"].map((category)=>{
+                        return(
+                          <SelectItem key={category} value={category}>{category}</SelectItem>
+                 
+                        )
+                    })
+                  }
+                 
+                </SelectContent>
+              </Select>
+              {/* <FormDescription>
+                You can manage email addresses in your{" "}
+                <Link to="/examples/forms">email settings</Link>.
+              </FormDescription> */}
+              <FormMessage />
+            </FormItem>
+          )}
+        />
                   <FormField
                     control={form.control}
                     name="email"

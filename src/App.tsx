@@ -22,6 +22,7 @@ function App() {
   const isOrderDetails = location.pathname === "/user/order-details";
   const isProducts = location.pathname === `/user/products/${productId}`;
   const isPTB = location.pathname === "/user/checkout";
+  const isPayment = location.pathname === "/user/payment";
 
   
   return (
@@ -33,7 +34,7 @@ function App() {
         </div>}
         <div className="flex">
           {/* border dynamic */}
-         {(!isAdminLoginPage  && !isUserWebsite && !isUserLoginPage  && !isUserCategory && !isUserSubCategory  && !selectedCategories && !cart && !isUserRegisterPage && !isProducts && !isWishList && !isPTB) && <div className={`${isUser ? 'bg-white':'bg-white'}`}>
+         {(!isAdminLoginPage  && !isUserWebsite && !isUserLoginPage  && !isUserCategory && !isUserSubCategory  && !selectedCategories && !cart && !isUserRegisterPage && !isProducts && !isWishList && !isPTB && !isPayment) && <div className={`${isUser ? 'bg-white':'bg-white'}`}>
             {" "}
             <SideBar />
           </div>}
