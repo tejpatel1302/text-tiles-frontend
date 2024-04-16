@@ -30,6 +30,12 @@ import ProductInDetail from './User/user pages/ProductsInDetail.tsx';
 import WishList from './User/user pages/WishList.tsx';
 import UserWishList from './User/user pages/WishList.tsx';
 import ProceedToBuy from './User/user pages/ProceedToBuy.tsx';
+import Payment from './User/user pages/Payment.tsx';
+import ForgotPassword from './components/common/Forgot-password.tsx';
+import AdminRegister from './Admin/admin pages/Admin-Register.tsx';
+import AccountPage from './components/common/AccountPage.tsx';
+import MyDetails from './User/user pages/MyDetails.tsx';
+import AddressBook from './User/user pages/AddressBook.tsx';
 
 
 
@@ -43,8 +49,24 @@ const appRoutes = createBrowserRouter([
         element: <AdminLogin/>,
       },
       {
+        path: "/admin/register",
+        element: <AdminRegister/>,
+      },
+      {
         path: "/user/checkout",
         element: <ProceedToBuy/>,
+      },
+      {
+        path: "/user/payment",
+        element: <Payment/>,
+      },
+      {
+        path: "/user/details",
+        element: <MyDetails/>,
+      },
+      {
+        path: "/user/account",
+        element: <AccountPage/>,
       },
       {
         path: "/user/register",
@@ -66,6 +88,10 @@ const appRoutes = createBrowserRouter([
       {
         path: "/user/login",
         element: <UserLogin/>,
+      },
+      {
+        path: "/user/address-book",
+        element: <AddressBook/>,
       },
       {
         path: "/user/category",
@@ -103,6 +129,10 @@ const appRoutes = createBrowserRouter([
       {
         path: "/admin/orders",
         element: <Orders/>,
+      },
+      {
+        path: "/admin/forgot-password",
+        element: <ForgotPassword/>,
       },
       {
         path: "/admin/products",

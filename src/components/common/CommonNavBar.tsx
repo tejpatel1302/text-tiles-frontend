@@ -18,9 +18,13 @@ const CommonNavBar = () => {
   const isUser = location.pathname === "/user/order-history";
   const isOrderDetails = location.pathname === "/user/order-details";
   const selectedCategories = location.pathname.startsWith("/user");
-  
-const isCart  = location.pathname === "/user/cart";
+
+  const isCart = location.pathname === "/user/cart";
+  const isCheckout = location.pathname === "/user/checkout";
   const isAdminDashboard = location.pathname.startsWith("/admin");
+  const isPayment = location.pathname === "/user/payment";
+  const isMyAccount = location.pathname === "/user/details";
+  const isMyAddressBook = location.pathname === "/user/address-book";
 
   console.log(selectedCategories);
   useEffect(() => {
@@ -37,19 +41,17 @@ const isCart  = location.pathname === "/user/cart";
   // function navigateClickHandler(){
   //   navigate('/user/order-history')
   // }
-  function clickHandler2(){
-    navigate('/user/cart')
+  function clickHandler2() {
+    navigate("/user/cart");
   }
-  function clickHandler3(){
-    navigate('/user/wishlist')
+  function clickHandler3() {
+    navigate("/user/wishlist");
   }
-
 
   return (
     <>
       {isAdminDashboard && (
         <div className="flex justify-between w-11/12 mx-auto p-3  ">
-
           <div className="h-20 w-20 relative mr-16 ">
             <img src={image} alt="" className="" />
           </div>
@@ -60,17 +62,19 @@ const isCart  = location.pathname === "/user/cart";
             )}
           </div>
         </div>
-
-      )
-      }
-      {
-        !isAdminDashboard  && (
-          <div className="flex justify-between w-9/12 mx-auto p-3  ">
-
-            <div className="h-20 w-20">
-              <img src={image} alt="" />
-            </div>
-            {selectedCategories && !isUser && !isCart &&(
+      )}
+      {!isAdminDashboard && (
+        <div className="flex justify-between w-9/12 mx-auto p-3  ">
+          <div className="h-20 w-20">
+            <img src={image} alt="" />
+          </div>
+          {selectedCategories &&
+            !isUser &&
+            !isCart &&
+            !isCheckout &&
+            !isPayment &&
+            !isMyAccount &&
+            !isMyAddressBook && (
               <div className="flex items-center justify-center gap-5">
                 <div>
                   <input
@@ -102,25 +106,26 @@ const isCart  = location.pathname === "/user/cart";
               </div>
             )}
 
+          {!isMyAccount && !isMyAddressBook && (
             <div className="flex items-center gap-5">
-
               <div className="flex gap-8 ">
                 {!isUser && !isOrderDetails && (
                   <div className="flex gap-8">
                     <UserDropDown />
-                    <Heart size={35} onClick={clickHandler3}/>
+                    <Heart size={35} onClick={clickHandler3} />
                   </div>
                 )}
-                <ShoppingCart size={35} onClick={clickHandler2}/>
+                <ShoppingCart size={35} onClick={clickHandler2} />
               </div>
-
             </div>
-
-          </div>
-        )
-      }
-
-
+          )}
+          {(isMyAccount || isMyAddressBook )&& (
+            <div>
+              <div className="text-3xl font-bold mr-[630px]">My Account</div>
+            </div>
+          )}
+        </div>
+      )}
     </>
   );
 };

@@ -118,6 +118,7 @@ export function DataTable<TData, TValue>({
   const isAdminProducts = location.pathname === "/admin/products";
   const isAdminOrders = location.pathname === "/admin/orders";
   const isOrderDetails = location.pathname === "/user/order-details";
+  const isAdminDetails = location.pathname === "/admin/order-details";
   const isCategory = location.pathname === "/admin/manage-category";
   const isSubCategory = location.pathname === "/admin/manage-sub-category";
 
@@ -126,7 +127,7 @@ const isCheckout  = location.pathname === "/user/checkout";
  
 
 
-  const [placeholder, setPlaceholder] = useState(isUser ? "Search Order History" : isWishList ? "Search Wishlist" : isAdminProducts ? "Search Products" : isAdminOrders ? "Search Orders" : isOrderDetails ? "Search Order Details" : isCategory ? "Search Categories" : isSubCategory ? "Search Sub-Categories" : isCart ? "Search Order" : '');
+  const [placeholder, setPlaceholder] = useState(isUser ? "Search Order History" : isWishList ? "Search Wishlist" : isAdminProducts ? "Search Products" : isAdminOrders ? "Search Orders" : isOrderDetails ? "Search Order Details" : isCategory ? "Search Categories" : isSubCategory ? "Search Sub-Categories" : isCart ? "Search Order" : isAdminDetails ? 'Search Admin Details' : '' );
 
 
   function clickHandler() {
@@ -155,7 +156,7 @@ const isCheckout  = location.pathname === "/user/checkout";
       <div className={`${isWishList || isCart ? 'rounded-md ml-10' : 'rounded-md'}`}>
         <div className="text-3xl font-bold flex items-center gap-5 ">
           {!isOrderDetails && !isWishList && !isCheckout && (
-            <div className={`flex justify-between relative ${isAdminOrders || isUser ? '-top-[220px]': isCart ? '-top-[165px] left-[350px]' : '-top-[120px]'} left-[160px]  py-4`}>
+            <div className={`flex justify-between relative ${isAdminOrders || isUser || isAdminDetails  ? '-top-[220px]': isCart  ? '-top-[165px] left-[350px]' : '-top-[120px]'} left-[160px]  py-4`}>
               <Input
                 placeholder={placeholder}
                 value={globalFilter} // Changed to use globalFilter state

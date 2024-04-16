@@ -97,7 +97,7 @@ const Login = ({ redirect }: any) => {
                             Login
                           </Button>
                           <Button variant={"purple"} className="px-2" >
-                            <Link to="/reset">Forgot Password ?</Link>
+                            <Link to="/admin/forgot-password">Forgot Password ?</Link>
                           </Button>
                         </div>
                       </FormItem>

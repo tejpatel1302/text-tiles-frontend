@@ -22,24 +22,30 @@ function App() {
   const isOrderDetails = location.pathname === "/user/order-details";
   const isProducts = location.pathname === `/user/products/${productId}`;
   const isPTB = location.pathname === "/user/checkout";
+  const isPayment = location.pathname === "/user/payment";
+  const isForgotPassword = location.pathname === "/admin/forgot-password";
+  const isAdminRegister = location.pathname === "/admin/register";
+  const isMyAccount = location.pathname === "/user/details";
+  const isMyAddressBook = location.pathname === "/user/address-book";
 
   
   return (
     <>
-      <div className="border-4 ">
+      <div>
         {/* bg- dynamic */}
-       {(!isAdminLoginPage  && !isUserLoginPage && !isUserRegisterPage) &&  <div className={`${(isUser || isOrderDetails) ? 'bg-white':'bg-[#7346da]'}`}>
+        
+       {(!isAdminLoginPage  && !isUserLoginPage && !isUserRegisterPage  && !isForgotPassword && !isAdminRegister ) &&  <div className={`${(isUser || isOrderDetails || isMyAccount || isMyAddressBook) ? 'bg-white':'bg-[#7346da]'}`}>
           <CommonNavBar />
         </div>}
         <div className="flex">
           {/* border dynamic */}
-         {(!isAdminLoginPage  && !isUserWebsite && !isUserLoginPage  && !isUserCategory && !isUserSubCategory  && !selectedCategories && !cart && !isUserRegisterPage && !isProducts && !isWishList && !isPTB) && <div className={`${isUser ? 'bg-white':'bg-white'}`}>
+         {(!isAdminLoginPage  && !isUserWebsite && !isUserLoginPage  && !isUserCategory && !isUserSubCategory  && !selectedCategories && !cart && !isUserRegisterPage && !isProducts && !isWishList && !isPTB && !isPayment && !isForgotPassword && !isAdminRegister ) && <div className={`${isUser ? 'bg-white': isMyAccount || isMyAddressBook ? 'ml-52 border-2 border-gray-400': 'bg-white'}`}>
             {" "}
             <SideBar />
           </div>}
-          <div className={` w-full min-h-screen  ${(isAdminLoginPage || isUserLoginPage || isUserRegisterPage) ? 'grid-bg ba-grid anim':'min-h-screen bg-white'}` }>
+          <div className={` w-full min-h-screen  ${(isAdminLoginPage || isUserLoginPage || isUserRegisterPage || isForgotPassword || isAdminRegister) ? 'grid-bg ba-grid anim':'min-h-screen bg-white'}` }>
            {
-            (isAdminLoginPage || isUserLoginPage || isUserRegisterPage) ? (<div className="inner">
+            (isAdminLoginPage || isUserLoginPage || isUserRegisterPage ||  isForgotPassword || isAdminRegister) ? (<div className="inner">
               <div>
                 <Outlet/>
               </div>
