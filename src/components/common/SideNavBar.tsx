@@ -6,6 +6,8 @@ import {
   FilePlus2Icon,
   Heart,
   Home,
+  HomeIcon,
+  InfoIcon,
   LogOut,
   PackageSearch,
   PlusIcon,
@@ -14,6 +16,7 @@ import {
   User,
 } from "lucide-react";
 import { useLocation } from "react-router-dom";
+import { IdCardIcon } from "@radix-ui/react-icons";
 
 type Props = {};
 
@@ -23,6 +26,8 @@ export default function SideBar({ }: Props) {
   const userSelected = location.pathname === "/user/selected-categories"
   const userHistory = location.pathname === "/user/order-history"
   const isOrderDetails = location.pathname === "/user/order-details";
+  const isMyAccount = location.pathname === "/user/details";  
+  const isMyAddressBook = location.pathname === "/user/address-book";
 
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -53,12 +58,37 @@ export default function SideBar({ }: Props) {
       },
       {
         title: "My Account",
-        href: "/user/account",
+        href: "/user/details",
         icon: User,
         variant: "ghost",
       },
-    ]
-    : [
+    ] : (isMyAccount || isMyAddressBook)? [
+      {
+        title: "My Details",
+        href: "/user/details",
+        icon: InfoIcon,
+        variant: "ghost",
+      },
+      {
+        title: "My Orders",
+        href: "/user/order-history",
+        icon: ShoppingCart,
+        variant: "purple",
+      },
+      {
+        title: "Address Book",
+        href: "/user/address-book",
+        icon: HomeIcon,
+        variant: "ghost",
+      },
+      {
+        title: "Payment Methods",
+        href: "",
+        icon: IdCardIcon,
+        variant: "ghost",
+      },
+      
+    ] :[
       {
         title: "Orders",
         href: "/admin/orders",
@@ -101,7 +131,9 @@ export default function SideBar({ }: Props) {
         icon: Settings,
         variant: "ghost",
       },
-    ];
+    ]
+
+
 
   return (
     <div className="relative min-w-[200px]  px-10 pb-10  space-y-14 min-h-screen  flex flex-col justify-center ">

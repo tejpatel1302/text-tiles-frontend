@@ -37,7 +37,7 @@ export const AddCategorySchema = z.object({
 
 export const ResetSchema = z.object({
     email: z.string().email(),
-   
+    dob: z.string()
 })
 export const RegisterSchema = z.object({
     email: z.string().email(),

@@ -22,6 +22,7 @@ const CardWrapper = ({ children,
   showSocial }: CardWrapperProps) => {
   const location = useLocation()
   const isUserRegisterPage = location.pathname === "/user/register";
+  const isAdminRegister = location.pathname === "/admin/register";
   const navigate = useNavigate()
 
 
@@ -34,11 +35,11 @@ const CardWrapper = ({ children,
   return (
     // width and height dynamic
     <Card className="relative ">
-      {!isUserRegisterPage &&
+      {(!isUserRegisterPage && !isAdminRegister) &&
         <div >
           <img src={image} alt="" className="h-40 ml-10 mt-2" />
         </div>}
-      <div className={`${isUserRegisterPage ? 'w-10/12 -top-[10px] left-[80px]' : 'w-4/12'} mx-auto absolute top-10 left-80`}>
+      <div className={`${isUserRegisterPage || isAdminRegister ? 'w-10/12 -top-[20px] left-[80px]' : 'w-4/12'} mx-auto absolute top-10 left-80`}>
         <CardHeader >
           <Header label={headerLabel} />
         </CardHeader>

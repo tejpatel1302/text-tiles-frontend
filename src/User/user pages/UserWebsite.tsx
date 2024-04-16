@@ -31,7 +31,7 @@ console.log(products.id)
             <div className='flex flex-wrap gap-10'>
                 {products?.map((product:any) => (
                  <div key={product?.title}>
-                       <Link to={`/user/products/${product.id}`}><ProductCard  image={product.image} title={product.title}/></Link>
+                       <Link to={`/user/products/${product.id}`}><ProductCard  image={product.image} title={product.title} price={product.price}/></Link>
            
                  </div>
                 ))}
