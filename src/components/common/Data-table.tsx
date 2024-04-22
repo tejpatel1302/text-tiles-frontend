@@ -121,17 +121,17 @@ export function DataTable<TData, TValue>({
   const isAdminDetails = location.pathname === "/admin/order-details";
   const isCategory = location.pathname === "/admin/manage-category";
   const isSubCategory = location.pathname === "/admin/manage-sub-category";
-
+  const isSuperAdminOrders = location.pathname === "/super-admin/orders";
 const isCart  = location.pathname === "/user/cart";
 const isCheckout  = location.pathname === "/user/checkout";
  
 
 
-  const [placeholder, setPlaceholder] = useState(isUser ? "Search Order History" : isWishList ? "Search Wishlist" : isAdminProducts ? "Search Products" : isAdminOrders ? "Search Orders" : isOrderDetails ? "Search Order Details" : isCategory ? "Search Categories" : isSubCategory ? "Search Sub-Categories" : isCart ? "Search Order" : isAdminDetails ? 'Search Admin Details' : '' );
+  const [placeholder, setPlaceholder] = useState(isUser ? "Search Order History" : isWishList ? "Search Wishlist" : isAdminProducts ? "Search Products" : isAdminOrders ? "Search Orders" : isSuperAdminOrders ? "Search Orders": isOrderDetails ? "Search Order Details" : isCategory ? "Search Categories" : isSubCategory ? "Search Sub-Categories" : isCart ? "Search Order" : isAdminDetails ? 'Search Admin Order Details' : '' );
 
 
   function clickHandler() {
-    if (isAdminOrders) {
+    if (isAdminOrders || isSuperAdminOrders) {
       navigate("/admin/order-details");
     } else {
       navigate("/user/order-details");
@@ -156,12 +156,12 @@ const isCheckout  = location.pathname === "/user/checkout";
       <div className={`${isWishList || isCart ? 'rounded-md ml-10' : 'rounded-md'}`}>
         <div className="text-3xl font-bold flex items-center gap-5 ">
           {!isOrderDetails && !isWishList && !isCheckout && (
-            <div className={`flex justify-between relative ${isAdminOrders || isUser || isAdminDetails  ? '-top-[220px]': isCart  ? '-top-[165px] left-[350px]' : '-top-[120px]'} left-[160px]  py-4`}>
+            <div className={`flex justify-between relative ${isAdminOrders || isUser || isSuperAdminOrders ? '-top-[220px]': isCart  ? '-top-[165px] left-[350px]' : '-top-[140px]'} left-[160px]  py-4`}>
               <Input
                 placeholder={placeholder}
                 value={globalFilter} // Changed to use globalFilter state
                 onChange={(event: any) => setGlobalFilter(event.target.value)} // Changed to update globalFilter state
-                className=" bg-[#f2f2f2] w-[500px] rounded-full  border border-black p-2 pl-5 focus:outline-none  focus:ring-purple-600 focus:ring-opacity-10"
+                className=" bg-[#f2f2f2] w-[500px] rounded-full  border border-black py-8 pl-5 focus:outline-none  focus:ring-purple-600 focus:ring-opacity-10"
               />
             </div>
           )}
@@ -171,9 +171,7 @@ const isCheckout  = location.pathname === "/user/checkout";
             !isAdminProducts &&
             !isWishList &&
           !isCart &&
-          !isCheckout
-        
-        ) && (
+          !isCheckout && !isAdminDetails) && (
               <div
                 className={`${isUser ? "mb-10 " : "relative -top-[35px] right-[50px]"
                   } `}
@@ -230,7 +228,7 @@ const isCheckout  = location.pathname === "/user/checkout";
                             alt="Product image"
                             style={{ width: 70, height: 70 }}
                           />
-                        ) : (isAdminOrders || isUser) &&
+                        ) : (isAdminOrders || isUser || isSuperAdminOrders) &&
                           cell.column.columnDef.header === "Order Details" ? (
                           <Button variant={"purple"} onClick={clickHandler}>
                             {row.getValue("orderDetails")}

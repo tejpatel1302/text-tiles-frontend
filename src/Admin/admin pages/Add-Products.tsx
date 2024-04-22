@@ -41,7 +41,7 @@ const AddProducts = ({ redirect }: any) => {
     <div className="max-h-screen">
       <div className="h-[600px] flex border-2 border-black w-9/12 rounded-md bg-white justify-center mx-auto p-10 my-4">
         <div className="text-3xl font-bold relative top-0 right-20">
-          Add Products:
+          Add Products
         </div>
         <div>
           <div>
@@ -153,6 +153,20 @@ const AddProducts = ({ redirect }: any) => {
                             >
                               {" "}
                               XL:
+                              <Input
+                                {...field}
+                                placeholder="Extra Large"
+                                type="radio"
+                                value="extraLarge"
+                                className="text-sm bg-red-500"
+                              />
+                            </label>
+                            <label
+                              htmlFor=""
+                              className="flex items-center gap-2"
+                            >
+                              {" "}
+                              XXL:
                               <Input
                                 {...field}
                                 placeholder="Extra Large"

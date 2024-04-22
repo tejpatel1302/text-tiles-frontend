@@ -22,7 +22,13 @@ const navigate = useNavigate()
   function clickHandler(){
     navigate('/user/order-history')
   }
-
+  
+  function clickHandler2(){
+    navigate('/user/account')
+  }
+  function clickHandler3(){
+    navigate('/user/products')
+  }
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
@@ -32,7 +38,8 @@ const navigate = useNavigate()
         <DropdownMenuLabel>Hi, Monesh</DropdownMenuLabel>
         <DropdownMenuSeparator />
         <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
-          <DropdownMenuRadioItem value="top">My Account</DropdownMenuRadioItem>
+        <DropdownMenuRadioItem value="left"  onClick={clickHandler3}>Home</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="top"  onClick={clickHandler2}>My Account</DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="bottom" onClick={clickHandler}>Order History</DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="right">Logout</DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>

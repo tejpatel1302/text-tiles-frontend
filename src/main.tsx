@@ -14,7 +14,7 @@ import ManageCategory from './Admin/admin pages/Manage-Category.tsx';
 import UserHistory from './User/user pages/UserHistory.tsx';
 import UserWebsite from './User/user pages/UserWebsite.tsx';
 import { Provider } from 'react-redux';
-import store from './redux_toolkit/store.ts';
+import store  from './features/redux_toolkit/store.ts';
 import Cart from './User/user pages/Cart.tsx';
 import AdminLogin from './Admin/admin pages/Admin-Login.tsx';
 import UserLogin from './User/user pages/UserLogin.tsx';
@@ -36,6 +36,8 @@ import AdminRegister from './Admin/admin pages/Admin-Register.tsx';
 import AccountPage from './components/common/AccountPage.tsx';
 import MyDetails from './User/user pages/MyDetails.tsx';
 import AddressBook from './User/user pages/AddressBook.tsx';
+import SAOrders from './Super Admin/super-admin-pages/SAOrders.tsx';
+import SuperAdminLogin from './Super Admin/super-admin-pages/Super-Admin-Login.tsx';
 
 
 
@@ -55,6 +57,14 @@ const appRoutes = createBrowserRouter([
       {
         path: "/user/checkout",
         element: <ProceedToBuy/>,
+      },
+      {
+        path: "/user/forgot-password",
+        element: <ForgotPassword/>,
+      },
+      {
+        path: "/super-admin/forgot-password",
+        element: <ForgotPassword/>,
       },
       {
         path: "/user/payment",
@@ -94,6 +104,14 @@ const appRoutes = createBrowserRouter([
         element: <AddressBook/>,
       },
       {
+        path: "/super-admin/orders",
+        element: <SAOrders/>,
+      },
+      {
+        path: "/super-admin/login",
+        element: <SuperAdminLogin/>,
+      },
+      {
         path: "/user/category",
         element: <Category/>,
       },
@@ -108,7 +126,7 @@ const appRoutes = createBrowserRouter([
       },
       {
         path: "/user/products",
-        element: <UserWebsite/>,
+        element: <UserWebsite title={"See What We Have to Offer"}/>,
       },
       {
         path:'/user/products/:productId',

@@ -13,7 +13,7 @@ const AdminOrderDetails= () => {
       size: order.size,
       price: order.price,
       quantity: order.quantity,
-      brand: order.brand
+      
     
     
   }));
@@ -22,7 +22,7 @@ const AdminOrderDetails= () => {
 
   return (
     <div className="bg-white">
-      <div className=" m-10 my-10 text-3xl font-bold">Order Details</div>
+      <div className="  text-3xl font-bold">Order Details</div>
       <div>
         <DataTable columns={columns} data={data} />
       </div>

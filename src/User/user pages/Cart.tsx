@@ -1,5 +1,5 @@
 import { useSelector, useDispatch } from "react-redux";
-import { remove } from "../../redux_toolkit/cartSlice";
+import { remove } from "../../features/redux_toolkit/cartSlice";
 import { DataTable } from "@/components/common/Data-table";
 
 import { UserCart, columns } from "@/utils/user-cart-column";

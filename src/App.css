@@ -23,11 +23,11 @@
     position: relative;
     z-index: 1;
     
-    background-image: 
+    background: 
   /*     radial-gradient(ellipse at center, #2883b6 0%, #084688 100%), */
       radial-gradient(ellipse at bottom left, rgba(104,128,138,0.4) 10%, rgba(138,114,76,0) 40%),
       linear-gradient(to bottom, #39addb40, rgba(42,60,87,0.4)),
-      linear-gradient(135deg, purple, #6534d9);
+   
   }
   
   

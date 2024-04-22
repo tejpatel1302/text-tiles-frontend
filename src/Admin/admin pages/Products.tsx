@@ -13,7 +13,7 @@ const Products = () => {
       sizes : product.sizes,
       images: product.images,
       details: product.details,
-      brand: product.brand,
+      material: product.material,
       quantity: product.quantity 
 
     
@@ -26,7 +26,7 @@ const Products = () => {
 
   return (
     <div >
-       <div className="  text-3xl font-bold">Products</div>
+       <div className="text-3xl font-bold">Products</div>
       <div>
         <DataTable columns={columns} data={data} />
       </div>

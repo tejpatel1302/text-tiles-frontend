@@ -28,6 +28,7 @@ export default function SideBar({ }: Props) {
   const isOrderDetails = location.pathname === "/user/order-details";
   const isMyAccount = location.pathname === "/user/details";  
   const isMyAddressBook = location.pathname === "/user/address-book";
+  const isSuperAdminOrders = location.pathname === "/super-admin/orders";
 
   const [isCollapsed, setIsCollapsed] = useState(false);
 
@@ -88,7 +89,16 @@ export default function SideBar({ }: Props) {
         variant: "ghost",
       },
       
-    ] :[
+    ] : (isSuperAdminOrders)? [
+    
+      {
+        title: "My Orders",
+        href: "/super-admin/orders",
+        icon: ShoppingCart,
+        variant: "purple",
+      },
+    
+    ] : [
       {
         title: "Orders",
         href: "/admin/orders",

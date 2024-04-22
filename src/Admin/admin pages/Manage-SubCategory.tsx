@@ -17,7 +17,7 @@ const ManageSubCategory = () => {
 
   return (
     <div className="bg-white">
-      <div className="text-3xl font-bold">Order Details:</div>
+      <div className="text-3xl font-bold">Sub-Category Management</div>
       <div>
         <DataTable columns={columns} data={data} />
       </div>

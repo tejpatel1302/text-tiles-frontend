@@ -7,7 +7,7 @@ export const ViewDetails = [
       "size": "Medium",
       "price": 10.99,
       "quantity": 50,
-      "brand": "Brand X"
+      'status': 'Reviewed',
     },
     {
       "id": 2,
@@ -17,7 +17,7 @@ export const ViewDetails = [
       "size": "Large",
       "price": 19.99,
       "quantity": 30,
-      "brand": "Brand Y"
+      'status': 'Reviewed',
     },
     {
       "id": 3,
@@ -27,7 +27,7 @@ export const ViewDetails = [
       "size": "Small",
       "price": 8.50,
       "quantity": 20,
-      "brand": "Brand Z"
+      'status': 'Reviewed',
     },
     {
       "id": 4,
@@ -37,7 +37,7 @@ export const ViewDetails = [
       "size": "Medium",
       "price": 14.75,
       "quantity": 40,
-      "brand": "Brand X"
+      'status': 'Reviewed',
     },
     {
       "id": 5,
@@ -47,7 +47,7 @@ export const ViewDetails = [
       "size": "Large",
       "price": 24.99,
       "quantity": 25,
-      "brand": "Brand Y"
+      'status': 'Reviewed',
     },
     {
       "id": 6,
@@ -57,7 +57,7 @@ export const ViewDetails = [
       "size": "Small",
       "price": 12.00,
       "quantity": 35,
-      "brand": "Brand Z"
+      'status': 'Reviewed',
     },
     {
       "id": 7,
@@ -67,7 +67,7 @@ export const ViewDetails = [
       "size": "Medium",
       "price": 18.50,
       "quantity": 15,
-      "brand": "Brand X"
+      'status': 'Reviewed',
     },
     {
       "id": 8,
@@ -77,7 +77,7 @@ export const ViewDetails = [
       "size": "Large",
       "price": 29.99,
       "quantity": 10,
-      "brand": "Brand Y"
+      'status': 'Reviewed',
     },
     {
       "id": 9,
@@ -87,7 +87,7 @@ export const ViewDetails = [
       "size": "Small",
       "price": 9.99,
       "quantity": 60,
-      "brand": "Brand Z"
+      'status': 'Reviewed',
     },
     {
       "id": 10,
@@ -97,7 +97,7 @@ export const ViewDetails = [
       "size": "Medium",
       "price": 16.50,
       "quantity": 45,
-      "brand": "Brand X"
+      'status': 'Reviewed',
     }
   ]
   
