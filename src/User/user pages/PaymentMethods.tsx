@@ -1,12 +1,12 @@
 import Card2 from '@/User/user pages/Card2'
 import React from 'react'
 
-const MyDetails = () => {
+const PaymentMethods = () => {
   return (
     <div className='max-h-screen mx-auto w-10/12'>
      
             <div>
-              <div className="text-3xl font-bold mr-[630px] my-4">My Details</div>
+              <div className="text-3xl font-bold mr-[630px] my-4">Payment Methods</div>
             </div>
           
             <div className="flex flex-col justify-center">
@@ -27,4 +27,4 @@ const MyDetails = () => {
   )
 }
 
-export default MyDetails
+export default PaymentMethods

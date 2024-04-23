@@ -33,7 +33,9 @@ function App() {
   const isMyAddressBook = location.pathname === "/user/address-book";
   const isSuperAdminLogin = location.pathname === "/super-admin/login";
   const isDefaultPage = location.pathname === "/"
-  console.log(isDefaultPage,'DP')
+  const isAdminDashboard = location.pathname.startsWith("/admin");
+  const isSuperAdminDashboard = location.pathname.startsWith("/super-admin");
+  const isUserDashboard = location.pathname.startsWith("/user");
   
   
   return (
@@ -41,12 +43,12 @@ function App() {
       <div>
         {/* bg- dynamic */}
         
-       {(!isAdminLoginPage  && !isUserLoginPage && !isUserRegisterPage  && !isForgotPassword && !isAdminRegister && !isSuperAdminLogin && !isDefaultPage &&!isSAForgotPassword && !isUserForgotPassword) &&  <div className={`${(isUser || isOrderDetails || isMyAccount || isMyAddressBook) ? 'bg-[#7346da]':'bg-[#7346da]'}`}>
+       {(!isAdminLoginPage  && !isUserLoginPage && !isUserRegisterPage  && !isForgotPassword && !isAdminRegister && !isSuperAdminLogin && !isDefaultPage &&!isSAForgotPassword && !isUserForgotPassword) &&  <div className={`${ isUserDashboard ? 'bg-[#7346da]': isAdminDashboard ? "bg-[#79a9ed]" : isSuperAdminDashboard ? 'bg-red-500' : ''}`}>
           <CommonNavBar />
         </div>}
         <div className="flex">
           {/* border dynamic */}
-         {(!isAdminLoginPage  && !isUserWebsite && !isUserLoginPage  && !isUserCategory && !isUserSubCategory  && !selectedCategories && !cart && !isUserRegisterPage && !isProducts && !isWishList && !isPTB && !isPayment && !isForgotPassword && !isAdminRegister && !isSuperAdminLogin && !isDefaultPage &&!isSAForgotPassword && !isUserForgotPassword ) && <div className={`${isUser ? 'bg-white': isMyAccount || isMyAddressBook ? 'ml-52 border-2 border-gray-400': 'bg-white'}`}>
+         {(!isAdminLoginPage  && !isUserWebsite && !isUserLoginPage  && !isUserCategory && !isUserSubCategory  && !selectedCategories && !cart && !isUserRegisterPage && !isProducts && !isWishList && !isPTB && !isPayment && !isForgotPassword && !isAdminRegister && !isSuperAdminLogin && !isDefaultPage &&!isSAForgotPassword && !isUserForgotPassword ) && <div className={`${isUser ? 'bg-white': 'bg-white'}`}>
             {" "}
             <SideBar />
             <ToastContainer autoClose={3000} />

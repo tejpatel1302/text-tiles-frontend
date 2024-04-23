@@ -230,7 +230,16 @@ const isCheckout  = location.pathname === "/user/checkout";
                           />
                         ) : (isAdminOrders || isUser || isSuperAdminOrders) &&
                           cell.column.columnDef.header === "Order Details" ? (
-                          <Button variant={"purple"} onClick={clickHandler}>
+                          <Button  variant={
+                            isUser
+                              ? "purple"
+                              : isAdminOrders
+                              ? "skyblue"
+                              : isSuperAdminOrders
+                              ? "red"
+                              : "default"
+                          }
+                         onClick={clickHandler}>
                             {row.getValue("orderDetails")}
                           </Button>
                         ) 

@@ -1,6 +1,6 @@
 import * as z from "zod";
-import { AddCategorySchema, LoginSchema } from "@/utils/schemas";
-import CardWrapper from "@/components/common/Card-Wrapper";
+import { AddCategorySchema } from "@/utils/schemas";
+
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 
@@ -16,31 +16,65 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 
-import { Link, useNavigate } from "react-router-dom";
-import { Divide } from "lucide-react";
+import { useNavigate } from "react-router-dom";
+
+import { useDispatch, useSelector } from "react-redux";
+import { selectAdminCurrentToken } from "@/features/redux_toolkit/authSlice";
+import { addCategoryApi, uploadApi } from "@/features/api/apicall";
+
+
 
 const AddCategory = ({ redirect }: any) => {
   const navigate = useNavigate();
+  
+  const token = useSelector(selectAdminCurrentToken)
+  console.log(token, 'admin token')
   const form = useForm<z.infer<typeof AddCategorySchema>>({
     defaultValues: {
-      product_name: "",
+      name: "",
       description: "",
-      image: ""
+      file: null
     },
-    mode: 'all',
+    mode: 'onChange',
     resolver: zodResolver(AddCategorySchema),
     
   });
+  
+  //  const handleImageChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = event.target.files && event.target.files[0];
+  //   if (file) {
+  //     setImage(file);
+  //   }
+  // };
 
-  const submitData = (data: any) => {
-    console.log(JSON.stringify(data,null,4));
-    
+  const submitData = async (data: any) => {
+    try {
+      const formData = new FormData();
+      formData.append('name', data.name);
+      formData.append('description', ' '); 
+      formData.append('file', data.file[0]);
+console.log(formData,'hiiiiiiiiiiiiiiii')
+      const config = {
+          headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'multipart/form-data'
+          }
+      };
+
+      const res = await addCategoryApi(formData, config);
+      console.log(res, 'addedsubmitData');
+      
+      
+      
+
+  } catch (error) {
+      console.error("Error fetching product data:", error);
+  }
+
   };
 
-  const loginClickHanlder = () => {
-    navigate(redirect);
-  };
-
+  
+  const fileRef = form.register('file', { required: true });
   return (
     <div className="max-h-screen">
       <div className="h-[600px] flex border-2 border-black w-9/12 rounded-md bg-white justify-center items-center mx-auto p-10 my-4">
@@ -59,7 +93,7 @@ const AddCategory = ({ redirect }: any) => {
                   
                   <FormField
                     control={form.control}
-                    name="product_name"
+                    name="name"
                     render={({ field }) => (
                       <FormItem >
                        <div className="flex items-center">
@@ -76,7 +110,7 @@ const AddCategory = ({ redirect }: any) => {
                       </FormItem>
                     )}
                   />
-                  <FormField
+                  {/* <FormField
                     control={form.control}
                     name="description"
                     render={({ field }) => (
@@ -91,7 +125,7 @@ const AddCategory = ({ redirect }: any) => {
                         </FormControl>
                       </FormItem>
                     )}
-                  />
+                  /> */}
                  
                 
 
@@ -100,25 +134,22 @@ const AddCategory = ({ redirect }: any) => {
                   
                   <FormField
                     control={form.control}
-                    name="image"
+                    name="file"
                     render={({ field }) => (
                       <div>
                         <FormItem className="flex items-center">
                           <FormLabel className="w-36">Image:</FormLabel>
                           <FormControl>
-                          <Input
-                            {...field}
-                            placeholder="Enter your Product Name"
-                            type="file"
-                          />
+                          <Input {...fileRef} type="file" />
+                          {/* onChange={handleImageChange}  */}
                           </FormControl>
                         </FormItem>
                         <div className="flex justify-center mx-auto gap-5 my-4">
                           <Button
                             type="submit"
-                            onClick={loginClickHanlder}
+                          
                             className="px-16"
-                            variant={"purple"}
+                            variant={"skyblue"}
                           >
                             Add
                           </Button>
@@ -135,5 +166,4 @@ const AddCategory = ({ redirect }: any) => {
     </div>
   );
 };
-
 export default AddCategory;

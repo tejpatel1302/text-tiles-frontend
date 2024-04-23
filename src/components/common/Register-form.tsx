@@ -22,17 +22,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Link, useLocation, useNavigate } from "react-router-dom";
-import { ComboboxForm } from "./Combo-box";
-import { ArrowBigDown, CalendarRange, LockIcon, Mail, Option, OptionIcon, Phone, Slice, UserRound } from "lucide-react";
-import { MobileIcon } from "@radix-ui/react-icons";
+import {  useLocation, useNavigate } from "react-router-dom";
+
+import { ArrowBigDown, CalendarRange, LockIcon, Mail,Phone, UserRound } from "lucide-react";
+
 import { PasswordInput } from "../ui/password-input";
+import { useAdminregisterMutation, useUserregisterMutation} from "@/features/api/authApiSlice";
 
 const Register = ({ redirect }: any) => {
   const navigate = useNavigate();
   const location = useLocation();
   const isUserRegisterPage = location.pathname === "/user/register";
   const isAdminRegisterPage = location.pathname === "/admin/register";
+  const [register] =  useAdminregisterMutation()
+  const [userRegister] =   useUserregisterMutation()
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
@@ -45,17 +48,51 @@ const Register = ({ redirect }: any) => {
       gender: undefined as "Male" | "Female" | "Others" | undefined,
       lastName: "",
     },
+    mode:'all'
   });
 
-  const submitData = (data: any) => {
-    console.log(data);
-    console.log("hello");
+  const submitData = async (data: any) => {
+    try {
+      console.log(data, 'registerData');
+  
+      const dobISOString = new Date(data.dob).toISOString();
+      const adminFilteredData = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        dob: dobISOString,
+        email: data.email,
+        password: data.password
+      };
+      const userFilteredData = {
+        firstName: data.firstName,
+        lastName: data.lastName,
+        gender: data.gender,
+        phoneNum: data.phone,
+        dob: dobISOString,
+        email: data.email,
+        password: data.password
+      };
+  
+      let userData: any;
+      if (location.pathname === '/admin/register') {
+        userData = await register(adminFilteredData);
+        console.log(userData, 'admin reg');
+      } else if (location.pathname === '/user/register') {
+        userData = await userRegister(userFilteredData);
+        console.log(userData, 'user reg');
+      } else {
+        throw new Error('Invalid registration path');
+      }
+  
+      navigate(redirect);
+    } catch (error) {
+      console.error('Error occurred during registration:', error);
+      // Handle error here, such as displaying an error message to the user
+    }
   };
-
-  const loginClickHanlder = () => {
-    navigate(redirect);
-  };
-
+  
+  
+  
   return (
     <div className="h-screen flex flex-col justify-center items-center">
       <CardWrapper
@@ -96,6 +133,7 @@ const Register = ({ redirect }: any) => {
                               type="text" // Fixed: corrected type
                             />
                           </FormControl>
+                          <FormMessage className="relative left-[1px]"/>
                         </FormItem>
                       )}
                     />
@@ -119,6 +157,7 @@ const Register = ({ redirect }: any) => {
                               type="tel" // Fixed: corrected type to tel for phone number input
                             />
                           </FormControl>
+                          <FormMessage className="relative left-[1px]"/>
                         </FormItem>
                       )}
                     />
@@ -145,7 +184,8 @@ const Register = ({ redirect }: any) => {
                               className=""
                             />
                         
-                        </FormItem>
+                   
+                   <FormMessage className="relative left-[1px]"/>     </FormItem>
                       )}
                     />
 
@@ -163,8 +203,10 @@ const Register = ({ redirect }: any) => {
                         `} />
                           <FormLabel className="w-[30%]">Password</FormLabel>
                           <FormControl>
-                          <PasswordInput className="px-10"/>
+                          <PasswordInput className="px-10" {...field}/>
                           </FormControl>
+      
+                          <FormMessage className="relative left-[1px] -top-[30px]"/>
                         </FormItem>
                       )}
                     />
@@ -190,6 +232,7 @@ const Register = ({ redirect }: any) => {
                               type="text" // Fixed: corrected type
                             />
                           </FormControl>
+                          <FormMessage className="relative left-[1px] "/>
                         </FormItem>
                       )}
                     />
@@ -213,6 +256,7 @@ const Register = ({ redirect }: any) => {
                               type="email" // Fixed: corrected type
                             />
                           </FormControl>
+                          <FormMessage className="relative left-[1px]"/>
                         </FormItem>
                       )}
                     />
@@ -261,7 +305,8 @@ const Register = ({ redirect }: any) => {
                 <Link to="/examples/forms">email settings</Link>.
               </FormDescription> */}
                           </div>
-                          <FormMessage className="relative left-[105px]" />
+                          
+                          <FormMessage className="relative left-[1px]"/>
                         </FormItem>
                       )}
                     />
@@ -282,27 +327,28 @@ const Register = ({ redirect }: any) => {
                           </FormLabel>
                           <FormControl>
                           <FormControl>
-                          <PasswordInput className="px-10"/>
+                          <PasswordInput className="px-10" {...field}/>
                           </FormControl>
                           </FormControl>
+                          <FormMessage className="relative left-[1px] -top-[32px]"/>
                         </FormItem>
                       )}
                     />
                   </div>
                 </div>
                 <div>
-                  <Button
-                    className="px-10 relative left-72 top-5 "
-                    variant={
-                      isUserRegisterPage
-                        ? "purple"
-                        : isAdminRegisterPage
-                        ? "skyblue"
-                        : "default"
-                    }
-                  >
-                    Register
-                  </Button>
+                <Button
+  className="px-10 fixed left-[690px] top-[540px]"
+  variant={
+    isUserRegisterPage
+      ? "purple"
+      : isAdminRegisterPage
+      ? "skyblue"
+      : "default"
+  }
+>
+  Register
+</Button>
                 </div>
               </form>
             </Form>

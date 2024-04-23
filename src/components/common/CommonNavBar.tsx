@@ -25,7 +25,7 @@ const CommonNavBar = () => {
   const isPayment = location.pathname === "/user/payment";
   const isMyAccount = location.pathname === "/user/details";
   const isMyAddressBook = location.pathname === "/user/address-book";
- 
+  const isMyPaymentMethods = location.pathname === "/user/payment-methods";
 
 
   console.log(selectedCategories);
@@ -76,7 +76,7 @@ const CommonNavBar = () => {
             !isCheckout &&
             !isPayment &&
             !isMyAccount &&
-            !isMyAddressBook && (
+            !isMyAddressBook && !isMyPaymentMethods && (
               <div className="flex items-center justify-center gap-5">
                 <div>
                   <input
@@ -108,7 +108,7 @@ const CommonNavBar = () => {
               </div>
             )}
 
-          {!isMyAccount && !isMyAddressBook && (
+          {!isMyAccount && !isMyAddressBook && !isMyPaymentMethods &&(
             <div className="flex items-center gap-5">
               <div className="flex gap-8 ">
                 {!isUser && !isOrderDetails && (
@@ -121,11 +121,7 @@ const CommonNavBar = () => {
               </div>
             </div>
           )}
-          {(isMyAccount || isMyAddressBook )&& (
-            <div>
-              <div className="text-3xl font-bold mr-[630px]">My Account</div>
-            </div>
-          )}
+         
         </div>
       )}
     </>

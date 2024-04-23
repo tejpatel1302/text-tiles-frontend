@@ -1,45 +1,47 @@
-
-import ReactDOM from 'react-dom/client'
-import App from './App.tsx'
-import './index.css'
+import ReactDOM from "react-dom/client";
+import App from "./App.tsx";
+import "./index.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import Orders from './Admin/admin pages/Orders.tsx';
-import Products from './Admin/admin pages/Products.tsx';
-import AddProducts from './Admin/admin pages/Add-Products.tsx';
-import AddCategory from './Admin/admin pages/Add-Category.tsx';
-import AddSubCategory from './Admin/admin pages/Add-SubCategory.tsx';
-import ManageSubCategory from './Admin/admin pages/Manage-SubCategory.tsx';
-import ManageCategory from './Admin/admin pages/Manage-Category.tsx';
+import Orders from "./Admin/admin pages/Orders.tsx";
+import Products from "./Admin/admin pages/Products.tsx";
+import AddProducts from "./Admin/admin pages/Add-Products.tsx";
+import AddCategory from "./Admin/admin pages/Add-Category.tsx";
+import AddSubCategory from "./Admin/admin pages/Add-SubCategory.tsx";
+import ManageSubCategory from "./Admin/admin pages/Manage-SubCategory.tsx";
+import ManageCategory from "./Admin/admin pages/Manage-Category.tsx";
 
-import UserHistory from './User/user pages/UserHistory.tsx';
-import UserWebsite from './User/user pages/UserWebsite.tsx';
-import { Provider } from 'react-redux';
-import store  from './features/redux_toolkit/store.ts';
-import Cart from './User/user pages/Cart.tsx';
-import AdminLogin from './Admin/admin pages/Admin-Login.tsx';
-import UserLogin from './User/user pages/UserLogin.tsx';
-import Category from './User/user pages/Category.tsx';
-import SubCategory from './User/user pages/SubCategory.tsx';
-import SelectedCategories from './User/user pages/SelectedCategories.tsx';
+import UserHistory from "./User/user pages/UserHistory.tsx";
+import UserWebsite from "./User/user pages/UserWebsite.tsx";
+import { Provider } from "react-redux";
+import store from "./features/redux_toolkit/store.ts";
+import Cart from "./User/user pages/Cart.tsx";
+import AdminLogin from "./Admin/admin pages/Admin-Login.tsx";
+import UserLogin from "./User/user pages/UserLogin.tsx";
+import Category from "./User/user pages/Category.tsx";
+import SubCategory from "./User/user pages/SubCategory.tsx";
+import SelectedCategories from "./User/user pages/SelectedCategories.tsx";
 
-import UserRegister from './User/user pages/User-Register.tsx';
+import UserRegister from "./User/user pages/User-Register.tsx";
 
-import AdminOrderDetails from './Admin/admin pages/Order-Details.tsx';
-import UserOrderDetails from './User/user pages/UserOrderDetails.tsx';
-import ProductInDetail from './User/user pages/ProductsInDetail.tsx';
-import WishList from './User/user pages/WishList.tsx';
-import UserWishList from './User/user pages/WishList.tsx';
-import ProceedToBuy from './User/user pages/ProceedToBuy.tsx';
-import Payment from './User/user pages/Payment.tsx';
-import ForgotPassword from './components/common/Forgot-password.tsx';
-import AdminRegister from './Admin/admin pages/Admin-Register.tsx';
-import AccountPage from './components/common/AccountPage.tsx';
-import MyDetails from './User/user pages/MyDetails.tsx';
-import AddressBook from './User/user pages/AddressBook.tsx';
-import SAOrders from './Super Admin/super-admin-pages/SAOrders.tsx';
-import SuperAdminLogin from './Super Admin/super-admin-pages/Super-Admin-Login.tsx';
+import AdminOrderDetails from "./Admin/admin pages/Order-Details.tsx";
+import UserOrderDetails from "./User/user pages/UserOrderDetails.tsx";
+import ProductInDetail from "./User/user pages/ProductsInDetail.tsx";
+import WishList from "./User/user pages/WishList.tsx";
+import UserWishList from "./User/user pages/WishList.tsx";
+import ProceedToBuy from "./User/user pages/ProceedToBuy.tsx";
+import Payment from "./User/user pages/Payment.tsx";
+import ForgotPassword from "./components/common/Forgot-password.tsx";
+import AdminRegister from "./Admin/admin pages/Admin-Register.tsx";
 
-
+import MyDetails from "./User/user pages/MyDetails.tsx";
+import AddressBook from "./User/user pages/AddressBook.tsx";
+import SAOrders from "./Super Admin/super-admin-pages/SAOrders.tsx";
+import SuperAdminLogin from "./Super Admin/super-admin-pages/Super-Admin-Login.tsx";
+import UnAuthenticated from "./components/common/UnAuthenticated.tsx";
+import Protected from "./components/common/Protected.tsx";
+import PaymentMethods from "./User/user pages/PaymentMethods.tsx";
+import { OrderReport } from "./utils/order-report.tsx";
+import UserOrderReport from "./User/user pages/UserOrderReport.tsx";
 
 const appRoutes = createBrowserRouter([
   {
@@ -48,144 +50,161 @@ const appRoutes = createBrowserRouter([
     children: [
       {
         path: "/admin/login",
-        element: <AdminLogin/>,
+        element: (
+          <UnAuthenticated>
+            <AdminLogin />
+          </UnAuthenticated>
+        ),
       },
       {
         path: "/admin/register",
-        element: <AdminRegister/>,
+        element: <AdminRegister />,
       },
       {
         path: "/user/checkout",
-        element: <ProceedToBuy/>,
+        element: <ProceedToBuy />,
       },
       {
         path: "/user/forgot-password",
-        element: <ForgotPassword/>,
+        element: <ForgotPassword />,
+      },
+      {
+        path: "/user/order-report",
+        element: <UserOrderReport/>,
+      },
+      {
+        path: "/admin/order-report",
+        element: <UserOrderReport/>,
+      },
+      {
+        path: "/super-admin/order-report",
+        element: <UserOrderReport/>,
+      },
+      {
+        path: "/user/payment-methods",
+        element: <PaymentMethods/>,
       },
       {
         path: "/super-admin/forgot-password",
-        element: <ForgotPassword/>,
+        element: <ForgotPassword />,
       },
       {
         path: "/user/payment",
-        element: <Payment/>,
+        element: <Payment />,
       },
       {
         path: "/user/details",
-        element: <MyDetails/>,
+        element: <MyDetails />,
       },
-      {
-        path: "/user/account",
-        element: <AccountPage/>,
-      },
+     
       {
         path: "/user/register",
-        element: <UserRegister/>,
+        element: <UserRegister />,
       },
       {
         path: "/user/order-details",
-        element: <UserOrderDetails/>,
+        element: <UserOrderDetails />,
       },
       {
         path: "/admin/order-details",
-        element: <AdminOrderDetails/>,
+        element: <AdminOrderDetails />,
       },
       {
         path: "/user/selected-categories",
-        element: <SelectedCategories/>,
-
+        element: <SelectedCategories />,
       },
       {
         path: "/user/login",
-        element: <UserLogin/>,
+        element: <UserLogin />,
       },
       {
         path: "/user/address-book",
-        element: <AddressBook/>,
+        element: <AddressBook />,
       },
       {
         path: "/super-admin/orders",
-        element: <SAOrders/>,
+        element: <SAOrders />,
       },
       {
         path: "/super-admin/login",
-        element: <SuperAdminLogin/>,
+        element: <SuperAdminLogin />,
       },
       {
         path: "/user/category",
-        element: <Category/>,
+        element: <Category />,
       },
       {
         path: "/user/sub-category",
-        element: <SubCategory/>,
+        element: <SubCategory />,
       },
       {
         path: "/user/cart",
-        element: <Cart/>,
-
+        element: <Cart />,
       },
       {
         path: "/user/products",
-        element: <UserWebsite title={"See What We Have to Offer"}/>,
+        element: <UserWebsite title={"See What We Have to Offer"} />,
       },
       {
-        path:'/user/products/:productId',
+        path: "/user/products/:productId",
 
-        element:<ProductInDetail/>
-        
+        element: <ProductInDetail />,
       },
       {
-        path:'/user/wishlist',
+        path: "/user/wishlist",
 
-        element:<UserWishList/>
-        
+        element: <UserWishList />,
       },
       {
         path: "/user/order-history",
-        element: <UserHistory/>,
+        element: <UserHistory />,
       },
       {
         path: "/admin/orders",
-        element: <Orders/>,
+        element: <Orders />,
       },
       {
         path: "/admin/forgot-password",
-        element: <ForgotPassword/>,
+        element: <ForgotPassword />,
       },
       {
         path: "/admin/products",
-        element: <Products/>,
+        element: (
+          <Protected>
+            <Products />
+          </Protected>
+        ),
       },
       {
         path: "/user/cart",
-        element: <Cart/>,
+        element: <Cart />,
       },
       {
         path: "/admin/add-products",
-        element: <AddProducts/>,
+        element: <AddProducts />,
       },
       {
         path: "/admin/add-category",
-        element: <AddCategory/>,
+        element: <AddCategory />,
       },
       {
         path: "/admin/add-sub-category",
-        element: <AddSubCategory/>,
+        element: <AddSubCategory />,
       },
       {
         path: "/admin/manage-sub-category",
-        element: <ManageSubCategory/>,
+        element: <ManageSubCategory />,
       },
       {
         path: "/admin/manage-category",
-        element: <ManageCategory/>,
+        element: <ManageCategory />,
       },
     ],
   },
-])
+]);
 
-ReactDOM.createRoot(document.getElementById('root')!).render(
+ReactDOM.createRoot(document.getElementById("root")!).render(
   <Provider store={store}>
-    <RouterProvider router={appRoutes}/>
+    <RouterProvider router={appRoutes} />
   </Provider>
-)
+);

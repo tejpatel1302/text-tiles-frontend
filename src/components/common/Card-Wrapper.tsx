@@ -26,9 +26,12 @@ const CardWrapper = ({ children,
   const isUserLoginPage = location.pathname === "/user/login";
   const isAdminLoginPage = location.pathname === "/admin/login";
   const isSuperAdminLogin = location.pathname === "/super-admin/login";
+  const isAdminForgotPassoword = location.pathname === "/admin/forgot-password";
   const isDefaultPage = location.pathname === "/";
+  const isRegister = location.pathname.includes("/register");
   const navigate = useNavigate()
-
+  const isUserForgotPassoword = location.pathname === "/user/forgot-password";
+  const isSAForgotPassoword = location.pathname === "/super-admin/forgot-password";
 
   function clickHandler() {
     navigate(backButtonHref)
@@ -54,11 +57,11 @@ const CardWrapper = ({ children,
         {!isSuperAdminLogin && <CardFooter className="flex justify-center">
           {backButtonLabel != '' && (
             <div onClick={clickHandler}>
-              <div className="cursor-pointer">{part1} ?<span className={`cursor-pointer
+              <div className={`cursor-pointer fixed top-[590px]  ${isRegister ? 'left-[680px]': isAdminForgotPassoword || isUserForgotPassoword || isSAForgotPassoword ? 'left-[720px]': 'left-[650px]'}`}>{part1} ?<span className={`cursor-pointer fixed top-[590px] left-[830px]
                          ${isUserLoginPage || isDefaultPage || isUserRegisterPage
-                          ? "text-[#7346da]"
+                          ? "text-[#7346da] "
                           : isAdminLoginPage || isAdminRegister
-                          ? "text-[#79a9ed]"
+                          ? "text-[#79a9ed] "
                           : isSuperAdminLogin
                           ? "text-red-500"
                           : "default"} 

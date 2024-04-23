@@ -19,152 +19,104 @@ import { Input } from "@/components/ui/input";
 import { Button } from "../ui/button";
 import CardWrapper from "./Card-Wrapper";
 import { Calendar, LockIcon, Mail } from "lucide-react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { PasswordInput } from "../ui/password-input";
+import { useAdminForgotPassMutation, useUserForgotPassMutation } from "@/features/api/authApiSlice";
 
 
 
 
 
 const ForgotPassword = () => {
- const location = useLocation()
- const [displayResetForm, setDisplayResetForm] = useState(false)
-  const form = useForm<z.infer<typeof ResetSchema>>({
-    resolver: zodResolver(ResetSchema),
-    defaultValues: {
-      email: "",    
-     
-    },
-  });
-
- 
-  const submitData = (data: any) => {
-console.log(data)
-  };
-   
-  const submitData2 = (data: any) => {
-    console.log(data)
-      };
+  const location = useLocation();
+  const navigate = useNavigate();
   const isForgotPassword = location.pathname === "/admin/forgot-password";
   const isUserForgotPassword = location.pathname === "/user/forgot-password";
   const isSAForgotPassword = location.pathname === "/super-admin/forgot-password";
 
-  function clickHandler(){
-    setDisplayResetForm(true)
-  }
+  const [displayResetForm, setDisplayResetForm] = useState(false);
+  const [adminFP ] =   useAdminForgotPassMutation()
+  const [userFP] =  useUserForgotPassMutation()
+  const form = useForm<z.infer<typeof ResetSchema>>({
+    resolver: zodResolver(ResetSchema),
+    defaultValues: {
+      email: "",
+      password: "",
+      confirm_password: ""
+    },
+    mode:'all'
+  });
+
+  const handleSubmit = (data: any) => {
+    if (displayResetForm) {
+      // Logic for submitting new password form
+      console.log("Submitting new password:", data);
+      // Perform any processing if needed
+    } else {
+      // Logic for submitting reset email form
+      console.log("Submitting reset email:", data);
+      setDisplayResetForm(true); // Switch to the state for setting new password
+    }
+  };
+
+  const handleNewPasswordSubmit = async (data: any) => {
+    // Logic for submitting form with new password
+    const FilteredData = {
+      email: data.email,
+      newpassword: data.password
+    };
+    console.log("Submitting form with new password:", data);
+    try {
+      let userData: any;
+      if (location.pathname === '/admin/forgot-password') {
+        userData = await adminFP(FilteredData);
+        navigate('/admin/login')
+      } else if (location.pathname === '/user/forgot-password') {
+        userData = await userFP(FilteredData);
+        navigate('/user/login')
+      // } else if (location.pathname === '/super-admin/login') {
+      //   userData = await saLogin(data);
+      } 
+      else {
+        throw new Error('Invalid login path');
+      }
   
-  function clickHandler2(){
-    setDisplayResetForm(false)
-  }
-    return (
-      <div className="z-10 absolute left-[20%]">
-         <div className="h-screen flex justify-center items-center">
-      {!displayResetForm &&   <CardWrapper
+      console.log(userData);
+      
+      // navigate(state.from ? state.from : redirect); something wrong
+     
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  return (
+    <div className="z-10 absolute left-[20%]">
+      <div className="h-screen flex justify-center items-center">
+        <CardWrapper
           headerLabel="Forgot Password ?"
           backButtonHref={`${
-            isUserForgotPassword 
+            isUserForgotPassword
               ? "/user/login"
-              : isForgotPassword 
+              : isForgotPassword
               ? "/admin/login"
-              : isSAForgotPassword ? '/super-admin/login': ''
+              : isSAForgotPassword
+              ? '/super-admin/login'
+              : ''
           }`}
-          backButtonLabel="Back to Login"
-         
-        >
-           <Form {...form}>
-            <form onSubmit={form.handleSubmit(submitData)} className="space-y-4">
-              <div>
-                <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                    <Mail  className={`relative top-16 left-2  
-                         ${
-                          isUserForgotPassword
-                             ? "text-[#7346da]"
-                             : isForgotPassword
-                             ? "text-[#79a9ed]"
-                             : isSAForgotPassword
-                             ? "text-red-500"
-                             : "default"
-                         } 
-                        `}
-                    />
-                    <FormLabel>Email</FormLabel>
-                     
-                      <FormControl>
-                        <Input
-                          {...field}
-                          placeholder="Enter your Email"
-                          type="email"
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-     <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem>
-                        <Calendar  className={`relative top-16 left-2  
-                         ${
-                          isUserForgotPassword
-                             ? "text-[#7346da]"
-                             : isForgotPassword
-                             ? "text-[#79a9ed]"
-                             : isSAForgotPassword
-                             ? "text-red-500"
-                             : "default"
-                         } 
-                        `}
-                    />
-                      <FormLabel>DOB</FormLabel>
-                      <FormControl>
-                        <Input
-                          {...field}
-                          placeholder="Enter your Date of Birth"
-                          type="date"
-                          className="pl-10"
-                          
-                        />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-                
-              </div>
-    
-              <Button size={"lg"} type="submit" className="w-full" onClick={clickHandler}>
-                Send Reset Email
-              </Button>
-            </form>
-          </Form>
-         
-        </CardWrapper>}
-        {displayResetForm &&   <CardWrapper
-          headerLabel="Forgot Password ?"
-          backButtonHref={`${
-            isUserForgotPassword 
-              ? "/user/login"
-              : isForgotPassword 
-              ? "/admin/login"
-              : isSAForgotPassword ? '/super-admin/login': ''
-          }`}
-          backButtonLabel=""
-         
+          backButtonLabel={displayResetForm ? "Back" : "Back to Login"}
         >
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(submitData2)} className="space-y-4">
+            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
               <div>
                 <FormField
                   control={form.control}
                   name="email"
                   render={({ field }) => (
                     <FormItem>
-                    <LockIcon  className={`relative top-16 left-2  
+                      {displayResetForm ? (
+                        <LockIcon className={`relative top-16 left-2  
                          ${
                           isUserForgotPassword
                              ? "text-[#7346da]"
@@ -174,22 +126,9 @@ console.log(data)
                              ? "text-red-500"
                              : "default"
                          } 
-                        `}
-                    />
-                    <FormLabel>New Password</FormLabel>
-                     
-                      <FormControl>
-                      <PasswordInput className="px-10" />
-                      </FormControl>
-                    </FormItem>
-                  )}
-                />
-     <FormField
-                  control={form.control}
-                  name="email"
-                  render={({ field }) => (
-                    <FormItem className="relative">
-                        <LockIcon  className={`absolute top-10 left-2  
+                        `} />
+                      ) : (
+                        <Mail className={`relative top-16 left-2  
                          ${
                           isUserForgotPassword
                              ? "text-[#7346da]"
@@ -199,36 +138,89 @@ console.log(data)
                              ? "text-red-500"
                              : "default"
                          } 
-                        `}
-                    />
-                      <FormLabel>Confirm New Password</FormLabel>
+                        `} />
+                      )}
+                      <FormLabel>{displayResetForm ? "New Password" : "Email"}</FormLabel>
                       <FormControl>
-                      <PasswordInput className="px-10" />
-                      </FormControl>
+  {displayResetForm ? (
+    <PasswordInput
+      {...form.register("password")}
+      className="px-10"
+      placeholder="Enter New Password"
+      type="password"
+    />
+  ) : (
+    <Input
+      {...field}
+      placeholder="Enter your Email"
+      type="email"
+    />
+  )}
+</FormControl>
+
+                      <FormMessage className="relative left-[1px]" />
                     </FormItem>
                   )}
                 />
-                
-              </div>
-              <div className="flex gap-2">
-              <Button size={"lg"} type="submit" className="w-full" onClick={clickHandler2}>
-               Back
-              </Button>
-              <Button size={"lg"} type="submit" className="w-full">
-                Submit
-              </Button>
+                {displayResetForm && (
+                  <FormField
+             
+                    control={form.control}
+                    name="confirm_password"
+                    render={({ field }) => (
+                      <FormItem      className={'-mt-8'}>
+                        <LockIcon className={`relative top-16 left-2  
+                         ${
+                          isUserForgotPassword
+                             ? "text-[#7346da]"
+                             : isForgotPassword
+                             ? "text-[#79a9ed]"
+                             : isSAForgotPassword
+                             ? "text-red-500"
+                             : "default"
+                         } 
+                        `} />
+                        <FormLabel>Confirm New Password</FormLabel>
+                        <FormControl>
+                          <PasswordInput {...field} className="px-10" />
+                        </FormControl>
+                        <FormMessage className="relative left-[1px] -top-[24px]" />
+                      </FormItem>
+                    )}
+                  />
+                )}
+                {displayResetForm && (
+                  <Button
+                    size={"lg"}
+                    type="submit"
+                    className="w-full"
+                    onClick={form.handleSubmit(handleNewPasswordSubmit)}
+                  >
+                    Submit
+                  </Button>
+                )}
+               {!displayResetForm && (
+  <Button
+    size={"lg"}
+    type="button" // Change type to "button"
+    className="w-full mt-10"
+    onClick={() => handleSubmit(form.getValues())} // Call handleSubmit directly
+  >
+    Send
+  </Button>
+)}
               </div>
             </form>
           </Form>
-         
-        </CardWrapper>}
-       </div>
+        </CardWrapper>
       </div>
-      );
-  }
-
-  
-  
-
+    </div>
+  );
+};
 
 export default ForgotPassword;
+
+  
+  
+
+

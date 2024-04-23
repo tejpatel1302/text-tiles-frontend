@@ -22,6 +22,7 @@ import {
   PopoverTrigger,
 } from "@/components/ui/popover"
 import { toast } from "@/components/ui/use-toast"
+import { useLocation } from "react-router-dom"
 
 const FormSchema = z.object({
   startDate: z.date().optional(),
@@ -32,7 +33,13 @@ export function DatePickerForm({ setStartDate, setEndDate, onApply }: { setStart
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   })
-
+const location = useLocation()
+const isUser = location.pathname === "/user/order-history";
+const isSuperAdminOrders = location.pathname === "/super-admin/orders";
+const isAdminOrders = location.pathname === "/admin/orders";
+const isSAOrderReport = location.pathname === "/super-admin/order-report";
+const isAdminOrderReport = location.pathname === "/admin/order-report";
+const isUserOrderReport = location.pathname === "/user/order-report";
   function onSubmit(data: z.infer<typeof FormSchema>) {
     setStartDate(data.startDate ?? null);
     setEndDate(data.endDate ?? null);
@@ -140,7 +147,16 @@ export function DatePickerForm({ setStartDate, setEndDate, onApply }: { setStart
             </FormItem>
           )}
         />
-        <Button type="submit" variant="purple">Apply</Button>
+        <Button type="submit"  variant={
+                          isUser || isUserOrderReport
+                            ? "purple"
+                            : isAdminOrders || isAdminOrderReport
+                            ? "skyblue"
+                            : isSuperAdminOrders || isSAOrderReport
+                            ? "red"
+                            : "default"
+                        }
+                      >Apply</Button>
       </form>
     </Form>
   )

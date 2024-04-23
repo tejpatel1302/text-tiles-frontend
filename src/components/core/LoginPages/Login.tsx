@@ -10,36 +10,66 @@ import {
   FormControl,
   FormItem,
   FormLabel,
+  FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { LoginSchema } from "@/utils/schemas";
 import { PasswordInput } from "@/components/ui/password-input";
+import { setCredentials } from "@/features/redux_toolkit/authSlice";
+import { setCredentials2 } from "@/features/redux_toolkit/userAuthSlice";
+import { useDispatch } from "react-redux";
+import { useAdminloginMutation, useSaloginMutation, useUserloginMutation} from "@/features/api/authApiSlice";
 
 const Login = ({ redirect }: any) => {
+  const dispatch = useDispatch()
   const location = useLocation();
+  const state = useLocation().state;
+  console.log(state)
   const navigate = useNavigate();
+  const [login ] =   useAdminloginMutation()
+  const [userLogin] =   useUserloginMutation()
+  const [saLogin] =     useSaloginMutation()
   const form = useForm<z.infer<typeof LoginSchema>>({
     resolver: zodResolver(LoginSchema),
     defaultValues: {
       email: "",
       password: "",
     },
+    mode:"all"
   });
 
-  const submitData = (data: any) => {
-    console.log(data);
-    console.log("hello");
+  const submitData = async (data: any) => {
+    console.log(data, 'hellooo')
+    try {
+      let userData: any;
+      if (location.pathname === '/admin/login') {
+        userData = await login(data);
+        dispatch(setCredentials(userData));
+      } else if (location.pathname === '/user/login') {
+        userData = await userLogin(data);
+        dispatch(setCredentials2(userData));
+      } else if (location.pathname === '/super-admin/login') {
+        userData = await saLogin(data);
+      } else {
+        throw new Error('Invalid login path');
+      }
+  
+      console.log(userData);
+      
+      // navigate(state.from ? state.from : redirect); something wrong
+      navigate(redirect)
+    } catch (err) {
+      console.log(err);
+    }
   };
-
+  
   const isUserLoginPage = location.pathname === "/user/login";
   const isAdminLoginPage = location.pathname === "/admin/login";
   const isSuperAdminLogin = location.pathname === "/super-admin/login";
   const isDefaultPage = location.pathname === "/";
 
-  const loginClickHandler = () => {
-    navigate(redirect);
-  };
+  
 
   return (
     <div className="h-screen flex justify-center items-center">
@@ -84,6 +114,7 @@ const Login = ({ redirect }: any) => {
                         type="email"
                       />
                     </FormControl>
+                    <FormMessage className="absolute left-[305px] top-[160px]"/>
                   </FormItem>
                 )}
               />
@@ -110,13 +141,14 @@ const Login = ({ redirect }: any) => {
 
                     <FormControl>
                       <FormControl>
-                        <PasswordInput className="px-10" />
+                        <PasswordInput className="px-10" { ...field } />
                       </FormControl>
                     </FormControl>
+                    <FormMessage className="absolute left-[280px] top-[30px]"/>
                     <div className="flex justify-center mx-auto gap-5">
                       <Button
                         type="submit"
-                        onClick={loginClickHandler}
+                     
                         className="px-7"
                         variant={
                           isUserLoginPage || isDefaultPage
