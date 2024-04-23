@@ -1,7 +1,7 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { add } from "../../redux_toolkit/cartSlice";
-import { fetchProducts, STATUSES } from "../../redux_toolkit/productSlice"; // Import fetchProducts and STATUSES from the productSlice
+import { add } from "../../features/redux_toolkit/cartSlice";
+import { fetchProducts, STATUSES } from "../../features/redux_toolkit/productSlice"; // Import fetchProducts and STATUSES from the productSlice
 import ProductCard from "./Card";
 import { Button } from "@/components/ui/button";
 

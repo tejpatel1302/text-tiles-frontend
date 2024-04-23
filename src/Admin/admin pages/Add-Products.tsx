@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { LoginSchema } from "@/utils/schemas";
+import { AddProduct, LoginSchema } from "@/utils/schemas";
 import CardWrapper from "@/components/common/Card-Wrapper";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -10,6 +10,7 @@ import {
   FormLabel,
   FormField,
   FormControl,
+  FormMessage,
 } from "@/components/ui/form";
 
 import { Input } from "@/components/ui/input";
@@ -17,29 +18,132 @@ import { Button } from "@/components/ui/button";
 
 import { Link, useNavigate } from "react-router-dom";
 import { Divide } from "lucide-react";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
+import { useEffect, useState } from "react";
+import { addProductApi, getCategoryApi, getColorsApi, getSubCategoryApi } from "@/features/api/apicall";
+import { useSelector } from "react-redux";
+import { selectAdminCurrentToken } from "@/features/redux_toolkit/authSlice";
 
 const AddProducts = ({ redirect }: any) => {
   const navigate = useNavigate();
-  const form = useForm<z.infer<typeof LoginSchema>>({
-    resolver: zodResolver(LoginSchema),
+  const [showCategory, setShowCategory]:any = useState([]);
+  const [showSubCategory, setShowSubCategory]:any = useState([]);
+  const [showColors, setShowColors]:any = useState([]);
+  const token = useSelector(selectAdminCurrentToken)
+  const form = useForm<z.infer<typeof AddProduct>>({
+    resolver: zodResolver(AddProduct),
     defaultValues: {
-      email: "",
-      password: "",
+      name:'',
+      description:'',
+      material:'',
+      price: '',
+      size:'',
+      colorId:'',
+      file:'',
+      categoryId:'',
+      subcategoryId:''
     },
+    mode:'all'
   });
 
-  const submitData = (data: any) => {
-    console.log(data);
-    console.log("hello");
-  };
+  const submitData = async (data: any) => {
+    console.log(data)
+    try {
+      const formData = new FormData();
+      formData.append('name', data.name);
+      formData.append('description', data.description);
+      formData.append('file', data.file[0]);
+      formData.append('material', data.material);
+      formData.append('price', data.price);
+      formData.append('size', data.size);
+      formData.append('colorId', data.colorId);
+      
+      formData.append('subcategoryId', data.subcategoryId);
+      
+console.log(formData,'hiiiiiiiiiiiiiiii')
+      const config = {
+          headers: {
+              Authorization: `Bearer ${token}`,
+              'Content-Type': 'multipart/form-data'
+          }
+      };
 
-  const loginClickHanlder = () => {
-    navigate(redirect);
-  };
+      const res = await addProductApi(formData, config);
+      console.log(res, 'addedsubmitData');
+      
+      
+      
 
+  } catch (error) {
+      console.error("Error fetching product data:", error);
+  }
+
+  };
+  async function fetchCategoryData() {
+    try {
+      const payload = {
+        Authorization: `Bearer ${token}`,
+       
+      };
+      
+      const res = await getCategoryApi(payload);
+      console.log(res, 'getCategory')
+      setShowCategory(res?.data);
+      
+      
+    } catch (error) {
+      console.error("Error fetching product data:", error);
+    }
+  }
+  async function fetchColorsData() {
+    try {
+      const payload = {
+        Authorization: `Bearer ${token}`,
+       
+      };
+      
+      const res = await getColorsApi(payload);
+      console.log(res, 'getColors')
+      setShowColors(res?.data);
+      
+      
+    } catch (error) {
+      console.error("Error fetching product data:", error);
+    }
+  }
+  async function fetchSubCategoryData() {
+    try {
+      const payload = {
+        Authorization: `Bearer ${token}`,
+       
+      };
+      
+      const res = await getSubCategoryApi(payload);
+      console.log(res, 'getCategory')
+      setShowSubCategory(res?.data);
+      
+      
+    } catch (error) {
+      console.error("Error fetching product data:", error);
+    }
+  }
+
+  useEffect(() => {
+    fetchCategoryData();
+    fetchSubCategoryData();
+    fetchColorsData()
+  }, []);
+ 
+  const fileRef = form.register('file', { required: true });
   return (
     <div className="max-h-screen">
-      <div className="h-[600px] flex border-2 border-black w-9/12 rounded-md bg-white justify-center mx-auto p-10 my-4">
+      <div className="min-h-screen flex border-2 border-black w-9/12 rounded-md bg-white justify-center mx-auto p-10 my-4">
         <div className="text-3xl font-bold relative top-0 right-20">
           Add Products:
         </div>
@@ -53,58 +157,68 @@ const AddProducts = ({ redirect }: any) => {
                 <div className="space-y-4">
                   <FormField
                     control={form.control}
-                    name="email"
+                    name="name"
                     render={({ field }) => (
-                      <FormItem className="flex items-center">
-                        <FormLabel className="w-36">Product Name:</FormLabel>
+                      <FormItem>
+                         <div className="flex items-center">
+                       <FormLabel className="w-36">Product Name:</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
                             placeholder="Enter your Product Name"
-                            type="email"
+                            type="text"
                           />
                         </FormControl>
+                       </div>
+                        <FormMessage className="relative left-[105px]"/>
                       </FormItem>
                     )}
                   />
                   <FormField
                     control={form.control}
-                    name="email"
+                    name="description"
                     render={({ field }) => (
-                      <FormItem className="flex items-center">
+                      <FormItem >
+                         <div className="flex items-center">
                         <FormLabel className="w-36">Description:</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
-                            placeholder="Enter your Description "
-                            type="password"
+                            placeholder="Enter Description"
+                            type="text"
                           />
                         </FormControl>
+                        </div>
+                        <FormMessage className="relative left-[105px]"/>
                       </FormItem>
                     )}
                   />
                   <FormField
                     control={form.control}
-                    name="email"
+                    name="price"
                     render={({ field }) => (
-                      <FormItem className="flex items-center">
+                      <FormItem >
+                          <div className="flex items-center">
                         <FormLabel className="w-36">Price:</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
-                            placeholder="Enter your Product Name"
+                            placeholder="Enter Price"
                             type="number"
                           />
                         </FormControl>
+                        </div>
+                        <FormMessage className="relative left-[105px]"/>
                       </FormItem>
                     )}
                   />
 
                   <FormField
                     control={form.control}
-                    name="email"
+                    name="size"
                     render={({ field }) => (
-                      <FormItem className="flex items-center">
+                      <FormItem >
+                          <div className="flex items-center">
                         <FormLabel className="w-28">Sizes:</FormLabel>
                         <FormControl>
                           <div className="flex gap-5">
@@ -115,9 +229,8 @@ const AddProducts = ({ redirect }: any) => {
                               S:
                               <Input
                                 {...field}
-                                placeholder="Large"
+                                value="S"
                                 type="radio"
-                                value="large"
                                 className="radio-large"
                               />
                             </label>
@@ -128,9 +241,8 @@ const AddProducts = ({ redirect }: any) => {
                               M:
                               <Input
                                 {...field}
-                                placeholder="Large"
+                                value="M"
                                 type="radio"
-                                value="large"
                                 className="radio-large"
                               />
                             </label>
@@ -141,9 +253,8 @@ const AddProducts = ({ redirect }: any) => {
                               L:
                               <Input
                                 {...field}
-                                placeholder="Large"
+                                value="L"
                                 type="radio"
-                                value="large"
                                 className="radio-large"
                               />
                             </label>
@@ -155,94 +266,154 @@ const AddProducts = ({ redirect }: any) => {
                               XL:
                               <Input
                                 {...field}
-                                placeholder="Extra Large"
+                                value="XL"
                                 type="radio"
-                                value="extraLarge"
                                 className="text-sm bg-red-500"
                               />
                             </label>
                           </div>
                         </FormControl>
+                        </div>
+                        <FormMessage className="relative left-[105px]"/>
+                      </FormItem>
+                    )}
+                  />
+                   <FormField
+                    control={form.control}
+                    name="material"
+                    render={({ field }) => (
+                      <FormItem >
+                          <div className="flex items-center">
+                        <FormLabel className="w-36">Material</FormLabel>
+                        <FormControl>
+                          <Input
+                            {...field}
+                            placeholder="Enter Material"
+                            type="text"
+                          />
+                        </FormControl>
+                        </div>
+                        <FormMessage className="relative left-[105px]"/>
                       </FormItem>
                     )}
                   />
 
+<FormField
+          control={form.control}
+          name="colorId"
+          render={({ field }) => (
+            <FormItem >
+                <div className="flex items-center">
+              <FormLabel className="w-36">Color:</FormLabel>
+              <Select  onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a verified email to display" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                            {
+                              showColors?.map((color:any)=>{
+                                return(
+                                  <SelectItem key={color?.id} value={color?.id}>{color?.name}</SelectItem>
+                                )
+                              })
+                            }
+                          </SelectContent>
+              </Select>
+              {/* <FormDescription>
+                You can manage email addresses in your{" "}
+                <Link to="/examples/forms">email settings</Link>.
+              </FormDescription> */}
+              </div>
+            <FormMessage className="relative left-[105px]"/>
+            </FormItem>
+          )}
+        />
+                  <FormField
+          control={form.control}
+          name="categoryId"
+          render={({ field }) => (
+            <FormItem >
+                <div className="flex items-center">
+              <FormLabel className="w-36">Category:</FormLabel>
+              <Select  onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a verified email to display" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                            {
+                              showCategory?.map((category:any)=>{
+                                return(
+                                  <SelectItem key={category?.id} value={category?.id}>{category?.name}</SelectItem>
+                                )
+                              })
+                            }
+                          </SelectContent>
+              </Select>
+              {/* <FormDescription>
+                You can manage email addresses in your{" "}
+                <Link to="/examples/forms">email settings</Link>.
+              </FormDescription> */}
+              </div>
+            <FormMessage className="relative left-[105px]"/>
+            </FormItem>
+          )}
+        />
+                  <FormField
+          control={form.control}
+          name="subcategoryId"
+          render={({ field }) => (
+            <FormItem >
+                <div className="flex items-center">
+              <FormLabel className="w-36">Sub-Category</FormLabel>
+              <Select  onValueChange={field.onChange} defaultValue={field.value}>
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a verified email to display" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                            {
+                              showSubCategory?.map((category:any)=>{
+                                return(
+                                  <SelectItem key={category?.id} value={category?.id}>{category?.name}</SelectItem>
+                                )
+                              })
+                            }
+                          </SelectContent>
+              </Select>
+              {/* <FormDescription>
+                You can manage email addresses in your{" "}
+                <Link to="/examples/forms">email settings</Link>.
+              </FormDescription> */}
+              </div>
+               <FormMessage className="relative left-[105px]"/>
+            </FormItem>
+          )}
+        />
                   <FormField
                     control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem className="flex items-center">
-                        <FormLabel className="w-28">Color:</FormLabel>
-                        <FormControl>
-                          <div >
-                            <select name="" id="" className="w-[400px] p-2 border-2 border-black">
-                              <option value="">Red</option>
-                              <option value="">Blue</option>
-                              <option value="">Green</option>
-                            </select>
-                          </div>
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem className="flex items-center">
-                        <FormLabel className="w-28">Category:</FormLabel>
-                        <FormControl>
-                        <div >
-                            <select name="" id="" className="w-[400px] p-2 border-2 border-black">
-                              <option value="">Men</option>
-                              <option value="">Women</option>
-                              <option value="">Children</option>
-                            </select>
-                          </div>
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="email"
-                    render={({ field }) => (
-                      <FormItem className="flex items-center">
-                        <FormLabel className="w-28">Subcategory:</FormLabel>
-                        <FormControl>
-                        <div >
-                            <select name="" id="" className="w-[400px] p-2 border-2 border-black">
-                              <option value="">Shirt</option>
-                              <option value="">T-Shirt</option>
-                              <option value="">Pants</option>
-                            </select>
-                          </div>
-                         
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={form.control}
-                    name="password"
+                    name="file"
                     render={({ field }) => (
                       <div>
-                        <FormItem className="flex items-center">
+                        <FormItem >
+                        <div className="flex items-center">
                           <FormLabel className="w-36">Image:</FormLabel>
                           <FormControl>
-                          <Input
-                            {...field}
-                            placeholder="Enter your Product Name"
-                            type="file"
-                          />
+                          <Input {...fileRef} type="file" />
                           </FormControl>
+                          </div>
+                          <FormMessage className="relative left-[105px]"/>
                         </FormItem>
                         <div className="flex justify-center mx-auto gap-5 my-4">
                           <Button
                             type="submit"
-                            onClick={loginClickHanlder}
+                           
                             className="px-16"
-                            variant={"purple"}
+                            variant={"skyblue"}
                           >
                             Add
                           </Button>

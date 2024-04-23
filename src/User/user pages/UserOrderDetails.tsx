@@ -13,7 +13,8 @@ const UserOrderDetails= () => {
       size: order.size,
       price: order.price,
       quantity: order.quantity,
-      brand: order.brand
+      status: order.status
+      
     
     
   }));

@@ -3,7 +3,7 @@ import image from "../../assets/textiles-logo.png";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
 import { useState, useEffect } from "react";
-import { fetchProducts, setProducts } from "@/redux_toolkit/productSlice";
+import { fetchProducts, setProducts } from "@/features/redux_toolkit/productSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { Heart, Search, ShoppingCart, UserRound } from "lucide-react";
 import { UserDropDown } from "@/User/user pages/UserDropDown";
@@ -25,6 +25,8 @@ const CommonNavBar = () => {
   const isPayment = location.pathname === "/user/payment";
   const isMyAccount = location.pathname === "/user/details";
   const isMyAddressBook = location.pathname === "/user/address-book";
+  const isMyPaymentMethods = location.pathname === "/user/payment-methods";
+
 
   console.log(selectedCategories);
   useEffect(() => {
@@ -74,14 +76,14 @@ const CommonNavBar = () => {
             !isCheckout &&
             !isPayment &&
             !isMyAccount &&
-            !isMyAddressBook && (
+            !isMyAddressBook && !isMyPaymentMethods && (
               <div className="flex items-center justify-center gap-5">
                 <div>
                   <input
                     type="text"
                     name=""
                     id=""
-                    className="border border-customSkyBlue h-10 w-[600px] p-2 placeholder-gray-400 rounded-full"
+                    className="border border-customSkyBlue h-10 w-[600px] p-8 placeholder-gray-400 rounded-full"
                     placeholder="What you are Looking for ?"
                     value={searchInput}
                     onChange={(e) => {
@@ -106,7 +108,7 @@ const CommonNavBar = () => {
               </div>
             )}
 
-          {!isMyAccount && !isMyAddressBook && (
+          {!isMyAccount && !isMyAddressBook && !isMyPaymentMethods &&(
             <div className="flex items-center gap-5">
               <div className="flex gap-8 ">
                 {!isUser && !isOrderDetails && (
@@ -119,11 +121,7 @@ const CommonNavBar = () => {
               </div>
             </div>
           )}
-          {(isMyAccount || isMyAddressBook )&& (
-            <div>
-              <div className="text-3xl font-bold mr-[630px]">My Account</div>
-            </div>
-          )}
+         
         </div>
       )}
     </>

@@ -23,8 +23,15 @@ const CardWrapper = ({ children,
   const location = useLocation()
   const isUserRegisterPage = location.pathname === "/user/register";
   const isAdminRegister = location.pathname === "/admin/register";
+  const isUserLoginPage = location.pathname === "/user/login";
+  const isAdminLoginPage = location.pathname === "/admin/login";
+  const isSuperAdminLogin = location.pathname === "/super-admin/login";
+  const isAdminForgotPassoword = location.pathname === "/admin/forgot-password";
+  const isDefaultPage = location.pathname === "/";
+  const isRegister = location.pathname.includes("/register");
   const navigate = useNavigate()
-
+  const isUserForgotPassoword = location.pathname === "/user/forgot-password";
+  const isSAForgotPassoword = location.pathname === "/super-admin/forgot-password";
 
   function clickHandler() {
     navigate(backButtonHref)
@@ -39,7 +46,7 @@ const CardWrapper = ({ children,
         <div >
           <img src={image} alt="" className="h-40 ml-10 mt-2" />
         </div>}
-      <div className={`${isUserRegisterPage || isAdminRegister ? 'w-10/12 -top-[20px] left-[80px]' : 'w-4/12'} mx-auto absolute top-10 left-80`}>
+      <div className={`${isUserRegisterPage || isAdminRegister ? 'w-10/12 -top-[1px] left-[80px]' : 'w-4/12'} mx-auto absolute top-10 left-80`}>
         <CardHeader >
           <Header label={headerLabel} />
         </CardHeader>
@@ -47,16 +54,24 @@ const CardWrapper = ({ children,
           {children}
         </CardContent>
 
-        <CardFooter className="flex justify-center">
+        {!isSuperAdminLogin && <CardFooter className="flex justify-center">
           {backButtonLabel != '' && (
             <div onClick={clickHandler}>
-              <div>{part1} ?<span className="text-purple-800">{part2}</span></div>
+              <div className={`cursor-pointer fixed top-[590px]  ${isRegister ? 'left-[680px]': isAdminForgotPassoword || isUserForgotPassoword || isSAForgotPassoword ? 'left-[720px]': 'left-[650px]'}`}>{part1} ?<span className={`cursor-pointer fixed top-[590px] left-[830px]
+                         ${isUserLoginPage || isDefaultPage || isUserRegisterPage
+                          ? "text-[#7346da] "
+                          : isAdminLoginPage || isAdminRegister
+                          ? "text-[#79a9ed] "
+                          : isSuperAdminLogin
+                          ? "text-red-500"
+                          : "default"} 
+                        `}>{part2}</span></div>
 
             </div>
           )
 
           }
-        </CardFooter>
+        </CardFooter>}
       </div>
     </Card>
   )

@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Button } from "../ui/button";
 import {
   ChevronRight,
+  File,
   FilePlus2Icon,
   Heart,
   Home,
@@ -15,28 +16,65 @@ import {
   ShoppingCart,
   User,
 } from "lucide-react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { IdCardIcon } from "@radix-ui/react-icons";
+import { useAdminLogoutMutation, useUserLogoutMutation } from "@/features/api/authApiSlice";
+import { useDispatch } from "react-redux";
+import { logOut } from "@/features/redux_toolkit/authSlice";
+import { userlogOut } from "@/features/redux_toolkit/userAuthSlice";
 
 type Props = {};
 
 export default function SideBar({ }: Props) {
+  const dispatch = useDispatch()
   const location = useLocation();
+  const navigate = useNavigate();
   const userOrderHistory = location.pathname === "/user/cart";
   const userSelected = location.pathname === "/user/selected-categories"
   const userHistory = location.pathname === "/user/order-history"
   const isOrderDetails = location.pathname === "/user/order-details";
   const isMyAccount = location.pathname === "/user/details";  
   const isMyAddressBook = location.pathname === "/user/address-book";
-
+  const isMyPaymentMethods = location.pathname === "/user/payment-methods";
+  const isSuperAdminOrders = location.pathname === "/super-admin/orders";
+  const isSuperAdminReport = location.pathname === "/super-admin/order-report";
+  const isUserReport = location.pathname === "/user/order-report";
+  const isAdminReport = location.pathname === "/admin/order-report";
+  const isSuperAdminDetails = location.pathname === "/super-admin/order-details";
   const [isCollapsed, setIsCollapsed] = useState(false);
 
-  function toggleSideBar() {
-    setIsCollapsed(!isCollapsed);
+  // function toggleSideBar() {
+  //   setIsCollapsed(!isCollapsed);
+  // }
+  const [adminLogoutTrigger] = useAdminLogoutMutation(); // Destructure the trigger function from the tuple
+const [userLogoutTrigger] = useUserLogoutMutation(); 
+const clickHandler = async () => {
+  try {
+    let userData: any;
+    if (location.pathname.startsWith("/admin")) {
+      const adminLogout = await adminLogoutTrigger(); // Call the trigger function
+      console.log('hi admin');
+      dispatch(logOut());
+      navigate('/admin/login');
+    } else if (location.pathname.startsWith("/user")) {
+      const userLogout = await userLogoutTrigger(); // Call the trigger function
+      dispatch(userlogOut());
+      navigate('/user/login');
+    } else {
+      throw new Error('Invalid login path');
+    }
+
+    console.log(userData);
+
+    // navigate(state.from ? state.from : redirect); something wrong
+
+  } catch (err) {
+    console.log(err);
   }
+};
 
   // Define links array based on userOrderHistory
-  const links: any = (userOrderHistory || userSelected || userHistory || isOrderDetails)
+  const links: any = (userOrderHistory || userSelected || userHistory || isOrderDetails || isUserReport)
     ? [
       {
         title: "Home",
@@ -57,12 +95,18 @@ export default function SideBar({ }: Props) {
         variant: "ghost",
       },
       {
+        title: "Order-Report",
+        href: "/user/order-report",
+        icon: File,
+        variant: "skyblue",
+      },
+      {
         title: "My Account",
         href: "/user/details",
         icon: User,
         variant: "ghost",
       },
-    ] : (isMyAccount || isMyAddressBook)? [
+    ] : (isMyAccount || isMyAddressBook || isMyPaymentMethods)? [
       {
         title: "My Details",
         href: "/user/details",
@@ -83,12 +127,27 @@ export default function SideBar({ }: Props) {
       },
       {
         title: "Payment Methods",
-        href: "",
+        href: "/user/payment-methods",
         icon: IdCardIcon,
         variant: "ghost",
       },
       
-    ] :[
+    ] : (isSuperAdminOrders || isSuperAdminDetails || isSuperAdminReport)? [
+    
+      {
+        title: "My Orders",
+        href: "/super-admin/orders",
+        icon: ShoppingCart,
+        variant: "purple",
+      },
+      {
+        title: "Order-Report",
+        href: "/super-admin/order-report",
+        icon: File,
+        variant: "skyblue",
+      },
+    
+    ] : [
       {
         title: "Orders",
         href: "/admin/orders",
@@ -120,6 +179,12 @@ export default function SideBar({ }: Props) {
         variant: "ghost",
       },
       {
+        title: "Order-Report",
+        href: "/admin/order-report",
+        icon: File,
+        variant: "skyblue",
+      },
+      {
         title: "Manage Category",
         href: "/admin/manage-category",
         icon: Settings,
@@ -143,11 +208,11 @@ export default function SideBar({ }: Props) {
 
       <div className="flex justify-center">
         {isCollapsed ? (
-          <Button className="text-white">
+          <Button className="text-white" onClick={clickHandler}>
             <LogOut />
           </Button>
         ) : (
-          <Button className="text-sm p-5">Logout</Button>
+          <Button onClick={clickHandler} className="text-sm p-5">Logout</Button >
         )}
       </div>
     </div>

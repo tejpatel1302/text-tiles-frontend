@@ -3,9 +3,25 @@ import React from 'react'
 
 const AddressBook = () => {
   return (
-    <div className='max-h-screen mr-52 ml-4'>
-        <div className='border-2 border-gray-400 w-full h-[200px] '>My Orders</div>
-        <div className='border-2 border-gray-400 w-full h-[400px] mt-4'>My Orders</div>
+    <div className='max-h-screen mx-auto w-10/12'>
+     
+            <div>
+              <div className="text-3xl font-bold mr-[630px] my-4">Address Book</div>
+            </div>
+          
+            <div className="flex flex-col justify-center">
+  <div className="max-w-[90%] rounded-lg overflow-hidden shadow-lg bg-white my-4">
+    <div className="px-6 py-4">
+      <div className="border-2 border-purple-400 h-32 flex items-center justify-center rounded-lg"></div>
+    </div>
+  </div>
+  <div className="max-w-[90%] rounded-lg overflow-hidden shadow-lg bg-white my-4">
+    <div className="px-6 py-4">
+      <div className="border-2 border-purple-400  h-64 flex items-center justify-center"></div>
+    </div>
+  </div>
+</div>
+
         <div></div>
     </div>
   )

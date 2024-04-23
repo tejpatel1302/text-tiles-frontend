@@ -6,7 +6,7 @@ import { Heart } from 'lucide-react'
 import Accordian from '@/components/common/Accordian'
 import UserWebsite from './UserWebsite'
 import { useDispatch } from 'react-redux'
-import { add } from '@/redux_toolkit/cartSlice'
+import { add } from '@/features/redux_toolkit/cartSlice'
 
 const ProductInDetail = () => {
    const dispatch = useDispatch();
@@ -43,7 +43,7 @@ const ProductInDetail = () => {
                </div>
                <div className='flex flex-col justify-center max-w-[500px]'>
                   <h2 className='text-3xl font-semibold mb-4 '>{product?.title}</h2>
-                  <div className='text-xl mb-4 '>Price: ${product?.price}</div>
+                  <div className='text-xl mb-4 '>Price: {product?.price} €</div>
                   <div className='mb-4'>
                      <div className='mb-2'>Colors</div>
                      <div className='flex gap-3'>
@@ -85,7 +85,7 @@ const ProductInDetail = () => {
       <div className=' mx-auto'>
         
          <div>
-            <UserWebsite/>
+            <UserWebsite title={"Similar Product Which You Might Like"}/>
          </div>
       </div>
       </div>

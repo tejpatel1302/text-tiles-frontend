@@ -17,7 +17,7 @@ const Accordian = () => {
     </AccordionContent>
   </AccordionItem>
   <AccordionItem value="item-2">
-    <AccordionTrigger>Brand</AccordionTrigger>
+    <AccordionTrigger>Material Composition</AccordionTrigger>
     <AccordionContent>
       Yes. It adheres to the WAI-ARIA design pattern.
     </AccordionContent>

@@ -19,7 +19,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { LockIcon, Mail, UserRound } from "lucide-react";
 import Card2 from "./Card2";
 import { useDispatch, useSelector } from "react-redux";
-import { addAddress } from "@/redux_toolkit/addressSlice";
+import { addAddress } from "@/features/redux_toolkit/addressSlice";
 
 
 const ProceedToBuy = ({ redirect }: any) => {

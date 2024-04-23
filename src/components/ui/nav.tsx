@@ -23,7 +23,9 @@ interface NavProps {
 export function Nav({ links, isCollapsed }: NavProps) {
   const location = useLocation();
   const pathName = location.pathname;
-
+  const isAdminDashboard = location.pathname.startsWith("/admin");
+  const isSuperAdminDashboard = location.pathname.startsWith("/super-admin");
+  const isUserDashboard = location.pathname.startsWith("/user");
   return (
     <TooltipProvider>
       <div
@@ -66,12 +68,11 @@ export function Nav({ links, isCollapsed }: NavProps) {
                 to={link.title === "Assessment" ? `${link.href}?page=1` : link.href} // Adjust the query string here
                 className={cn(
                   buttonVariants({
-                    variant: link.href === pathName ? "purple" : "ghost",
+                    variant: link.href === pathName && isAdminDashboard ? "skyblue" : link.href === pathName && isUserDashboard ? 'purple': link.href === pathName && isSuperAdminDashboard ? 'red': 'ghost' ,
                     size: "sm",
                   }),
                   "h-16 w-52 text-md my-2",
-                  link.variant === "purple" &&
-                    "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white",
+                  (link.variant === (isUserDashboard ? 'purple' : isAdminDashboard ? "skyblue" : isSuperAdminDashboard ? 'red' : '')),
                   "justify-start"
                 )}
               >
@@ -79,13 +80,14 @@ export function Nav({ links, isCollapsed }: NavProps) {
                 {link.title}
                 {link.label && (
                   <span
-                    className={cn(
-                      "ml-auto",
-                      link.variant === "purple" && "text-background dark:text-white"
-                    )}
-                  >
-                    {link.label}
-                  </span>
+                  className={cn(
+                    "ml-auto",
+                    (link.variant === (isUserDashboard ? 'purple' : isAdminDashboard ? "skyblue" : isSuperAdminDashboard ? 'red' : '')) && "text-background dark:text-white"
+                  )}
+                >
+                  {link.label}
+                </span>
+                
                 )}
               </Link>
             )

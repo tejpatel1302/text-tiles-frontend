@@ -12,7 +12,7 @@ export type Product = {
   sizes: any
   images: any;
   details: string;
-  brand: string;
+  material: string;
   quantity: number;
   };
   
@@ -44,8 +44,8 @@ export type Product = {
         header: "Details",
       },
       {
-        accessorKey: "brand",
-        header: "Brand",
+        accessorKey: "material",
+        header: "Material",
       },
       {
         accessorKey: "quantity",

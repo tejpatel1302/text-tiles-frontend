@@ -6,11 +6,9 @@ import { useEffect, useState } from "react";
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type SubCategory = {
-    subcategoryID: number;
-    subcategoryName: string;
-    subcategoryDescription: string;
-    mainCategoryName: string;
-    image: string;
+  subcategoryID: string,
+  name: string,
+  images: string,
 };
 
 const EditCell = ({ row, table }: any) => {
@@ -98,23 +96,15 @@ export const columns = [
       type: "number",
     },
   }),
-  columnHelper.accessor("image", {
+  columnHelper.accessor("images", {
     header: "SubCategory Image",
    
   }),
-  columnHelper.accessor("subcategoryName", {
-    header: "Subcategory Name",
+  columnHelper.accessor("name", {
+    header: "Name",
     cell: TableCell
   }),
-  
-  columnHelper.accessor("subcategoryDescription", {
-    header: "Subcategory Description",
-    cell: TableCell
-  }),
-  columnHelper.accessor("mainCategoryName", {
-    header: "Main Category Name",
-    cell: TableCell
-  }),
+ 
   columnHelper.display({
     header:'Actions',
     id: "edit",
