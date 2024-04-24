@@ -71,7 +71,7 @@ const AddProducts = ({ redirect }: any) => {
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Typ</div>e': 'multipart/form-data'
+          'Content-Type': 'multipart/form-data'
         }
       };
 
