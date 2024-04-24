@@ -27,6 +27,8 @@ const UserWebsite = ({ title }: { title: string }) => {
           res = await getProductsApi(payload);
         }
         setShowProducts(res?.data || []);
+
+        console.log(res, 'getCategory');
         setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);

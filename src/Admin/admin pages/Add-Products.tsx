@@ -35,6 +35,7 @@ const AddProducts = ({ redirect }: any) => {
   const [showCategory, setShowCategory]: any = useState([]);
   const [showSubCategory, setShowSubCategory]: any = useState([]);
   const [showColors, setShowColors]: any = useState([]);
+  const [selectedCategory, setSelectedCategory]: any = useState('');
   const token = useSelector(selectAdminCurrentToken)
   const form = useForm<z.infer<typeof AddProduct>>({
     resolver: zodResolver(AddProduct),
@@ -70,7 +71,7 @@ const AddProducts = ({ redirect }: any) => {
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
-          'Content-Typ</div>e': 'multipart/form-data'
+          'Content-Type': 'multipart/form-data'
         }
       };
 
@@ -137,17 +138,22 @@ const AddProducts = ({ redirect }: any) => {
   useEffect(() => {
     fetchCategoryData();
     fetchSubCategoryData();
-    fetchColorsData()
+    fetchColorsData();
   }, []);
 
   const handleCategoryChange = (value: string) => {
-    // Handle category value change here
     console.log("Selected category:", value);
-    
-    const filteredSubcategories = showSubCategory.filter((subcategory: any) => subcategory.categoryId === value);
+    const filteredSubcategories = showSubCategory.filter((subcategory: any) => subcategory?.categoryId == value);
     setShowSubCategory(filteredSubcategories);
     console.log("Filtered subcategories:", filteredSubcategories);
   };
+
+  useEffect(() => {
+    fetchSubCategoryData();
+    handleCategoryChange(selectedCategory);
+  }, [selectedCategory]);
+
+
   const fileRef = form.register('file', { required: true });
   return (
     <div className="max-h-screen">
@@ -349,7 +355,10 @@ const AddProducts = ({ redirect }: any) => {
                       <FormItem >
                         <div className="flex items-center">
                           <FormLabel className="w-36">Category:</FormLabel>
-                          <Select onValueChange={field.onChange} defaultValue={field.value}>
+                          <Select onValueChange={(value) => {
+                            field.onChange(value);
+                            handleCategoryChange(value);
+                          }} defaultValue={field.value}>
                             <FormControl>
                               <SelectTrigger>
                                 <SelectValue placeholder="Select a verified email to display" />
@@ -383,7 +392,7 @@ const AddProducts = ({ redirect }: any) => {
                           <FormLabel className="w-36">Sub-Category</FormLabel>
                           <Select onValueChange={(value) => {
                             field.onChange(value);
-                            handleCategoryChange(value);
+                            // handleCategoryChange(value);
                           }} defaultValue={field.value}>
                             <FormControl>
                               <SelectTrigger>
@@ -447,3 +456,4 @@ const AddProducts = ({ redirect }: any) => {
 };
 
 export default AddProducts;
+

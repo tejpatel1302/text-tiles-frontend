@@ -43,6 +43,7 @@ export function UserDropDown() {
       } catch (error) {
         console.error("Error fetching product data:", error);
         setLoading(false)
+        navigate('/user/login')
       }
     }
     fetchUserData();
@@ -57,6 +58,10 @@ export function UserDropDown() {
   function clickHandler3() {
     navigate('/user/products')
   }
+
+  // if (user.user === undefined) {
+  //   
+  // }
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
