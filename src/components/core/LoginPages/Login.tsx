@@ -20,6 +20,7 @@ import { setCredentials } from "@/features/redux_toolkit/authSlice";
 import { setCredentials2 } from "@/features/redux_toolkit/userAuthSlice";
 import { useDispatch } from "react-redux";
 import { useAdminloginMutation, useSaloginMutation, useUserloginMutation} from "@/features/api/authApiSlice";
+import { useState } from "react";
 
 const Login = ({ redirect }: any) => {
   const dispatch = useDispatch()
@@ -38,8 +39,10 @@ const Login = ({ redirect }: any) => {
     },
     mode:"all"
   });
+  const [loading, setLoading] = useState(false);
 
   const submitData = async (data: any) => {
+    setLoading(true);
     console.log(data, 'hellooo')
     try {
       let userData: any;
@@ -61,6 +64,8 @@ const Login = ({ redirect }: any) => {
       navigate(redirect)
     } catch (err) {
       console.log(err);
+    } finally {
+      setLoading(false);
     }
   };
   
@@ -148,7 +153,7 @@ const Login = ({ redirect }: any) => {
                     <div className="flex justify-center mx-auto gap-5">
                       <Button
                         type="submit"
-                     
+                        disabled={loading}
                         className="px-7"
                         variant={
                           isUserLoginPage || isDefaultPage
@@ -160,7 +165,7 @@ const Login = ({ redirect }: any) => {
                             : "default"
                         }
                       >
-                        Login
+                        {loading ? 'Loading...' : 'Login'}
                       </Button>
                       <Button
                         variant={

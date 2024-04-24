@@ -39,7 +39,7 @@ const ManageCategory = () => {
   
     categoryID: item.id,
     categoryName: item.name, 
-    images: item.image ? URL.createObjectURL(new Blob([item.image.buffer], { type: item.image.mimetype })) : null,
+    images: `data:image/jpeg;base64,${item.image.buffer}`,
   
 }));
 
