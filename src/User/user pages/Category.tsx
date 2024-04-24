@@ -66,20 +66,14 @@ const Category = () => {
       <div className="flex justify-center items-center gap-10 mt-10 flex-wrap" >
         {showCategory.map((category:any) => (
           <div key={category?.id} onClick={()=>{clickHandler(category?.id)}}className="h-[500px] w-[400px] rounded-lg border border-gray-300 bg-white overflow-hidden shadow-lg relative transition duration-300 ease-in-out transform hover:scale-105 flex flex-col justify-center items-center">
-            <img className="h-96" src={category?.image} alt={category?.name} />
+            <img className="h-96" src={`data:image/jpeg;base64,${category.image.buffer}`} alt={category?.name} />
             <div className="px-6 py-4">
               <div className="font-bold text-xl text-center mt-5">{category?.name}</div>
             </div>
             <div className="px-6 py-4 flex items-center justify-between"></div>
           </div>
         ))}
-         <div  onClick={clickHandler2} className="h-[500px] w-[400px] rounded-lg border border-gray-300 bg-white overflow-hidden shadow-lg relative transition duration-300 ease-in-out transform hover:scale-105 flex flex-col justify-center items-center">
-           
-            <div className="px-6 py-4">
-              <div className="font-bold text-xl text-center mt-5">ALL</div>
-            </div>
-            <div className="px-6 py-4 flex items-center justify-between"></div>
-          </div>
+        
       </div>
     </div>
   );

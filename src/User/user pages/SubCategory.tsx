@@ -48,9 +48,9 @@ const SubCategory = () => {
     <div className=" max-w-[90%] mx-auto mr-10 ">
       <div className="text-4xl font-bold mt-10  text-gray-600 ">Choose Your Sub-Category</div>
       <div className="flex  items-center gap-10 mt-10 flex-wrap" onClick={clickHandler}>
-        {showSubCategory.map(category => (
+        {showSubCategory.map(category  => (
           <div onClick={()=>{clickHandler(category?.id)}} key={category?.id} className="h-[500px] w-[400px] rounded-lg border border-gray-300 bg-white overflow-hidden shadow-lg relative transition duration-300 ease-in-out transform hover:scale-105 flex flex-col justify-center items-center">
-            <img className="h-96" src={category?.image} alt={category?.name} />
+            <img className="h-96" src={`data:image/jpeg;base64,${category.image.buffer}`} alt={category?.name} />
             <div className="px-6 py-4">
               <div className="font-bold text-xl text-center mt-5">{category?.name}</div>
             </div>
