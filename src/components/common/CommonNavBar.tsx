@@ -40,9 +40,9 @@ const CommonNavBar = () => {
   function clickHandler() {
     navigate("/user/products");
   }
-  // function navigateClickHandler(){
-  //   navigate('/user/order-history')
-  // }
+  function navigateClickHandler(){
+    navigate('/user/category')
+  }
   function clickHandler2() {
     navigate("/user/cart");
   }
@@ -54,8 +54,8 @@ const CommonNavBar = () => {
     <>
       {isAdminDashboard && (
         <div className="flex justify-between w-11/12 mx-auto p-3  ">
-          <div className="h-20 w-20 relative mr-16 ">
-            <img src={image} alt="" className="" />
+          <div className="h-20 w-20 relative mr-16 " >
+            <img src={image} alt="" className="" onClick={navigateClickHandler}/>
           </div>
 
           <div className="flex items-center gap-5">
@@ -67,7 +67,7 @@ const CommonNavBar = () => {
       )}
       {!isAdminDashboard && (
         <div className="flex justify-between w-9/12 mx-auto p-3  ">
-          <div className="h-20 w-20">
+          <div className="h-20 w-20" onClick={navigateClickHandler}>
             <img src={image} alt="" />
           </div>
           {selectedCategories &&

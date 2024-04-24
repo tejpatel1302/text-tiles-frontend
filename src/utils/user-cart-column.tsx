@@ -8,12 +8,15 @@ import { useLocation } from "react-router-dom";
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type UserCart = {
-  category: string; 
-  name: string;
-  price: string;
-  images: string
-  productId:string
-  // quantity:string
+  id: string,
+
+  quantity:any,
+image:any,
+name:any
+  
+  itemSize: any,
+  totalPrice: any,
+  // image / name pending
 };
 const EditCell = ({ row, table }: any) => {
   const location = useLocation()
@@ -96,19 +99,27 @@ const EditCell = ({ row, table }: any) => {
 
 const columnHelper = createColumnHelper<UserCart >();
 export const columns = [
-    columnHelper.accessor("productId", {
+    columnHelper.accessor("id", {
         header: "Product ID",
         
     }),
-    columnHelper.accessor("images", {
-        header: "images",
+    columnHelper.accessor("image", {
+        header: "image",
         
     }),
     columnHelper.accessor("name", {
         header: "Name",
         
     }),
-    columnHelper.accessor("price", {
+    columnHelper.accessor("itemSize", {
+      header: "Size",
+      
+  }),
+    columnHelper.accessor("quantity", {
+      header: "Quantity",
+      
+  }),
+    columnHelper.accessor("totalPrice", {
         header: "Price",
         
     }),
@@ -117,14 +128,26 @@ export const columns = [
     //     cell: TableCell
         
     // }),
-    columnHelper.accessor("category", {
-      header: "Category",
+    // columnHelper.accessor("category", {
+    //   header: "Category",
      
-      meta: {
-        type: "number",
-      },
-    }),
-    
+    //   meta: {
+    //     type: "number",
+    //   },
+    // }),
+    {
+      accessorKey: "total",
+      header: "Total",
+      cell: ({row}:any) => {
+          const result = row.getValue('quantity') * row.getValue('totalPrice');
+          const formattedResult = result.toFixed(2); // Limit to 2 decimal places
+          return (
+              <div>
+                  {formattedResult}
+              </div>
+          );
+      }
+  },
     
   columnHelper.display({
    

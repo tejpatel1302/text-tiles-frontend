@@ -42,6 +42,7 @@ import Protected from "./components/common/Protected.tsx";
 import PaymentMethods from "./User/user pages/PaymentMethods.tsx";
 import { OrderReport } from "./utils/order-report.tsx";
 import UserOrderReport from "./User/user pages/UserOrderReport.tsx";
+import SAOrderDetails from "./Super Admin/SAOrderDetails.tsx";
 
 const appRoutes = createBrowserRouter([
   {
@@ -59,6 +60,10 @@ const appRoutes = createBrowserRouter([
       {
         path: "/admin/register",
         element: <AdminRegister />,
+      },
+      {
+        path: "/super-admin/order-details",
+        element: <SAOrderDetails/>,
       },
       {
         path: "/user/checkout",

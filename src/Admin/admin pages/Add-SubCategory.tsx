@@ -141,7 +141,7 @@ const AddSubCategory = ({ redirect }: any) => {
                           <Input
                             {...field}
                             placeholder="Enter Product Name"
-                            type="text"
+                            type="text" className="w-[300px]"
                           />
                         </FormControl>
                         <FormMessage />
@@ -172,7 +172,7 @@ const AddSubCategory = ({ redirect }: any) => {
                       <FormItem className="flex items-center">
                         <FormLabel className="w-36">Image:</FormLabel>
                         <FormControl>
-                        <Input {...fileRef} type="file" />
+                        <Input {...fileRef} type="file"  className="w-[300px]"/>
                         </FormControl>
                         <FormMessage />
                       </FormItem>

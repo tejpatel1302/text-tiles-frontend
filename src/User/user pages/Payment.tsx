@@ -20,15 +20,18 @@ import { LockIcon, Mail, UserRound } from "lucide-react";
 import Card2 from "./Card2";
 import { useDispatch, useSelector } from "react-redux";
 import { addAddress } from "@/features/redux_toolkit/addressSlice";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { getAddressApi } from "@/features/api/apicall";
+import { selectUserCurrentToken } from "@/features/redux_toolkit/userAuthSlice";
 
 const Payment = ({ redirect }: any) => {
   const [displayPayment, setDisplayPayment] = useState(false);
   const dispatch = useDispatch();
+  const token = useSelector(selectUserCurrentToken)
   const navigate = useNavigate();
   const { addressData } = useSelector((state: any) => state.address);
   const { cartData } = useSelector((state: any) => state.cart);
-  
+  const [showAddress, setShowAddress]:any = useState([]);
   const form = useForm<z.infer<typeof AddressSchema>>({
     resolver: zodResolver(AddressSchema),
     defaultValues: {
@@ -47,7 +50,26 @@ const Payment = ({ redirect }: any) => {
   const clickHandler = () =>{
     setDisplayPayment(true)
   }
-
+  async function fetchCategoryData() {
+    try {
+      const payload = {
+        Authorization: `Bearer ${token}`,
+       
+      };
+      
+      const res = await getAddressApi(payload);
+      console.log(res, 'getaddress')
+      setShowAddress(res?.data);
+      
+      
+    } catch (error) {
+      console.error("Error fetching product data:", error);
+    }
+  }
+  useEffect(() => {
+    fetchCategoryData();
+    
+  }, []);
   return (
     <div className=" flex w-8/12 gap-4 mx-auto my-10">
       <div className="w-1/2">
@@ -62,13 +84,26 @@ const Payment = ({ redirect }: any) => {
                 </div>
               </div>
               <div>
-                <div className="mb-2">{addressData[0]?.first_name}</div>
-                <div className="mb-2">{addressData[0]?.last_name}</div>
-                <div className="mb-2">{addressData[0]?.address}</div>
-                <div className="mb-2">{addressData[0]?.city}</div>
-                <div className="mb-2">{addressData[0]?.county}</div>
-                <div className="mb-2">{addressData[0]?.postcode}</div>
-              </div>
+  {showAddress.map((address, index) => (
+    <div key={index} className="flex">
+      <div>
+        <input
+          type="radio"
+          name="selectedAddress"
+          value={index}
+          onChange={() => handleAddressSelection(index)}
+        />
+      </div>
+      <div className="mb-2">{address.billToName}</div>
+      <div className="mb-2">{address.address1}</div>
+      <div className="mb-2">{address.address2}</div>
+      <div className="mb-2">{address.city}</div>
+      <div className="mb-2">{address.county}</div>
+      <div className="mb-2">{address.eir}</div>
+    </div>
+  ))}
+</div>
+
             </div>
             <div>
               <div className="text-2xl font-bold my-4">Payment Type:</div>

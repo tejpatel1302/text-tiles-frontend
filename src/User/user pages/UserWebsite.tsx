@@ -1,43 +1,58 @@
-import { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { add } from '../../features/redux_toolkit/cartSlice';
-import { fetchProducts, STATUSES } from '../../features/redux_toolkit/productSlice'; // Import fetchProducts and STATUSES from the productSlice
+import { fetchProducts } from '../../features/redux_toolkit/productSlice';
 import ProductCard from './Card';
-import { Button } from '@/components/ui/button';
-import { Link } from 'react-router-dom';
-const UserWebsite = ({title}:any) => {
-    const dispatch = useDispatch();
-    const { data: products, status } = useSelector((state:any) => state.product);
-console.log(products.id)
-    useEffect(() => {
-        dispatch(fetchProducts('')); // Dispatch fetchProducts thunk when component mounts
-    }, [dispatch]); // Include dispatch in the dependency array to avoid linting warnings
+import { getProductsApi, getProductsWithSubIDApi } from '@/features/api/apicall';
+import { selectUserCurrentToken } from '@/features/redux_toolkit/userAuthSlice';
 
-    const handleAdd = (product:any) => {
-        dispatch(add(product));
-    };
+const UserWebsite = ({ title }: { title: string }) => {
+  const dispatch = useDispatch();
+  const token = useSelector(selectUserCurrentToken);
+  const { subId } = useSelector((state: any) => state.subId);
 
-    if (status === STATUSES.LOADING) {
-        return <h2>Loading....</h2>;
+  const [showProducts, setShowProducts] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        setLoading(true);
+        let res;
+        if (subId) {
+          const payload = { Authorization: `Bearer ${token}` };
+          res = await getProductsWithSubIDApi(payload, subId);
+        } else {
+          const payload = { Authorization: `Bearer ${token}` };
+          res = await getProductsApi(payload);
+        }
+        setShowProducts(res?.data || []);
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setLoading(false);
+      }
     }
 
-    if (status === STATUSES.ERROR) {
-        return <h2>Something went wrong!</h2>;
-    }
+    fetchData();
+  }, [subId, token]);
 
-    return (
-        <div className="container mx-auto ml-24">
-            <div className='text-2xl font-semibold'>{title}</div>
-            <div className='flex flex-wrap gap-10'>
-                {products?.map((product:any) => (
-                 <div key={product?.title}>
-                       <ProductCard  image={product.image} title={product.title} price={product.price} id={product.id}/>
-           
-                 </div>
-                ))}
-            </div>
-        </div>
-    );
+  const handleAdd = (product: any) => {
+    dispatch(add(product));
+  };
+
+  return (
+    <div className="container mx-auto ml-24">
+      <div className='text-2xl font-semibold mt-10'>{title}</div>
+      <div className='flex flex-wrap gap-10'>
+        {showProducts?.map((product: any) => (
+          <div key={product?.title}>
+            <ProductCard image={product.image} title={product.title} price={product.price} id={product.id} />
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 };
 
 export default UserWebsite;

@@ -1,10 +1,13 @@
 import { useSelector, useDispatch } from "react-redux";
 import { remove } from "../../features/redux_toolkit/cartSlice";
 import { DataTable } from "@/components/common/Data-table";
-
 import { UserCart, columns } from "@/utils/user-cart-column";
 import { Button } from "@/components/ui/button";
 import { useLocation, useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { getCartApi } from "@/features/api/apicall";
+import { RootState } from "@/app/store"; // Assuming RootState contains the type of your Redux state
+import { selectUserCurrentToken } from "@/features/redux_toolkit/userAuthSlice";
 
 const Cart = () => {
   const location = useLocation();
@@ -12,20 +15,43 @@ const Cart = () => {
   const navigate = useNavigate();
   const isCheckout = location.pathname === "/user/checkout";
 
-  const { cartData } = useSelector((state: any) => state.cart);
-  console.log(cartData);
+  const [showProducts, setShowProducts] = useState<UserCart[]>([]);
+  const [loading, setLoading] = useState(true);
+  const token = useSelector(selectUserCurrentToken);
+  const cartData = useSelector((state: RootState) => state.cart.cartData);
+
   const handleRemove = (productId: any) => {
     dispatch(remove(productId));
   };
-  const data: UserCart[] = cartData.map((data: any) => ({
-    productId: data?.id,
+ 
+  async function fetchCartProductsData() {
+    try {
+      const payload = {
+        Authorization: `Bearer ${token}`,
+      };
 
-    name: data?.title,
-    price: data?.price,
+      const res = await getCartApi(payload);
+      setShowProducts(res?.data?.cart?.CartItem || []);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching subcategory data:", error);
+      setLoading(false);
+    }
+  }
+console.log(showProducts,'jijiji')
+  useEffect(() => {
+    fetchCartProductsData();
+  }, [token]);
 
-    category: data?.category,
-    images: data?.image,
+  const data: UserCart[] = showProducts?.map((item: any) => ({
+    id: item?.id,
+    quantity: item?.quantity,
+    itemSize: item?.itemSize,
+    totalPrice: item?.totalPrice,
+    image: item?.colorRelation?.image,
+    name: item?.colorRelation?.Product?.name
   }));
+
   function clickHandler() {
     navigate("/user/checkout");
   }
@@ -33,10 +59,8 @@ const Cart = () => {
   return (
     <div className="w-[95%] mx-auto">
       <div className="flex justify-between">
-        <div className=" text-3xl font-bold">{`${
-          isCheckout ? "Items" : "Cart"
-        }`}</div>
-        <div className={`${isCheckout ? "flex items-center gap-8" : "my-4 mr-24 "}`}>
+        <div className=" text-3xl font-bold">{`${isCheckout ? "Items" : "Cart"}`}</div>
+        <div className={`${isCheckout ? "flex items-center gap-8" : "my-4 mr-24"}`}>
           {!isCheckout ? (
             <div></div>
           ) : (
@@ -49,9 +73,14 @@ const Cart = () => {
           </Button>
         </div>
       </div>
-      <div className="flex flex-col justify-center w-[95%] mx-auto ">
-        <DataTable columns={columns} data={data} />
-      </div>
+      <div className="text-3xl font-bold">Products</div>
+       {loading ? (
+        <div>Loading...</div>
+      ) : (
+        <div>
+          <DataTable columns={columns} data={data} />
+        </div>
+      )}
     </div>
   );
 };

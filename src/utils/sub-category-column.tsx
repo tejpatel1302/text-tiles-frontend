@@ -1,7 +1,10 @@
 import { Button } from "@/components/ui/button";
+import { deleteSubCategoryApi } from "@/features/api/apicall";
+import { selectAdminCurrentToken } from "@/features/redux_toolkit/authSlice";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { Save, X } from "lucide-react";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -11,44 +14,63 @@ export type SubCategory = {
   images: string,
 };
 
-const EditCell = ({ row, table }: any) => {
-    const meta = table.options.meta;
-    const setEditedRows = (e: any) => {
-      meta?.setEditedRows((old: []) => ({
-        ...old,
-        [row.id]: !old[row.id],
-      }));
-    };
-    const removeRow = () => {
-        meta?.removeRow(row.index);
-      };
-    //   meta?.editedRows[row.id] ? 
-    return (
-        <div className="edit-cell-container mr-32">
-        
-        {meta?.editedRows[row.id] ? (
-          <div className="edit-cell-action flex gap-4">
-            <Button onClick={setEditedRows} name="cancel" variant={'ghost'} className="text-red-500" >
-              <X/>
-            </Button>{" "}
-            <Button onClick={setEditedRows} name="done" variant={'ghost'} className="text-green-500">
-              <Save/>
-            </Button>
-          </div>
-        ) : (
-          <div className="edit-cell-action flex gap-4">
-            <Button onClick={setEditedRows} name="edit" variant={'green'}>
-              Edit
-            </Button>
-            <Button onClick={removeRow} name="remove" variant={'red'}>
-              Delete
-            </Button>
-          </div>
-        )}
-      </div>
-    )
+const EditCell = ({ row, table, subCategoryId }: any) => {
+  const meta = table.options.meta;
+  const setEditedRows = (e: any) => {
+    meta?.setEditedRows((old: []) => ({
+      ...old,
+      [row.id]: !old[row.id],
+    }));
   };
-
+//   const params = useParams();
+// const { productId } = params;
+  const token = useSelector(selectAdminCurrentToken);
+  const removeRow = async () => {
+      meta?.removeRow(row.index);
+     
+        try {
+          const payload = {
+            Authorization: `Bearer ${token}`,
+            // 'Content-Type': 'application/json'
+          };
+    
+          const res = await deleteSubCategoryApi(payload, subCategoryId);
+        
+          console.log(res, "hihello");
+          
+        } catch (error) {
+          console.error("Error fetching subcategory data:", error);
+          
+        }
+      }
+    
+    
+  //   meta?.editedRows[row.id] ? 
+  return (
+      <div className="edit-cell-container mr-32">
+      
+      {meta?.editedRows[row.id] ? (
+        <div className="edit-cell-action flex gap-4">
+          <Button onClick={setEditedRows} name="cancel" variant={'ghost'} className="text-red-500" >
+            <X/>
+          </Button>{" "}
+          <Button onClick={setEditedRows} name="done" variant={'ghost'} className="text-green-500">
+            <Save/>
+          </Button>
+        </div>
+      ) : (
+        <div className="edit-cell-action flex gap-4">
+          <Button onClick={setEditedRows} name="edit" variant={'green'}>
+            Edit
+          </Button>
+          <Button onClick={removeRow} name="remove" variant={'red'}>
+            Delete
+          </Button>
+        </div>
+      )}
+    </div>
+  )
+};
   const TableCell = ({ getValue, row, column, table }:any) => {
     const initialValue = getValue()
     const columnMeta = column.columnDef.meta
@@ -97,7 +119,7 @@ export const columns = [
     },
   }),
   columnHelper.accessor("images", {
-    header: "SubCategory Image",
+    header: "images",
    
   }),
   columnHelper.accessor("name", {
@@ -106,8 +128,8 @@ export const columns = [
   }),
  
   columnHelper.display({
-    header:'Actions',
+    header: 'Actions',
     id: "edit",
-    cell: EditCell,
-  }),
+    cell: ({ row, table }) => <EditCell row={row} subCategoryId={row.original.subcategoryID} table={table} />,
+}),
 ];

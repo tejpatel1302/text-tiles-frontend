@@ -5,10 +5,14 @@ import { useSelector } from "react-redux";
 import { selectAdminCurrentToken } from "@/features/redux_toolkit/authSlice";
 import { useEffect, useState } from "react";
 
-const ManageSubCategory = () => {
+interface ManageSubCategoryProps {
+  // Add props if needed
+}
+
+const ManageSubCategory: React.FC<ManageSubCategoryProps> = () => {
   const token = useSelector(selectAdminCurrentToken);
 
-  const [showSubCategory, setShowSubCategory] = useState([]);
+  const [showSubCategory, setShowSubCategory] = useState<SubCategory[]>([]);
   const [loading, setLoading] = useState(true);
 
   async function fetchSubCategoryData() {
@@ -25,27 +29,43 @@ const ManageSubCategory = () => {
       setLoading(false);
     }
   }
-console.log(showSubCategory)
+
   useEffect(() => {
     fetchSubCategoryData();
   }, []);
 
-  const data: SubCategory[] = showSubCategory.map((item: any) => ({
+  // Function to create Blob from buffer
+  function createBlobFromBuffer(bufferString: string, mimetype: string): string | null {
+    try {
+      const binary = atob(bufferString);
+      const buffer = new ArrayBuffer(binary.length);
+      const view = new Uint8Array(buffer);
+      for (let i = 0; i < binary.length; i++) {
+        view[i] = binary.charCodeAt(i);
+      }
+      const blob = new Blob([view], { type: mimetype });
+      return URL.createObjectURL(blob);
+    } catch (error) {
+      console.error("Error creating Blob:", error);
+      return null;
+    }
+  }
+
+  const processedData: SubCategory[] = showSubCategory.map((item: any) => ({
     subcategoryID: item.id,
     name: item.name,
-    // Handle image here if needed
-    images: item.image ? URL.createObjectURL(new Blob([item.image.buffer], { type: item.image.mimetype })) : null,
+    images: item.image ? createBlobFromBuffer(item.image.buffer, item.image.mimetype) : null,
   }));
 
   return (
     <div className="bg-white">
-      <div className="text-3xl font-bold">Sub-Category Management</div>
+      <div className="text-3xl font-bold mt-10 ml-4 ">Sub-Category Management</div>
       {loading ? (
         <div>Loading...</div>
       ) : (
-        <div>
-          <DataTable columns={columns} data={data} />
-        </div>
+         <div className="-mt-12">
+        <DataTable columns={columns} data={processedData} />
+      </div>
       )}
     </div>
   );
