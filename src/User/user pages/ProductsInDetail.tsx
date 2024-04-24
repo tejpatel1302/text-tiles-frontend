@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import ProductCard from "./Card";
 import { Button } from "@/components/ui/button";
@@ -28,6 +28,7 @@ import {
   getColorsApi,
   getProductsWithColorIdApi,
   getSingleProductApi,
+  getUserApi,
 } from "@/features/api/apicall";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Input } from "@/components/ui/input";
@@ -45,7 +46,7 @@ const ProductInDetail = () => {
       productId: "string",
       itemSize: "string",
       colorRelationId: "string",
-      quantity:1,
+      quantity: 1,
     },
 
     mode: "onChange",
@@ -55,8 +56,9 @@ const ProductInDetail = () => {
   const [product, setProduct]: any = useState(null);
   const [showColors, setShowColors]: any = useState([]);
   const [showColorsRel, setShowColorsRel]: any = useState([]);
-  const [colorId,  setColorId]: any = useState('');
+  const [colorId, setColorId]: any = useState('');
   const [loading, setLoading] = useState(true);
+  const [user, setUser] = React.useState([] as any);
   const params = useParams();
   const { productId } = params;
 
@@ -79,10 +81,26 @@ const ProductInDetail = () => {
   console.log(product);
   useEffect(() => {
     fetchProductsData();
+    async function fetchUserData() {
+      try {
+        const payload = {
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        };
+        const res = await getUserApi(payload);
+        setUser(res?.data);
+        console.log(res, "getUser");
+        setLoading(false);
+      } catch (error) {
+        console.error("Error fetching product data:", error);
+        setLoading(false);
+      }
+    }
+    fetchUserData();
   }, [productId]);
 
   const submitData = async (data: any) => {
-    console.log(data,'hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii');
+    console.log(data, 'hiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii');
     try {
       // const formData = new FormData();
       // formData.append("productId", product?.product?.id);
@@ -90,18 +108,20 @@ const ProductInDetail = () => {
       // formData.append("itemSize", data.itemSize);
       // formData.append("colorRelationId", colorId);
 
+
+
       const FilteredData = {
-         productId:  product?.product?.id,
-         quantity: Number(data.quantity),
-         itemSize: data.itemSize,
-         colorRelationId: showColorsRel[0].id
-       };
-      
+        productId: product?.product?.id,
+        quantity: Number(data.quantity),
+        itemSize: data.itemSize,
+        colorRelationId: showColorsRel[0].id
+      };
+
       console.log(FilteredData, "hiiiiiiiiiiiiiiii");
       const config = {
         headers: {
           Authorization: `Bearer ${token}`,
-          
+
         },
       };
 
@@ -126,37 +146,38 @@ const ProductInDetail = () => {
     }
   }
   useEffect(() => {
-   fetchColorsData()
- },[] );
- async function fetchColorsRelation() {
-   try {
-     const payload = {
-       Authorization: `Bearer ${token}`,
-     };
+    fetchColorsData()
+    fetchColorsRelation()
+  }, []);
+  async function fetchColorsRelation() {
+    try {
+      const payload = {
+        Authorization: `Bearer ${token}`,
+      };
 
-     const res = await getProductsWithColorIdApi(payload,productId);
-     console.log(res, "getColorsRllel");
-     setShowColorsRel(res);
-   } catch (error) {
-     console.error("Error fetching product data:", error);
-   }
- }
- useEffect(() => {
-   fetchColorsRelation()
-},[] );
 
- function clickHandler(colorId:any) {
+      const res = await getProductsWithColorIdApi(payload, productId);
+      console.log(res, "getColorsRllel");
+      setShowColorsRel(res);
+    } catch (error) {
+      console.error("Error fetching product data:", error);
+    }
+  }
+  useEffect(() => {
+  }, []);
 
-   setColorId(colorId);
- }
- console.log(colorId,'124112423')
+  function clickHandler(colorId: any) {
+
+    setColorId(colorId);
+  }
+  console.log(colorId, '124112423')
   return (
     <div>
       <div className="flex justify-center items-center w-10/12 mx-auto py-8">
         {product && (
           <div className="flex gap-8">
             <div className="border border-gray-300 h-[450px] w-[400px] rounded-lg overflow-hidden flex justify-center items-center">
-              <img src={product?.image} alt={product?.title} className="h-96" />
+              <img src={`data:image/jpeg;base64,${showColorsRel[0].image.buffer}`} alt={product?.title} className="h-96" />
             </div>
             <div className="flex flex-col justify-center max-w-[500px]">
               <h2 className="text-3xl font-semibold mb-4 ">
@@ -169,17 +190,17 @@ const ProductInDetail = () => {
                 <div>
                   <div className="mb-2">Colors</div>
                   <div className="flex gap-3">
-  {showColors.map((color:any, index:any) => (
-    <div 
-      onClick={() => { clickHandler(color.id) }} 
-      key={index}
-      className={`h-8 w-8 rounded-full ${
-        color.id === showColorsRel[0].colorId ? 'border-4 border-black' : ''
-      }`}
-      style={{ backgroundColor: color.hexCode }}
-    ></div>
-  ))}
-</div>
+                    {showColors.map((color: any, index: any) => (
+                      <div
+                        onClick={() => { clickHandler(color.id) }}
+                        key={index}
+                        className={`h-8 w-8 rounded-full ${''} ? 'border-4 border-black' : ''
+                          }`}
+
+                        style={{ backgroundColor: color.hexCode }}
+                      ></div>
+                    ))}
+                  </div>
 
 
 
@@ -202,7 +223,7 @@ const ProductInDetail = () => {
                               <Select
                                 onValueChange={field.onChange}
                                 defaultValue={field.value}
-                                
+
                               >
                                 <FormControl>
                                   <SelectTrigger>
@@ -238,7 +259,7 @@ const ProductInDetail = () => {
                             <FormControl>
                               <Input {...field} placeholder="Quantity" className="w-[400px]" type="number" />
                               {/* onChange={handleImageChange}  */}
-                              
+
                             </FormControl>
                           </FormItem>
                           <div className="flex justify-center mx-auto gap-5 my-4">
