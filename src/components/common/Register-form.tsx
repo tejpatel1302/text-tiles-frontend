@@ -22,20 +22,20 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {  useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
-import { ArrowBigDown, CalendarRange, LockIcon, Mail,Phone, UserRound } from "lucide-react";
+import { ArrowBigDown, CalendarRange, LockIcon, Mail, Phone, UserRound } from "lucide-react";
 
 import { PasswordInput } from "../ui/password-input";
-import { useAdminregisterMutation, useUserregisterMutation} from "@/features/api/authApiSlice";
+import { useAdminregisterMutation, useUserregisterMutation } from "@/features/api/authApiSlice";
 
 const Register = ({ redirect }: any) => {
   const navigate = useNavigate();
   const location = useLocation();
   const isUserRegisterPage = location.pathname === "/user/register";
   const isAdminRegisterPage = location.pathname === "/admin/register";
-  const [register] =  useAdminregisterMutation()
-  const [userRegister] =   useUserregisterMutation()
+  const [register] = useAdminregisterMutation()
+  const [userRegister] = useUserregisterMutation()
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
     defaultValues: {
@@ -48,13 +48,13 @@ const Register = ({ redirect }: any) => {
       gender: undefined as "Male" | "Female" | "Others" | undefined,
       lastName: "",
     },
-    mode:'all'
+    mode: 'all'
   });
 
   const submitData = async (data: any) => {
     try {
       console.log(data, 'registerData');
-  
+
       const dobISOString = new Date(data.dob).toISOString();
       const adminFilteredData = {
         firstName: data.firstName,
@@ -72,7 +72,7 @@ const Register = ({ redirect }: any) => {
         email: data.email,
         password: data.password
       };
-  
+
       let userData: any;
       if (location.pathname === '/admin/register') {
         userData = await register(adminFilteredData);
@@ -83,27 +83,27 @@ const Register = ({ redirect }: any) => {
       } else {
         throw new Error('Invalid registration path');
       }
-  
+
       navigate(redirect);
     } catch (error) {
       console.error('Error occurred during registration:', error);
       // Handle error here, such as displaying an error message to the user
     }
   };
-  
-  
-  
+
+
+
   return (
     <div className="h-screen flex flex-col justify-center items-center">
       <CardWrapper
         headerLabel="Register"
-        backButtonHref={ 
+        backButtonHref={
           `${isUserRegisterPage
-           ? "/user/login"
-           : isAdminRegisterPage
-           ? "/admin/login"
-           : ""}`
-         }
+            ? "/user/login"
+            : isAdminRegisterPage
+              ? "/admin/login"
+              : ""}`
+        }
         backButtonLabel="Already Registered ? Login"
         showSocial
       >
@@ -118,12 +118,12 @@ const Register = ({ redirect }: any) => {
                       name="firstName" // Fixed: corrected name attribute
                       render={({ field }) => (
                         <FormItem className="relative">
-                        <UserRound className={`absolute top-10 left-2 
+                          <UserRound className={`absolute top-10 left-2 
                           ${isUserRegisterPage
-                           ? "text-[#7346da]"
-                           : isAdminRegisterPage
-                           ? "text-[#79a9ed]"
-                           :  ""} 
+                              ? "text-[#7346da]"
+                              : isAdminRegisterPage
+                                ? "text-[#79a9ed]"
+                                : ""} 
                          `} />
                           <FormLabel className="w-[30%]">First Name</FormLabel>
                           <FormControl>
@@ -133,7 +133,7 @@ const Register = ({ redirect }: any) => {
                               type="text" // Fixed: corrected type
                             />
                           </FormControl>
-                          <FormMessage className="relative left-[1px]"/>
+                          <FormMessage className="relative left-[1px]" />
                         </FormItem>
                       )}
                     />
@@ -142,12 +142,12 @@ const Register = ({ redirect }: any) => {
                       name="phone" // Fixed: corrected name attribute
                       render={({ field }) => (
                         <FormItem className="relative">
-                       <Phone className={`absolute top-10 left-2 
+                          <Phone className={`absolute top-10 left-2 
                          ${isUserRegisterPage
-                          ? "text-[#7346da]"
-                          : isAdminRegisterPage
-                          ? "text-[#79a9ed]"
-                          :  ""} 
+                              ? "text-[#7346da]"
+                              : isAdminRegisterPage
+                                ? "text-[#79a9ed]"
+                                : ""} 
                         `} />
                           <FormLabel className="w-[30%]">Phone</FormLabel>
                           <FormControl>
@@ -157,7 +157,7 @@ const Register = ({ redirect }: any) => {
                               type="tel" // Fixed: corrected type to tel for phone number input
                             />
                           </FormControl>
-                          <FormMessage className="relative left-[1px]"/>
+                          <FormMessage className="relative left-[1px]" />
                         </FormItem>
                       )}
                     />
@@ -167,25 +167,25 @@ const Register = ({ redirect }: any) => {
                       name="dob" // Fixed: corrected name attribute
                       render={({ field }) => (
                         <FormItem className="relative">
-                       <CalendarRange className={`absolute top-10 left-2 
+                          <CalendarRange className={`absolute top-10 left-2 
                          ${isUserRegisterPage
-                          ? "text-[#7346da]"
-                          : isAdminRegisterPage
-                          ? "text-[#79a9ed]"
-                          :  ""} 
+                              ? "text-[#7346da]"
+                              : isAdminRegisterPage
+                                ? "text-[#79a9ed]"
+                                : ""} 
                         `} />
                           <FormLabel className="w-[30%]">
                             Date of Birth
                           </FormLabel>
-                          
-                            <Input
-                              {...field}
-                              type="date"
-                              className=""
-                            />
-                        
-                   
-                   <FormMessage className="relative left-[1px]"/>     </FormItem>
+
+                          <Input
+                            {...field}
+                            type="date"
+                            className=""
+                          />
+
+
+                          <FormMessage className="relative left-[1px]" />     </FormItem>
                       )}
                     />
 
@@ -194,19 +194,19 @@ const Register = ({ redirect }: any) => {
                       name="password" // Fixed: corrected name attribute
                       render={({ field }) => (
                         <FormItem className="relative">
-                       <LockIcon className={`absolute top-10 left-2 
+                          <LockIcon className={`absolute top-10 left-2 
                          ${isUserRegisterPage
-                          ? "text-[#7346da]"
-                          : isAdminRegisterPage
-                          ? "text-[#79a9ed]"
-                          :  ""} 
+                              ? "text-[#7346da]"
+                              : isAdminRegisterPage
+                                ? "text-[#79a9ed]"
+                                : ""} 
                         `} />
                           <FormLabel className="w-[30%]">Password</FormLabel>
                           <FormControl>
-                          <PasswordInput className="px-10" {...field}/>
+                            <PasswordInput className="px-10" {...field} />
                           </FormControl>
-      
-                          <FormMessage className="relative left-[1px] -top-[30px]"/>
+
+                          <FormMessage className="relative left-[1px] -top-[30px]" />
                         </FormItem>
                       )}
                     />
@@ -217,12 +217,12 @@ const Register = ({ redirect }: any) => {
                       name="lastName" // Fixed: corrected name attribute
                       render={({ field }) => (
                         <FormItem className="relative">
-                       <UserRound className={`absolute top-10 left-2 
+                          <UserRound className={`absolute top-10 left-2 
                          ${isUserRegisterPage
-                          ? "text-[#7346da]"
-                          : isAdminRegisterPage
-                          ? "text-[#79a9ed]"
-                          :  ""} 
+                              ? "text-[#7346da]"
+                              : isAdminRegisterPage
+                                ? "text-[#79a9ed]"
+                                : ""} 
                         `} />
                           <FormLabel className="w-[30%]">Last Name</FormLabel>
                           <FormControl>
@@ -232,7 +232,7 @@ const Register = ({ redirect }: any) => {
                               type="text" // Fixed: corrected type
                             />
                           </FormControl>
-                          <FormMessage className="relative left-[1px] "/>
+                          <FormMessage className="relative left-[1px] " />
                         </FormItem>
                       )}
                     />
@@ -241,12 +241,12 @@ const Register = ({ redirect }: any) => {
                       name="email" // Fixed: corrected name attribute
                       render={({ field }) => (
                         <FormItem className="relative">
-                       <Mail className={`absolute top-10 left-2 
+                          <Mail className={`absolute top-10 left-2 
                          ${isUserRegisterPage
-                          ? "text-[#7346da]"
-                          : isAdminRegisterPage
-                          ? "text-[#79a9ed]"
-                          :  ""} 
+                              ? "text-[#7346da]"
+                              : isAdminRegisterPage
+                                ? "text-[#79a9ed]"
+                                : ""} 
                         `} />
                           <FormLabel className="w-[30%]">Email</FormLabel>
                           <FormControl>
@@ -256,7 +256,7 @@ const Register = ({ redirect }: any) => {
                               type="email" // Fixed: corrected type
                             />
                           </FormControl>
-                          <FormMessage className="relative left-[1px]"/>
+                          <FormMessage className="relative left-[1px]" />
                         </FormItem>
                       )}
                     />
@@ -266,14 +266,14 @@ const Register = ({ redirect }: any) => {
                       name="gender"
                       render={({ field }) => (
                         <FormItem className="relative">
-                       <ArrowBigDown className={`absolute top-10 left-2 
+                          <ArrowBigDown className={`absolute top-10 left-2 
                          ${isUserRegisterPage
-                          ? "text-[#7346da]"
-                          : isAdminRegisterPage
-                          ? "text-[#79a9ed]"
-                          :  ""} 
-                        `} /> 
-                          
+                              ? "text-[#7346da]"
+                              : isAdminRegisterPage
+                                ? "text-[#79a9ed]"
+                                : ""} 
+                        `} />
+
                           <div className="mt-3 space-y-2">
                             <FormLabel className="w-36">Gender:</FormLabel>
                             <Select
@@ -305,8 +305,8 @@ const Register = ({ redirect }: any) => {
                 <Link to="/examples/forms">email settings</Link>.
               </FormDescription> */}
                           </div>
-                          
-                          <FormMessage className="relative left-[1px]"/>
+
+                          <FormMessage className="relative left-[1px]" />
                         </FormItem>
                       )}
                     />
@@ -315,40 +315,40 @@ const Register = ({ redirect }: any) => {
                       name="confirm_password" // Fixed: corrected name attribute
                       render={({ field }) => (
                         <FormItem className="relative">
-                       <LockIcon className={`absolute top-10 left-2 
+                          <LockIcon className={`absolute top-10 left-2 
                          ${isUserRegisterPage
-                          ? "text-[#7346da]"
-                          : isAdminRegisterPage
-                          ? "text-[#79a9ed]"
-                          :  ""} 
-                        `} /> 
+                              ? "text-[#7346da]"
+                              : isAdminRegisterPage
+                                ? "text-[#79a9ed]"
+                                : ""} 
+                        `} />
                           <FormLabel className="w-[30%]">
                             Confirm Password
                           </FormLabel>
                           <FormControl>
-                          <FormControl>
-                          <PasswordInput className="px-10" {...field}/>
+                            <FormControl>
+                              <PasswordInput className="px-10" {...field} />
+                            </FormControl>
                           </FormControl>
-                          </FormControl>
-                          <FormMessage className="relative left-[1px] -top-[32px]"/>
+                          <FormMessage className="relative left-[1px] -top-[32px]" />
                         </FormItem>
                       )}
                     />
                   </div>
                 </div>
                 <div>
-                <Button
-  className="px-10 fixed left-[690px] top-[540px]"
-  variant={
-    isUserRegisterPage
-      ? "purple"
-      : isAdminRegisterPage
-      ? "skyblue"
-      : "default"
-  }
->
-  Register
-</Button>
+                  <Button
+                    className="px-10 fixed left-[690px] top-[560px]"
+                    variant={
+                      isUserRegisterPage
+                        ? "purple"
+                        : isAdminRegisterPage
+                          ? "skyblue"
+                          : "default"
+                    }
+                  >
+                    Register
+                  </Button>
                 </div>
               </form>
             </Form>
@@ -360,3 +360,4 @@ const Register = ({ redirect }: any) => {
 };
 
 export default Register;
+
