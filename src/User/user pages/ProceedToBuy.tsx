@@ -29,7 +29,7 @@ const ProceedToBuy = ({ redirect }: any) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const token = useSelector(selectUserCurrentToken);
-  const [showProducts, setShowProducts] = useState<UserCart[]>([]);
+  const [showProducts, setShowProducts]:any = useState([]);
   const [loading, setLoading] = useState(true);
   const { cartData } = useSelector((state: any) => state.cart);
   const form = useForm<z.infer<typeof AddressSchema>>({
@@ -248,29 +248,33 @@ console.log(showProducts,'jijiji')
       </div>
     </div>
     <div className="max-h-60 overflow-y-auto border-b-2 border-purple-400 p-2">
-      {showProducts.map((cd:any, index:any) => (
-        <div className="flex items-center mb-4" key={index}>
-          <div className="w-20 h-20 border-2 border-gray-300 rounded-lg overflow-hidden">
-            <img src={cd.image} alt={cd.title} className="w-full h-full object-cover" />
-          </div>
-          <div className="ml-4">
-            <div className="font-bold text-xl">{`$${cd.price}`}</div>
-            <div className="text-sm">{cd.title}</div>
-            <div className="text-sm text-gray-600">Quantity: 1</div>
-          </div>
-        </div>
-      ))}
-    </div>
-    <div className="mt-4">
-      <div className="flex justify-between mb-2">
-        <div className="font-semibold">Delivery Charges</div>
-        <div className="font-semibold">$5.00</div>
+  {showProducts.map((cd:any, index:any) => (
+    <div className="flex items-center mb-4" key={index}>
+      <div className="w-20 h-20 border-2 border-gray-300 rounded-lg overflow-hidden">
+        <img src={cd.image} alt={cd.title} className="w-full h-full object-cover" />
       </div>
-      <div className="flex justify-between">
-        <div className="font-bold text-xl">Total to Pay</div>
-        <div className="font-bold text-xl">$100.00</div>
+      <div className="ml-4">
+        <div className="font-bold text-xl">{`€${cd?.totalPrice}`}</div>
+        <div className="text-sm">{cd.title}</div>
+        <div className="text-sm text-gray-600">Quantity: 1</div>
       </div>
     </div>
+  ))}
+</div>
+<div className="mt-4">
+  <div className="flex justify-between mb-2">
+    <div className="font-semibold">Delivery Charges</div>
+    <div className="font-semibold">€5.00</div>
+  </div>
+  <div className="flex justify-between">
+    <div className="font-bold text-xl">Total to Pay</div>
+    <div className="font-bold text-xl">
+      {/* Dynamically calculate total price */}
+      €{showProducts.reduce((acc, cd) => acc + cd.totalPrice, 0).toFixed(2)}
+    </div>
+  </div>
+</div>
+
   </div>
 </div>
 

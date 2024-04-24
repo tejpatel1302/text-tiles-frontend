@@ -174,7 +174,7 @@ const ProductInDetail = () => {
       onClick={() => { clickHandler(color.id) }} 
       key={index}
       className={`h-8 w-8 rounded-full ${
-        color.id === showColorsRel[0].colorId ? 'border-4 border-black' : ''
+        color.id === showColorsRel[0]?.colorId ? 'border-4 border-black' : ''
       }`}
       style={{ backgroundColor: color.hexCode }}
     ></div>
