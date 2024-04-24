@@ -148,7 +148,7 @@ console.log(formData,'hiiiiiiiiiiiiiiii')
           Add Products:
         </div>
         <div>
-          <div>
+          <div >
             <Form {...form}>
               <form
                 onSubmit={form.handleSubmit(submitData)}
@@ -162,11 +162,12 @@ console.log(formData,'hiiiiiiiiiiiiiiii')
                       <FormItem>
                          <div className="flex items-center">
                        <FormLabel className="w-36">Product Name:</FormLabel>
-                        <FormControl>
+                        <FormControl >
                           <Input
                             {...field}
                             placeholder="Enter your Product Name"
                             type="text"
+                            className="w-[300px]"
                           />
                         </FormControl>
                        </div>
@@ -186,6 +187,7 @@ console.log(formData,'hiiiiiiiiiiiiiiii')
                             {...field}
                             placeholder="Enter Description"
                             type="text"
+                            className="w-[300px]"
                           />
                         </FormControl>
                         </div>
@@ -198,13 +200,14 @@ console.log(formData,'hiiiiiiiiiiiiiiii')
                     name="price"
                     render={({ field }) => (
                       <FormItem >
-                          <div className="flex items-center">
+                          <div className="flex items-center ">
                         <FormLabel className="w-36">Price:</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
                             placeholder="Enter Price"
                             type="number"
+                            className="w-[300px]"
                           />
                         </FormControl>
                         </div>
@@ -219,7 +222,7 @@ console.log(formData,'hiiiiiiiiiiiiiiii')
                     render={({ field }) => (
                       <FormItem >
                           <div className="flex items-center">
-                        <FormLabel className="w-28">Sizes:</FormLabel>
+                        <FormLabel className="w-36">Sizes:</FormLabel>
                         <FormControl>
                           <div className="flex gap-5">
                             <label
@@ -290,6 +293,7 @@ console.log(formData,'hiiiiiiiiiiiiiiii')
                             {...field}
                             placeholder="Enter Material"
                             type="text"
+                            className="w-[300px]"
                           />
                         </FormControl>
                         </div>
@@ -403,7 +407,7 @@ console.log(formData,'hiiiiiiiiiiiiiiii')
                         <div className="flex items-center">
                           <FormLabel className="w-36">Image:</FormLabel>
                           <FormControl>
-                          <Input {...fileRef} type="file" />
+                          <Input {...fileRef} type="file" className="w-[300px]"/>
                           </FormControl>
                           </div>
                           <FormMessage className="relative left-[105px]"/>

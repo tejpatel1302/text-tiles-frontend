@@ -12,8 +12,8 @@ const UserOrderReport = () => {
 
 
   return (
-    <div >
-       <div className="mt-4 text-3xl font-bold">Orders-Report</div>
+    <div className="overflow-x-hidden">
+       <div className="m-4 text-3xl font-bold">Orders-Report</div>
       <div>
         <DataTable columns={columns} data={data} />
       </div>

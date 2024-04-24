@@ -1,18 +1,22 @@
 import { Button } from "@/components/ui/button";
+import { deleteCategoryApi } from "@/features/api/apicall";
+import { selectAdminCurrentToken } from "@/features/redux_toolkit/authSlice";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { Cross, Save, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { IconRight } from "react-day-picker";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type Category = {
   categoryID: number;
   categoryName: string;
-  categoryDescription: string;
-  image: string
+  
+  images: string
 };
-const EditCell = ({ row, table }: any) => {
+const EditCell = ({ row, table, categoryId }: any) => {
     const meta = table.options.meta;
     const setEditedRows = (e: any) => {
       meta?.setEditedRows((old: []) => ({
@@ -20,9 +24,29 @@ const EditCell = ({ row, table }: any) => {
         [row.id]: !old[row.id],
       }));
     };
-    const removeRow = () => {
+  //   const params = useParams();
+  // const { productId } = params;
+    const token = useSelector(selectAdminCurrentToken);
+    const removeRow = async () => {
         meta?.removeRow(row.index);
-      };
+       
+          try {
+            const payload = {
+              Authorization: `Bearer ${token}`,
+              // 'Content-Type': 'application/json'
+            };
+      
+            const res = await deleteCategoryApi(payload, categoryId);
+          
+            console.log(res, "hihello");
+            
+          } catch (error) {
+            console.error("Error fetching subcategory data:", error);
+            
+          }
+        }
+      
+      
     //   meta?.editedRows[row.id] ? 
     return (
         <div className="edit-cell-container mr-32">
@@ -96,7 +120,7 @@ export const columns = [
       type: "number",
     },
   }),
-  columnHelper.accessor("image", {
+  columnHelper.accessor("images", {
     header: "Category Image",
    
   }),
@@ -104,14 +128,12 @@ export const columns = [
     header: "Category Name",
     cell: TableCell
   }),
-  columnHelper.accessor("categoryDescription", {
-    header: "Category Description",
-    cell: TableCell
-  }),
+  
   
   columnHelper.display({
-    header:'Actions',
+    header: 'Actions',
     id: "edit",
-    cell: EditCell,
-  }),
+    cell: ({ row, table }) => <EditCell row={row} categoryId={row.original.categoryID} table={table} />,
+}),
+
 ];

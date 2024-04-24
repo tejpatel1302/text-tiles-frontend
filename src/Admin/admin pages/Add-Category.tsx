@@ -20,7 +20,7 @@ import { useNavigate } from "react-router-dom";
 
 import { useDispatch, useSelector } from "react-redux";
 import { selectAdminCurrentToken } from "@/features/redux_toolkit/authSlice";
-import { addCategoryApi, uploadApi } from "@/features/api/apicall";
+import { addCategoryApi} from "@/features/api/apicall";
 
 
 
@@ -102,7 +102,7 @@ console.log(formData,'hiiiiiiiiiiiiiiii')
                           <Input
                             {...field}
                             placeholder="Enter your Product Name"
-                            type="text"
+                            type="text" className="w-[300px]"
                           />
                         </FormControl>
                        </div>
@@ -140,7 +140,7 @@ console.log(formData,'hiiiiiiiiiiiiiiii')
                         <FormItem className="flex items-center">
                           <FormLabel className="w-36">Image:</FormLabel>
                           <FormControl>
-                          <Input {...fileRef} type="file" />
+                          <Input {...fileRef} type="file" className="w-[300px]" />
                           {/* onChange={handleImageChange}  */}
                           </FormControl>
                         </FormItem>

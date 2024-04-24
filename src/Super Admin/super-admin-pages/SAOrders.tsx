@@ -20,8 +20,8 @@ const SAOrders = () => {
 
   return (
     <div >
-       <div className=" m-10 my-10 text-3xl font-bold">Orders</div>
-      <div>
+       <div className="mt-10 ml-4  text-3xl font-bold">Orders</div>
+       <div className="-mt-12">
         <DataTable columns={columns} data={data} />
       </div>
     </div>

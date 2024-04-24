@@ -9,6 +9,15 @@ import {
   ColumnFiltersState,
   getFilteredRowModel,
 } from "@tanstack/react-table";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu"
 import { Button } from "../ui/button";
 import {
   Table,
@@ -122,17 +131,24 @@ export function DataTable<TData, TValue>({
   const isCategory = location.pathname === "/admin/manage-category";
   const isSubCategory = location.pathname === "/admin/manage-sub-category";
   const isSuperAdminOrders = location.pathname === "/super-admin/orders";
+  const isSuperAdminDetails =
+  location.pathname === "/super-admin/order-details";
 const isCart  = location.pathname === "/user/cart";
 const isCheckout  = location.pathname === "/user/checkout";
- 
+const isSuperAdminReport = location.pathname === "/super-admin/order-report";
+const isAdminReport = location.pathname === "/admin/order-report";
+const isUserReport = location.pathname === "/user/order-report";
+const [position, setPosition]:any = useState("bottom")
 
 
-  const [placeholder, setPlaceholder] = useState(isUser ? "Search Order History" : isWishList ? "Search Wishlist" : isAdminProducts ? "Search Products" : isAdminOrders ? "Search Orders" : isSuperAdminOrders ? "Search Orders": isOrderDetails ? "Search Order Details" : isCategory ? "Search Categories" : isSubCategory ? "Search Sub-Categories" : isCart ? "Search Order" : isAdminDetails ? 'Search Admin Order Details' : '' );
+  const [placeholder, setPlaceholder] = useState(isUser ? "Search Order History" : isWishList ? "Search Wishlist"  : isSuperAdminDetails ? "Search Order Details" : isAdminProducts ? "Search Products" : isAdminOrders ? "Search Orders" : isSuperAdminOrders ? "Search Orders": isOrderDetails ? "Search Order Details" : isCategory ? "Search Categories" : isSubCategory ? "Search Sub-Categories" : isCart ? "Search Order" : isAdminDetails ? 'Search Admin Order Details' : '' );
 
 
   function clickHandler() {
-    if (isAdminOrders || isSuperAdminOrders) {
+    if (isAdminOrders) {
       navigate("/admin/order-details");
+    } else if (isSuperAdminOrders) {
+      navigate("/super-admin/order-details");
     } else {
       navigate("/user/order-details");
     }
@@ -155,8 +171,8 @@ const isCheckout  = location.pathname === "/user/checkout";
     <>
       <div className={`${isWishList || isCart ? 'rounded-md ml-10' : 'rounded-md'}`}>
         <div className="text-3xl font-bold flex items-center gap-5 ">
-          {!isOrderDetails && !isWishList && !isCheckout && (
-            <div className={`flex justify-between relative ${isAdminOrders || isUser || isSuperAdminOrders ? '-top-[220px]': isCart  ? '-top-[165px] left-[350px]' : '-top-[140px]'} left-[160px]  py-4`}>
+          {!isOrderDetails && !isWishList && !isCheckout && !isSuperAdminReport && !isUserReport &&  !isAdminReport && (
+            <div className={`flex justify-between relative ${isAdminOrders || isUser || isSuperAdminOrders || isSubCategory || isCategory || isAdminProducts || isSuperAdminOrders ? '-top-[125px]': isCart  ? '-top-[165px] left-[350px]' : '-top-[100px]'} left-[160px]  py-4`}>
               <Input
                 placeholder={placeholder}
                 value={globalFilter} // Changed to use globalFilter state
@@ -171,9 +187,10 @@ const isCheckout  = location.pathname === "/user/checkout";
             !isAdminProducts &&
             !isWishList &&
           !isCart &&
-          !isCheckout && !isAdminDetails) && (
+          !isCheckout && !isAdminDetails &&
+          !isSuperAdminDetails) && (
               <div
-                className={`${isUser ? "mb-10 " : "relative -top-[35px] right-[50px]"
+                className={`${isUser || isSuperAdminReport  ? "mb-10 " : "relative -top-[15px] right-[50px]"
                   } `}
               >
                 <DatePickerForm
@@ -184,6 +201,24 @@ const isCheckout  = location.pathname === "/user/checkout";
               </div>
             )}
         </div>
+        {( isSuperAdminReport && isAdminReport && isUserReport) && 
+      (<div className="relative left-[900px]">
+        <DropdownMenu>
+          
+      <DropdownMenuTrigger asChild>
+        <div className="cursor-pointer border-2 border-black w-2/12 rounded-lg p-4 ">Status</div>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56">
+        
+        <DropdownMenuSeparator />
+        <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
+          <DropdownMenuRadioItem value="top">Reviewed</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="bottom" onClick={clickHandler}>Production</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="right">Completed</DropdownMenuRadioItem>
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+        </div>)}
         <div className="">
           <Table className="">
             <TableHeader >
@@ -217,7 +252,7 @@ const isCheckout  = location.pathname === "/user/checkout";
                     {row.getVisibleCells().map((cell) => (
 
                       <TableCell key={cell.id}  className={`${isWishList || isCart ? 'w-[150px]' : ''}`}>
-                        {(isAdminProducts || isCart || isCheckout)&& 
+                        {(isAdminProducts || isCart || isCheckout || isSubCategory) && 
                         cell.column.columnDef.header === "images" ? (
 
                           <img

@@ -20,36 +20,92 @@ import { LockIcon, Mail, UserRound } from "lucide-react";
 import Card2 from "./Card2";
 import { useDispatch, useSelector } from "react-redux";
 import { addAddress } from "@/features/redux_toolkit/addressSlice";
+import { addAddressApi, getCartApi } from "@/features/api/apicall";
+import { selectUserCurrentToken } from "@/features/redux_toolkit/userAuthSlice";
+import { useEffect, useState } from "react";
 
 
 const ProceedToBuy = ({ redirect }: any) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
+  const token = useSelector(selectUserCurrentToken);
+  const [showProducts, setShowProducts] = useState<UserCart[]>([]);
+  const [loading, setLoading] = useState(true);
   const { cartData } = useSelector((state: any) => state.cart);
   const form = useForm<z.infer<typeof AddressSchema>>({
     resolver: zodResolver(AddressSchema),
     defaultValues: {
-      first_name: '',
-      last_name: '',
-      address: '',
+      billToName: '',
+      address1: '',
+      address2: '',
       city: '',
       county: '',
-      postcode: ''
+      eir: ''
     },
   });
 
-  const submitData = (data: any) => {
-   
-    dispatch(addAddress(data));
-    navigate('/user/payment'); 
+  const submitData = async (data: any) => {
     console.log(data)
+    try {
+      // const formData = new FormData();
+      // formData.append("address1", data.address1); // corrected field name
+      // formData.append("address2", data.address2); // corrected field name
+      // formData.append("billToName", data.billToName); // corrected field name
+      // formData.append("city", data.city);
+      // formData.append("county", data.county); // corrected field name
+      // formData.append("eir", data.eir); // corrected field name
+      
+      const FilteredData = {
+        address1: data.address1,
+        address2: data.address2,
+        billToName: data.billToName,
+        city: data.city,
+        county: data.county,
+        eir: data.eir
+      };
+      
+
+      const config = {
+          headers: {
+              Authorization: `Bearer ${token}`,
+            
+          }
+      };
+
+      const res = await addAddressApi   (FilteredData, config);
+      console.log(res, 'addedsubmitData');
+      navigate('/user/payment');
+      
+      
+
+  } catch (error) {
+      console.error("Error fetching product data:", error);
+  }
+
   };
 
-  const loginClickHanlder = () => {
-    navigate(redirect);
+  // const loginClickHanlder = () => {
+  //   navigate('/user/payment');
     
-  };
+  // };
+  async function fetchCartProductsData() {
+    try {
+      const payload = {
+        Authorization: `Bearer ${token}`,
+      };
+
+      const res = await getCartApi(payload);
+      setShowProducts(res?.data?.cart?.CartItem || []);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching subcategory data:", error);
+      setLoading(false);
+    }
+  }
+console.log(showProducts,'jijiji')
+  useEffect(() => {
+    fetchCartProductsData();
+  }, [token]);
 
   return (
     <div className="h-screen flex w-8/12 gap-4 mx-auto my-10">
@@ -65,10 +121,10 @@ const ProceedToBuy = ({ redirect }: any) => {
                   <div className="space-y-4">
                     <FormField
                       control={form.control}
-                      name="first_name"
+                      name="billToName"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="w-36">First Name:</FormLabel>
+                          <FormLabel className="w-36">Billing Name:</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
@@ -82,10 +138,10 @@ const ProceedToBuy = ({ redirect }: any) => {
                     />
                     <FormField
                       control={form.control}
-                      name="last_name"
+                      name="address1"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="w-36">Last Name:</FormLabel>
+                          <FormLabel className="w-36">Address 1:</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
@@ -99,10 +155,10 @@ const ProceedToBuy = ({ redirect }: any) => {
                     />
                     <FormField
                       control={form.control}
-                      name="address"
+                      name="address2"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="w-36">Address:</FormLabel>
+                          <FormLabel className="w-36">Address 2:</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
@@ -150,10 +206,10 @@ const ProceedToBuy = ({ redirect }: any) => {
                     />
                     <FormField
                       control={form.control}
-                      name="postcode"
+                      name="eir"
                       render={({ field }) => (
                         <FormItem>
-                          <FormLabel className="w-36">Postcode:</FormLabel>
+                          <FormLabel className="w-36">EIR:</FormLabel>
                           <FormControl>
                             <Input
                               {...field}
@@ -168,7 +224,7 @@ const ProceedToBuy = ({ redirect }: any) => {
                     <div className="flex justify-center gap-5 mt-24">
                       <Button
                         type="submit"
-                        onClick={loginClickHanlder}
+                    
                         variant={'purple'}
                       >
                         Save This Address
@@ -192,7 +248,7 @@ const ProceedToBuy = ({ redirect }: any) => {
       </div>
     </div>
     <div className="max-h-60 overflow-y-auto border-b-2 border-purple-400 p-2">
-      {cartData.map((cd:any, index:any) => (
+      {showProducts.map((cd:any, index:any) => (
         <div className="flex items-center mb-4" key={index}>
           <div className="w-20 h-20 border-2 border-gray-300 rounded-lg overflow-hidden">
             <img src={cd.image} alt={cd.title} className="w-full h-full object-cover" />

@@ -20,12 +20,12 @@ export const RegisterSchema = z.object({
 });
 
 export const AddressSchema = z.object({
-    first_name: z.string(),
-    last_name: z.string(),
-    address: z.string(),
+    billToName: z.string(),
+    address1: z.string(),
+    address2: z.string(),
     city: z.string(),
     county: z.string(),
-    postcode: z.string().regex(/^\d{5}$/) // Assuming postcode is 5 digits
+    eir: z.string().regex(/^\d{5}$/) // Assuming postcode is 5 digits
 });
 
 export const AddCategorySchema = z.object({
@@ -107,6 +107,12 @@ export const AddProduct = z.object({
                     }),
     categoryId: z.string(),
     subcategoryId: z.string(),
+});
+export const AddToCartSchema = z.object({
+    productId: z.string(),
+    itemSize: z.string(),
+    colorRelationId: z.string(),
+    quantity: z.any()
 });
 export const ResetSchema = z.object({
     email: z.string().email(),
