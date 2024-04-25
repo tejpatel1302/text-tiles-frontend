@@ -178,6 +178,12 @@ export const addCategoryApi = async (formData: any, config: any) => {
       
     });
 };
+export const WishListApi = async (payload: any, req: any) => {
+  return axios.post(`${api}/order/action`, req, {
+      headers: payload,
+    
+  });
+};
   export const getSingleProductApi = async (payload:any, id:any) => {
     try {
       const response = await axios.get(`${api}/product/${id}`, {
