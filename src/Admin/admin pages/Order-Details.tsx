@@ -50,13 +50,10 @@ const AdminOrderDetails = () => {
         Authorization: `Bearer ${token}`,
         status: "REVIEWED",
       };
-     
-       
       
       const res = await ReviewedApi(
         payload,
         showOrderDetails[0]?.orderId,
-        status
       );
       console.log(res, "getOrdersdetails");
 
