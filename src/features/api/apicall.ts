@@ -154,25 +154,16 @@ export const addCategoryApi = async (formData: any, config: any) => {
   export const deleteCategoryApi  = async (payload: any, id:any) => {
     return axios.delete(`${api}/category/${id}`, {
       headers: payload,
-      params:{
-        id:id
-      }
     });
   };
   export const deleteSubCategoryApi  = async (payload: any, id:any) => {
     return axios.delete(`${api}/sub-category/${id}`, {
       headers: payload,
-      params:{
-        id:id
-      }
     });
   };
   export const ReviewedApi = async (payload: any, id:any, status:any) => {
     return axios.patch(`${api}/order/${id}`,status ,{
       headers: payload,
-      params:{
-        id:id
-      }
     });
   };
   export const actionApi = async (payload: any, req: any) => {
