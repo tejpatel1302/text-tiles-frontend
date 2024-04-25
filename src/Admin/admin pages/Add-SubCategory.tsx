@@ -110,7 +110,7 @@ const AddSubCategory = ({ redirect }: any) => {
                     name="categoryId"
                     render={({ field }) => (
                       <FormItem className="flex items-center">
-                        <FormLabel className="w-36">Category:</FormLabel>
+                        <FormLabel className="w-36">Category Name:</FormLabel>
                         <Select onValueChange={field.onChange} defaultValue={field.value}>
                           <FormControl>
                             <SelectTrigger>
@@ -136,7 +136,7 @@ const AddSubCategory = ({ redirect }: any) => {
                     name="name"
                     render={({ field }) => (
                       <FormItem className="flex items-center">
-                        <FormLabel className="w-36">Product Name:</FormLabel>
+                        <FormLabel className="w-36">SubCategory Name:</FormLabel>
                         <FormControl>
                           <Input
                             {...field}

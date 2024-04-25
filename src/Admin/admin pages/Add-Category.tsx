@@ -97,7 +97,7 @@ console.log(formData,'hiiiiiiiiiiiiiiii')
                     render={({ field }) => (
                       <FormItem >
                        <div className="flex items-center">
-                       <FormLabel className="w-36">Product Name:</FormLabel>
+                       <FormLabel className="w-36">Category Name:</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
