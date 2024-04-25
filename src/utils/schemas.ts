@@ -36,15 +36,7 @@ export const CardSchema = z.object({
 });
 
 export const AddCategorySchema = z.object({
-    name: z.string()
-                    .min(2, { message: 'Product name must be at least 2 characters long' })
-                    .refine(value => {
-                        // Custom validation logic for product_name
-                        if (value.includes('a')) {
-                            return false; // Return false to indicate validation failure
-                        }
-                        return true; // Return true if validation passes
-                    }, { message: 'Invalid product name' }),
+    name: z.string(),
     description: z.string()
                     .refine(value => {
                         // Custom validation logic for description

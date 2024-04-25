@@ -167,8 +167,8 @@ export const addCategoryApi = async (formData: any, config: any) => {
       }
     });
   };
-  export const ReviewedApi = async (payload: any, id:any, ) => {
-    return axios.put(`${api}/order/${id}` ,{
+  export const ReviewedApi = async (payload: any, id:any, status:any) => {
+    return axios.patch(`${api}/order/${id}`,status ,{
       headers: payload,
       params:{
         id:id
