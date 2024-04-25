@@ -74,8 +74,7 @@ const Category = () => {
           </div>
         ))}
          <div  onClick={clickHandler2} className="h-[500px] w-[400px] rounded-lg border border-gray-300 bg-white overflow-hidden shadow-lg relative transition duration-300 ease-in-out transform hover:scale-105 flex flex-col justify-center items-center">
-           
-       
+           ALL
           </div>
       </div>
     </div>

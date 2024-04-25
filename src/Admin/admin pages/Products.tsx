@@ -33,14 +33,28 @@ console.log(showProducts)
   useEffect(() => {
     fetchProductsData();
   }, []);
-
+  function createBlobFromBuffer(bufferString: string, mimetype: string): string | null {
+    try {
+      const binary = atob(bufferString);
+      const buffer = new ArrayBuffer(binary.length);
+      const view = new Uint8Array(buffer);
+      for (let i = 0; i < binary.length; i++) {
+        view[i] = binary.charCodeAt(i);
+      }
+      const blob = new Blob([view], { type: mimetype });
+      return URL.createObjectURL(blob);
+    } catch (error) {
+      console.error("Error creating Blob:", error);
+      return null;
+    }
+  }
   const data: Product[] = showProducts?.map((product:any) => ({
     id: product?.id,
     name: product?.name,
     price : product?.price,
-    colors : product?.colorRelation?.color?.name,
-    size : product?.size,
-    images: product?.colorRelation?.image,
+    colors : product?.colorRelation[0]?.color?.name,
+    size : product?.size[0],
+    images: product?.colorRelation[0]?.image ? createBlobFromBuffer(product?.colorRelation[0]?.image.buffer, product?.colorRelation[0]?.image.mimetype) : null,
     description: product?.description,
     material: product?.material,
     quantity: product?.quantity 

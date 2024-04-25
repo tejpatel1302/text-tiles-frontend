@@ -121,7 +121,7 @@ export const columns = [
     },
   }),
   columnHelper.accessor("images", {
-    header: "Category Image",
+    header: "images",
    
   }),
   columnHelper.accessor("categoryName", {

@@ -10,13 +10,13 @@ import { Button } from "@/components/ui/button";
 // You can use a Zod schema here if you want.
 export type Order = {
     customerId: number;
-    OrderID: number;
+    id: number;
     Name: string;
     city: string;
     email: string;
     mobileNumber: string;
     orderDate: string;
-    address: string;
+    
     orderDetails: string;
     status: string;
   };
@@ -30,7 +30,7 @@ export type Order = {
       header: "Customer ID",
     },
     {
-      accessorKey: "OrderID",
+      accessorKey: "id",
       header: ({ column }) => {
         return (
           <Button
@@ -73,10 +73,7 @@ export type Order = {
         );
       },
     },
-    {
-      accessorKey: "address",
-      header: "Address",
-    },
+
     {
       accessorKey: "orderDetails",
       header: "Order Details",

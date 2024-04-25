@@ -4,7 +4,7 @@ import CommonNavBar from "./components/common/CommonNavBar";
 import SideBar from "./components/common/SideNavBar";
 import { useLocation } from "react-router-dom";
 import { useParams } from 'react-router-dom'
-import { ToastContainer } from "react-toastify";
+
 import UserLogin from "./User/user pages/UserLogin";
 
 function App() {
@@ -51,7 +51,7 @@ function App() {
          {(!isAdminLoginPage  && !isUserWebsite && !isUserLoginPage  && !isUserCategory && !isUserSubCategory  && !selectedCategories && !cart && !isUserRegisterPage && !isProducts && !isWishList && !isPTB && !isPayment && !isForgotPassword && !isAdminRegister && !isSuperAdminLogin && !isDefaultPage &&!isSAForgotPassword && !isUserForgotPassword ) && <div className={`${isUser ? 'bg-white': 'bg-white'}`}>
             {" "}
             <SideBar />
-            <ToastContainer autoClose={3000} />
+         
           </div>}
           <div className={` w-full min-h-screen  ${(isAdminLoginPage || isUserLoginPage || isUserRegisterPage || isForgotPassword || isAdminRegister || isSuperAdminLogin || isDefaultPage || isSAForgotPassword || isUserForgotPassword) ? `grid-bg ${(isUserLoginPage || isDefaultPage || isUserRegisterPage || isUserForgotPassword) ? 'bg-gradient-to-br from-purple-400 to-[#6534d9]' : isAdminLoginPage || isAdminRegister || isForgotPassword? 'bg-gradient-to-br from-[#79a9ed] to-[#092756]' : (isSuperAdminLogin || isSAForgotPassword ) ? 'bg-gradient-to-br from-red-500 to-black' : ''} ba-grid anim`:'min-h-screen bg-white'}` }>
            {

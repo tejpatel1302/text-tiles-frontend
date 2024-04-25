@@ -338,7 +338,7 @@ const Register = ({ redirect }: any) => {
                 </div>
                 <div>
                   <Button
-                    className="px-10 fixed left-[690px] top-[560px]"
+                    className="px-10 fixed left-[690px] top-[520px]"
                     variant={
                       isUserRegisterPage
                         ? "purple"

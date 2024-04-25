@@ -32,16 +32,21 @@ import { Input } from "@/components/ui/input";
 import { DatePickerForm } from "./DatePicker";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Divide } from "lucide-react";
+import { useDispatch } from "react-redux";
+import { addId } from "@/features/redux_toolkit/orderItemIdSlice";
 
-interface DataTableProps<TData, TValue> {
+interface DataTableProps<TData extends OrderDetails, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
 }
-
-export function DataTable<TData, TValue>({
+interface OrderDetails {
+  id: any;
+  images: any; 
+}
+export function DataTable<TData extends OrderDetails, TValue>({
   columns,
   data,
-}: DataTableProps<TData, TValue>) {
+}: DataTableProps<OrderDetails, TValue>) {
   const [sorting, setSorting] = useState<SortingState>([]);
   const [editedRows, setEditedRows] = useState({});
   const [originalData, setOriginalData] = useState(() => [...data]);
@@ -119,7 +124,7 @@ export function DataTable<TData, TValue>({
       },
     },
   });
-
+  const dispatch = useDispatch()
   const location = useLocation();
   const navigate = useNavigate();
   const isUser = location.pathname === "/user/order-history";
@@ -165,6 +170,9 @@ const [position, setPosition]:any = useState("bottom")
 
   function setEndDate(date: Date | null): void {
     setEndDateState(date);
+  }
+  function clickHandler2(id:any){
+    dispatch(addId(id))
   }
 
   return (
@@ -244,7 +252,9 @@ const [position, setPosition]:any = useState("bottom")
             <TableBody>
               {table.getRowModel().rows?.length ? (
                 table.getRowModel().rows.map((row) => (
+              
                   <TableRow
+                  onClick={()=>{clickHandler2(row.original.id)}}
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
                     className={`${isWishList || isCart ? 'flex space-x-[80px]' : ''}`}
@@ -252,7 +262,7 @@ const [position, setPosition]:any = useState("bottom")
                     {row.getVisibleCells().map((cell) => (
 
                       <TableCell key={cell.id}  className={`${isWishList || isCart ? 'w-[150px]' : ''}`}>
-                        {(isAdminProducts || isCart || isCheckout || isSubCategory) && 
+                        {(isAdminProducts || isCart || isCheckout || isSubCategory || isCategory ) && 
                         cell.column.columnDef.header === "images" ? (
 
                           <img
@@ -304,7 +314,7 @@ const [position, setPosition]:any = useState("bottom")
           </Table>
         </div>
       </div>
-     {!isCheckout ? <div className="flex items-center justify-end space-x-2 py-4">
+     {!isCheckout && !isUserReport && !isAdminReport && !isSuperAdminReport ? <div className="flex items-center justify-end space-x-2 py-4">
         <Button
           variant="default"
           size="sm"

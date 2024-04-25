@@ -43,7 +43,7 @@ export function UserDropDown() {
       } catch (error) {
         console.error("Error fetching product data:", error);
         setLoading(false)
-        navigate('/user/login')
+        // navigate('/user/login')
       }
     }
     fetchUserData();
@@ -53,11 +53,9 @@ export function UserDropDown() {
   }
 
   function clickHandler2() {
-    navigate('/user/account')
+    navigate('/user/details')
   }
-  function clickHandler3() {
-    navigate('/user/products')
-  }
+  
 
   // if (user.user === undefined) {
   //   
@@ -72,10 +70,10 @@ export function UserDropDown() {
           <div>Loading...</div>
         ) : (
           <>
-            <DropdownMenuLabel>Hi, {user.user.firstName}</DropdownMenuLabel>
+            <DropdownMenuLabel>Hi, {user?.user?.firstName}</DropdownMenuLabel>
             <DropdownMenuSeparator />
             <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
-              <DropdownMenuRadioItem value="left" onClick={clickHandler3}>Home</DropdownMenuRadioItem>
+
               <DropdownMenuRadioItem value="top" onClick={clickHandler2}>My Account</DropdownMenuRadioItem>
               <DropdownMenuRadioItem value="bottom" onClick={clickHandler}>Order History</DropdownMenuRadioItem>
               <DropdownMenuRadioItem value="right">Logout</DropdownMenuRadioItem>

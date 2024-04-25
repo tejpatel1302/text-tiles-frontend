@@ -177,7 +177,7 @@ const ProductInDetail = () => {
         {product && (
           <div className="flex gap-8">
             <div className="border border-gray-300 h-[450px] w-[400px] rounded-lg overflow-hidden flex justify-center items-center">
-              <img src={`data:image/jpeg;base64,${showColorsRel[0].image.buffer}`} alt={product?.title} className="h-96" />
+              <img src={`data:image/jpeg;base64,${showColorsRel[0]?.image?.buffer}`} alt={product?.title} className="h-96" />
             </div>
             <div className="flex flex-col justify-center max-w-[500px]">
               <h2 className="text-3xl font-semibold mb-4 ">
@@ -195,7 +195,7 @@ const ProductInDetail = () => {
       onClick={() => { clickHandler(color.id) }} 
       key={index}
       className={`h-8 w-8 rounded-full ${
-        color.id === showColorsRel[0].colorId ? 'border-4 border-black' : ''
+        color.id === showColorsRel[0]?.colorId ? 'border-4 border-black' : ''
       }`}
       style={{ backgroundColor: color.hexCode }}
     ></div>
@@ -257,7 +257,7 @@ const ProductInDetail = () => {
                           <FormItem className="flex flex-col items-center">
                             <FormLabel className="w-36 relative -top-2 right-32 text-xl">Quantity:</FormLabel>
                             <FormControl>
-                              <Input {...field} placeholder="Quantity" className="w-[400px]" type="number" />
+                              <Input {...field} placeholder="Quantity" className="w-[300px]" type="number" />
                               {/* onChange={handleImageChange}  */}
 
                             </FormControl>

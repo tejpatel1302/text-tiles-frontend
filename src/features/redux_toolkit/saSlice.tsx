@@ -19,10 +19,10 @@ const saAuthSlice = createSlice({
   name: 'saAuth',
   initialState,
   reducers: {
-    setCredentials: (state, action: PayloadAction<Credentials>) => {
+    setCredentials3: (state, action: PayloadAction<Credentials>) => {
       const { data }:any = action.payload;
-      state.user = data.updatedAdminSession
-      state.token = data.token;
+      state.user = data?.updatedSession
+      state.token = data?.token;
     },
     salogOut: (state) => {
     
@@ -31,9 +31,9 @@ const saAuthSlice = createSlice({
   },
 });
 
-export const { setCredentials, salogOut } = saAuthSlice.actions;
+export const { setCredentials3, salogOut } = saAuthSlice.actions;
 
 export default saAuthSlice.reducer;
 
-export const selectSACurrentUser = (state: { auth: AuthState }) => state.auth.user;
-export const selectSACurrentToken = (state: { auth: AuthState }) => state.auth.token;
+export const selectSACurrentUser = (state: { saAuth: AuthState }) => state.saAuth.user;
+export const selectSACurrentToken = (state: { saAuth: AuthState }) => state.saAuth.token;

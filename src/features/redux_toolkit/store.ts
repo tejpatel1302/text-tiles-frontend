@@ -10,6 +10,7 @@ import userReducer from './userAuthSlice'
 import addCategoryReducer from './addCategorySlice'
 import categoryIdReducer from './categoryIdSlice'
 import subIdReducer from './subIdSlice '
+import orderItemIdReducer from './orderItemIdSlice'
 
 
 const store = configureStore({
@@ -24,7 +25,8 @@ const store = configureStore({
         saAuth: saReducer,
         addCategory:addCategoryReducer,
         categoryId:categoryIdReducer,
-        subId: subIdReducer
+        subId: subIdReducer,
+        orderItemId:orderItemIdReducer
     },
     middleware: getDefaultMiddleware =>
         getDefaultMiddleware().concat(apiSlice.middleware),
