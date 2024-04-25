@@ -154,15 +154,21 @@ export const addCategoryApi = async (formData: any, config: any) => {
   export const deleteCategoryApi  = async (payload: any, id:any) => {
     return axios.delete(`${api}/category/${id}`, {
       headers: payload,
+      params:{
+        id:id
+      }
     });
   };
   export const deleteSubCategoryApi  = async (payload: any, id:any) => {
     return axios.delete(`${api}/sub-category/${id}`, {
       headers: payload,
+      params:{
+        id:id
+      }
     });
   };
-  export const ReviewedApi = async (payload: any, id:any, status:any) => {
-    return axios.patch(`${api}/order/${id}`,status ,{
+  export const ReviewedApi = async (payload: any, id:any, ) => {
+    return axios.put(`${api}/order/${id}`,status ,{
       headers: payload,
     });
   };
@@ -176,7 +182,9 @@ export const addCategoryApi = async (formData: any, config: any) => {
     try {
       const response = await axios.get(`${api}/product/${id}`, {
         headers: payload,
-
+        params: {
+          id: id
+        }
         
       });
       return response.data;
@@ -190,6 +198,10 @@ export const addCategoryApi = async (formData: any, config: any) => {
     try {
       const response = await axios.get(`${api}/order/${id}`, {
         headers: payload,
+        params: {
+          id: id
+        }
+        
       });
       return response.data;
     } catch (error) {
@@ -203,6 +215,9 @@ export const addCategoryApi = async (formData: any, config: any) => {
     try {
       const response = await axios.get(`${api}/sub-category/${id}`, {
         headers: payload,
+        params: {
+          id: id
+        }
         
       });
       return response.data;
@@ -216,6 +231,9 @@ export const addCategoryApi = async (formData: any, config: any) => {
     try {
       const response = await axios.get(`${api}/product/Sub-Category/${id}`, {
         headers: payload,
+        params: {
+          id: id
+        }
         
       });
       return response.data;
@@ -229,6 +247,9 @@ export const addCategoryApi = async (formData: any, config: any) => {
     try {
       const response = await axios.get(`${api}/colors/relation/${id}`, {
         headers: payload,
+        params: {
+          id: id
+        }
         
       });
       return response.data;
