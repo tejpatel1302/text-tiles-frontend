@@ -20,6 +20,10 @@ import { setCredentials } from "@/features/redux_toolkit/authSlice";
 import { setCredentials2 } from "@/features/redux_toolkit/userAuthSlice";
 import { useDispatch } from "react-redux";
 import { useAdminloginMutation, useSaloginMutation, useUserloginMutation} from "@/features/api/authApiSlice";
+import { useState } from "react";
+import { Toaster, toast } from 'sonner'
+import { setCredentials3 } from "@/features/redux_toolkit/saSlice";
+
 
 const Login = ({ redirect }: any) => {
   const dispatch = useDispatch()
@@ -38,19 +42,32 @@ const Login = ({ redirect }: any) => {
     },
     mode:"all"
   });
+  const [loading, setLoading] = useState(false);
 
   const submitData = async (data: any) => {
+    setLoading(true);
     console.log(data, 'hellooo')
     try {
       let userData: any;
       if (location.pathname === '/admin/login') {
+        
         userData = await login(data);
+       
         dispatch(setCredentials(userData));
       } else if (location.pathname === '/user/login') {
         userData = await userLogin(data);
+       
         dispatch(setCredentials2(userData));
+        navigate(redirect)
+      } else if (location.pathname === '/') {
+        userData = await userLogin(data);
+        dispatch(setCredentials2(userData));
+        navigate(redirect)
       } else if (location.pathname === '/super-admin/login') {
         userData = await saLogin(data);
+        dispatch(setCredentials3(userData));
+        navigate('/super-admin/orders')
+       
       } else {
         throw new Error('Invalid login path');
       }
@@ -58,9 +75,11 @@ const Login = ({ redirect }: any) => {
       console.log(userData);
       
       // navigate(state.from ? state.from : redirect); something wrong
-      navigate(redirect)
+      // navigate(redirect)
     } catch (err) {
       console.log(err);
+    } finally {
+      setLoading(false);
     }
   };
   
@@ -69,10 +88,11 @@ const Login = ({ redirect }: any) => {
   const isSuperAdminLogin = location.pathname === "/super-admin/login";
   const isDefaultPage = location.pathname === "/";
 
-  
+
 
   return (
     <div className="h-screen flex justify-center items-center">
+    <Toaster position="top-center" />
       <CardWrapper
         headerLabel="Login To Continue"
         backButtonHref={`${
@@ -148,8 +168,9 @@ const Login = ({ redirect }: any) => {
                     <div className="flex justify-center mx-auto gap-5">
                       <Button
                         type="submit"
-                     
+                        disabled={loading}
                         className="px-7"
+                        onClick={() => toast.success('Logged In')}
                         variant={
                           isUserLoginPage || isDefaultPage
                             ? "purple"
@@ -160,7 +181,7 @@ const Login = ({ redirect }: any) => {
                             : "default"
                         }
                       >
-                        Login
+                        {loading ? 'Loading...' : 'Login'}
                       </Button>
                       <Button
                         variant={
@@ -196,6 +217,7 @@ const Login = ({ redirect }: any) => {
           </form>
         </Form>
       </CardWrapper>
+   
     </div>
   );
 };

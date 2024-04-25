@@ -27,6 +27,8 @@ const UserWebsite = ({ title }: { title: string }) => {
           res = await getProductsApi(payload);
         }
         setShowProducts(res?.data || []);
+
+        console.log(res, 'getCategory');
         setLoading(false);
       } catch (error) {
         console.error("Error fetching data:", error);
@@ -47,7 +49,7 @@ const UserWebsite = ({ title }: { title: string }) => {
       <div className='flex flex-wrap gap-10'>
         {showProducts?.map((product: any) => (
           <div key={product?.title}>
-            <ProductCard image={product.image} title={product.title} price={product.price} id={product.id} />
+            <ProductCard image={product?.colorRelation[0]?.image} title={product.title} price={product.price} id={product.id} />
           </div>
         ))}
       </div>

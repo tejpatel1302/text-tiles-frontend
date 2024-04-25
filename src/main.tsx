@@ -44,10 +44,11 @@ import { OrderReport } from "./utils/order-report.tsx";
 import UserOrderReport from "./User/user pages/UserOrderReport.tsx";
 import SAOrderDetails from "./Super Admin/SAOrderDetails.tsx";
 
+
 const appRoutes = createBrowserRouter([
   {
     path: "/",
-    element: <App />,
+    element: <App/>,
     children: [
       {
         path: "/admin/login",
@@ -120,7 +121,7 @@ const appRoutes = createBrowserRouter([
       },
       {
         path: "/user/login",
-        element: <UserLogin />,
+        element: <UserLogin/>,
       },
       {
         path: "/user/address-book",

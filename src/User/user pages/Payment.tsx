@@ -1,5 +1,5 @@
 import * as z from "zod";
-import { AddressSchema, LoginSchema } from "@/utils/schemas";
+import { AddressSchema, CardSchema, LoginSchema } from "@/utils/schemas";
 import CardWrapper from "@/components/common/Card-Wrapper";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -21,7 +21,7 @@ import Card2 from "./Card2";
 import { useDispatch, useSelector } from "react-redux";
 import { addAddress } from "@/features/redux_toolkit/addressSlice";
 import { useEffect, useState } from "react";
-import { getAddressApi } from "@/features/api/apicall";
+import { OrderApi, PaymentApi, getAddressApi, getCartApi } from "@/features/api/apicall";
 import { selectUserCurrentToken } from "@/features/redux_toolkit/userAuthSlice";
 
 const Payment = ({ redirect }: any) => {
@@ -29,26 +29,85 @@ const Payment = ({ redirect }: any) => {
   const dispatch = useDispatch();
   const token = useSelector(selectUserCurrentToken)
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(true);
+  const [showProducts, setShowProducts]:any = useState([]);
+  const [selectedCard, setSelectedCard] = useState(null);
   const { addressData } = useSelector((state: any) => state.address);
   const { cartData } = useSelector((state: any) => state.cart);
   const [showAddress, setShowAddress]:any = useState([]);
-  const form = useForm<z.infer<typeof AddressSchema>>({
-    resolver: zodResolver(AddressSchema),
+  const [cartId, setCartId]:any = useState([]);
+  const [paymentData, setPaymentData]:any = useState([]);
+  const [selectedAddressId, setSelectedAddressId] = useState(null);
+  const [totalPrice, setTotalPrice] = useState(0);
+  const form = useForm<z.infer<typeof  CardSchema >>({
+    resolver: zodResolver( CardSchema ),
     defaultValues: {
-      first_name: '',
-      last_name: '',
-      address: '',
-      city: '',
-      county: '',
-      postcode: ''
+      cardType: '',
+      cardNumber: '',
+      cardHolderName: '',
+      expiryDate: '',
+      cvv: '',
+     
     },
   });
-  const submitData = (data: any) => {
-    console.log(data)
+  const submitData = async (data: any) => {
+    try {
+      const FilteredData = {
+        cardType: selectedCard,
+        cardNumber: data.cardNumber,
+        cardHolderName: data.cardHolderName,
+        expiryDate: data. expiryDate,
+        cvv: data. cvv,
+      };
+  
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      };
+  
+      const res = await PaymentApi(FilteredData, config);
+      console.log(res,'ppaaaaaappp')
+      setPaymentData(res)
+      console.log(res, 'addedsubmitData');
+      navigate('/user/payment');
+    } catch (error) {
+      console.error("Error submitting data:", error);
+      // Handle error appropriately, like showing a user-friendly message
+    }
   };
+  const OrderData = async () => {
+    try {
+      const FilteredData2 = {
+        cartId: cartId,
+        amount: totalPrice,
+        paymentCardId: paymentData?.id,
+        addressId: selectedAddressId
+      }
+  
+      const config = {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        }
+      };
+  
+      const res = await OrderApi(FilteredData2, config);
+      console.log(res, 'addedordertddsf ,fsdData');
+      navigate('/user/payment');
+    } catch (error) {
+      console.error("Error submitting data:", error);
+      // Handle error appropriately, like showing a user-friendly message
+    }
+  };
+  useEffect(() => {
+    OrderData();
+    
+  }, [paymentData]);
+  
 
-  const clickHandler = () =>{
+  const clickHandler = (cardtype:any) =>{
     setDisplayPayment(true)
+    setSelectedCard(cardtype);
   }
   async function fetchCategoryData() {
     try {
@@ -70,6 +129,36 @@ const Payment = ({ redirect }: any) => {
     fetchCategoryData();
     
   }, []);
+  useEffect(() => {
+    // Calculate total price whenever showProducts changes
+    const calculatedTotalPrice = showProducts.reduce((acc, cd) => acc + cd.totalPrice, 0);
+    setTotalPrice(calculatedTotalPrice);
+  }, [showProducts]);
+  async function fetchCartProductsData() {
+    try {
+      const payload = {
+        Authorization: `Bearer ${token}`,
+      };
+
+      const res = await getCartApi(payload);
+      console.log(res,'cartdaat')
+      setShowProducts(res?.data?.cart?.CartItem || []);
+      setCartId(res?.data?.cart?.id)
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching subcategory data:", error);
+      setLoading(false);
+    }
+  }
+console.log(showProducts,'jijiji')
+  useEffect(() => {
+    fetchCartProductsData();
+  }, [token]);
+
+  const handleAddressSelection = (address: any) => {
+    setSelectedAddressId(address.id);
+    console.log(address.id, 'selected address id'); // Accessing address.id here
+  };
   return (
     <div className=" flex w-8/12 gap-4 mx-auto my-10">
       <div className="w-1/2">
@@ -84,15 +173,15 @@ const Payment = ({ redirect }: any) => {
                 </div>
               </div>
               <div>
-  {showAddress.map((address, index) => (
+  {showAddress.map((address:any, index:any) => (
     <div key={index} className="flex">
       <div>
-        <input
-          type="radio"
-          name="selectedAddress"
-          value={index}
-          onChange={() => handleAddressSelection(index)}
-        />
+      <input
+  type="radio"
+  name="selectedAddress"
+  value={index}
+  onChange={() => handleAddressSelection(address)}
+/>
       </div>
       <div className="mb-2">{address.billToName}</div>
       <div className="mb-2">{address.address1}</div>
@@ -108,11 +197,11 @@ const Payment = ({ redirect }: any) => {
             <div>
               <div className="text-2xl font-bold my-4">Payment Type:</div>
               <div>
-                <div className="border-2 border-black rounded-lg p-6 text-center" onClick={clickHandler}>
+                <div className="border-2 border-black rounded-lg p-6 text-center" onClick={() => clickHandler('Credit Card')}>
                   Credit Card
                 </div>
                 <div className="text-center">OR</div>
-                <div className="border-2 border-black rounded-lg p-6 text-center" onClick={clickHandler}>
+                <div className="border-2 border-black rounded-lg p-6 text-center"  onClick={() => clickHandler('Debit Card')}>
                   Debit Card
                 </div>
               </div>
@@ -127,7 +216,7 @@ const Payment = ({ redirect }: any) => {
                   <div className="space-y-4">
                     <FormField
                       control={form.control}
-                      name="email"
+                      name="cardNumber"
                       render={({ field }) => (
                         <FormItem className="flex items-center">
                           <FormLabel className="w-36">Card Number:</FormLabel>
@@ -144,7 +233,7 @@ const Payment = ({ redirect }: any) => {
                     />
                     <FormField
                       control={form.control}
-                      name="email"
+                      name="expiryDate"
                       render={({ field }) => (
                         <FormItem className="flex items-center">
                           <FormLabel className="w-36">Expiry Date</FormLabel>
@@ -161,7 +250,7 @@ const Payment = ({ redirect }: any) => {
                     />
                     <FormField
                       control={form.control}
-                      name="email"
+                      name="cardHolderName"
                       render={({ field }) => (
                         <FormItem className="flex items-center">
                           <FormLabel className="w-36">Name on Card:</FormLabel>
@@ -178,7 +267,7 @@ const Payment = ({ redirect }: any) => {
                     />
                     <FormField
                       control={form.control}
-                      name="email"
+                      name="cvv"
                       render={({ field }) => (
                         <FormItem className="flex items-center">
                           <FormLabel className="w-36">CVV:</FormLabel>
@@ -218,7 +307,7 @@ const Payment = ({ redirect }: any) => {
             </div>
           </div>
           <div className="max-h-60 overflow-y-auto border-b-2 border-purple-400 p-2">
-            {cartData.map((cd: any, index: any) => (
+            {showProducts.map((cd: any, index: any) => (
               <div className="flex items-center mb-4" key={index}>
                 <div className="w-20 h-20 border-2 border-gray-300 rounded-lg overflow-hidden">
                   <img
@@ -228,23 +317,24 @@ const Payment = ({ redirect }: any) => {
                   />
                 </div>
                 <div className="ml-4">
-                  <div className="font-bold text-xl">{`$${cd.price}`}</div>
-                  <div className="text-sm">{cd.title}</div>
-                  <div className="text-sm text-gray-600">Quantity: 1</div>
-                </div>
+                <div className="font-bold text-xl">{`${cd?.totalPrice.toFixed(2)} \u20AC`}</div>
+
+        <div className="text-sm">{cd.title}</div>
+        <div className="text-sm text-gray-600">Quantity: 1</div>
+      </div>
               </div>
             ))}
           </div>
           <div className="mt-4">
-            <div className="flex justify-between mb-2">
-              <div className="font-semibold">Delivery Charges</div>
-              <div className="font-semibold">$5.00</div>
-            </div>
-            <div className="flex justify-between">
-              <div className="font-bold text-xl">Total to Pay</div>
-              <div className="font-bold text-xl">$100.00</div>
-            </div>
-          </div>
+  <div className="flex justify-between mb-2">
+    <div className="font-semibold">Delivery Charges</div>
+    <div className="font-semibold">€5.00</div>
+  </div>
+  <div className="flex justify-between">
+    <div className="font-bold text-xl">Total to Pay</div>
+    <div className="font-bold text-xl">{`${(totalPrice + 5).toFixed(2)} \u20AC`}</div>
+  </div>
+</div>
         </div>
       </div>
     </div>

@@ -18,14 +18,15 @@ export type Order = {
     address: string;
     orderDetails: string;
     orderstatus: string;
+    orderid:string
   };
   
   
 
   export const columns: ColumnDef<Order>[] = [
     {
-        accessorKey: "ordernumber",
-        header: "Order Number",
+        accessorKey: "orderid",
+        header: "Order Id",
       },
       {
         accessorKey: "orderDate",
@@ -53,14 +54,11 @@ export type Order = {
         accessorKey: "city",
         header: "City",
       },
-      {
-        accessorKey: "deliverydate",
-        header: "Delivery Date",
-      },
-      {
-        accessorKey: "address",
-        header: "Address",
-      },
+      // {
+      //   accessorKey: "deliverydate",
+      //   header: "Delivery Date",
+      // },
+      
       {
         accessorKey: "orderDetails",
         header: "Order Details",

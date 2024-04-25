@@ -18,7 +18,7 @@ const ProductCard = ({ image, title, productId, isInWishlist, price, id }:any) =
   return (
     <div className="flex mt-10">
       <div className="rounded-lg border border-gray-300 overflow-hidden shadow-lg relative h-[550px] w-[300px] transition duration-300 ease-in-out transform hover:scale-105 flex flex-col items-center justify-center">
-      <Link to={`/user/products/${id}`}>  <img className="rounded-t h-96 p-4" src={image} alt="men's wear" /></Link>
+      <Link to={`/user/products/${id}`}>  <img className="rounded-t h-96 p-4" src={`data:image/jpeg;base64,${image?.buffer}`} alt="men's wear" /></Link>
         <div
           className="absolute top-[350px] right-0 rounded-full p-1 mr-2 bg-gray-300 hover:bg-gray-700 cursor-pointer"
           onClick={toggleWishlist}

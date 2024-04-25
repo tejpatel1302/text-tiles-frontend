@@ -35,11 +35,26 @@ const ManageCategory = () => {
     fetchCategoryData();
     
   }, []);
+  function createBlobFromBuffer(bufferString: string, mimetype: string): string | null {
+    try {
+      const binary = atob(bufferString);
+      const buffer = new ArrayBuffer(binary.length);
+      const view = new Uint8Array(buffer);
+      for (let i = 0; i < binary.length; i++) {
+        view[i] = binary.charCodeAt(i);
+      }
+      const blob = new Blob([view], { type: mimetype });
+      return URL.createObjectURL(blob);
+    } catch (error) {
+      console.error("Error creating Blob:", error);
+      return null;
+    }
+  }
   const data: Category[] = showCategory.map((item: any) => ({
   
     categoryID: item.id,
     categoryName: item.name, 
-    images: item.image ? URL.createObjectURL(new Blob([item.image.buffer], { type: item.image.mimetype })) : null,
+    images: item.image ? createBlobFromBuffer(item.image.buffer, item.image.mimetype) : null,
   
 }));
 

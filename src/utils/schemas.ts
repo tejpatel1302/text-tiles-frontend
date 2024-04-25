@@ -27,6 +27,13 @@ export const AddressSchema = z.object({
     county: z.string(),
     eir: z.string().regex(/^\d{5}$/) // Assuming postcode is 5 digits
 });
+export const CardSchema = z.object({
+    cardType: z.string(),
+    cardNumber: z.string().regex(/^\d{16}$/), // Assuming card number is 16 digits
+    cardHolderName: z.string(),
+    expiryDate: z.string().regex(/^\d{2}\/\d{2}$/), // Assuming expiry date is in MM/YY format
+    cvv: z.string().regex(/^\d{3}$/), // Assuming CVV is 3 digits
+});
 
 export const AddCategorySchema = z.object({
     name: z.string()
