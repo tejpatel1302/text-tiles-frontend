@@ -176,9 +176,7 @@ export const addCategoryApi = async (formData: any, config: any) => {
     try {
       const response = await axios.get(`${api}/product/${id}`, {
         headers: payload,
-        params: {
-          id: id
-        }
+
         
       });
       return response.data;
@@ -192,10 +190,6 @@ export const addCategoryApi = async (formData: any, config: any) => {
     try {
       const response = await axios.get(`${api}/order/${id}`, {
         headers: payload,
-        params: {
-          id: id
-        }
-        
       });
       return response.data;
     } catch (error) {
@@ -209,9 +203,6 @@ export const addCategoryApi = async (formData: any, config: any) => {
     try {
       const response = await axios.get(`${api}/sub-category/${id}`, {
         headers: payload,
-        params: {
-          id: id
-        }
         
       });
       return response.data;
@@ -225,9 +216,6 @@ export const addCategoryApi = async (formData: any, config: any) => {
     try {
       const response = await axios.get(`${api}/product/Sub-Category/${id}`, {
         headers: payload,
-        params: {
-          id: id
-        }
         
       });
       return response.data;
@@ -241,9 +229,6 @@ export const addCategoryApi = async (formData: any, config: any) => {
     try {
       const response = await axios.get(`${api}/colors/relation/${id}`, {
         headers: payload,
-        params: {
-          id: id
-        }
         
       });
       return response.data;
