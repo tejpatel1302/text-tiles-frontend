@@ -6,16 +6,18 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { getOrderHistoryApi } from "@/features/api/apicall";
 import { selectUserCurrentToken } from "@/features/redux_toolkit/userAuthSlice";
+import { useCookies } from "react-cookie";
 
 const UserHistory = () => {
-  const token = useSelector(selectUserCurrentToken);
+  // const token = useSelector(selectUserCurrentToken);
+  const [cookie] = useCookies(["auth"]);
   // const{data: category}= useAddCategoryMutation()
   const [showHistory, setShowHistory]:any = useState([]);
   const [loading, setLoading] = useState(true);
   async function fetchCategoryData() {
     try {
       const payload = {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${cookie.auth}`,
        
       };
       

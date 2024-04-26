@@ -22,12 +22,15 @@ import { useDispatch } from "react-redux";
 import { useAdminloginMutation, useSaloginMutation, useUserloginMutation} from "@/features/api/authApiSlice";
 import { useState } from "react";
 import { Toaster, toast } from 'sonner'
+import { useCookies } from "react-cookie";
 import { setCredentials3 } from "@/features/redux_toolkit/saSlice";
 
 
 const Login = ({ redirect }: any) => {
   const dispatch = useDispatch()
   const location = useLocation();
+  const [message, setMessage] = useState("");
+  const [cookie, setCookie] = useCookies([`auth`]);
   const state = useLocation().state;
   console.log(state)
   const navigate = useNavigate();
@@ -46,38 +49,38 @@ const Login = ({ redirect }: any) => {
 
   const submitData = async (data: any) => {
     setLoading(true);
-    console.log(data, 'hellooo')
+    setMessage(""); // Clear any previous error messages
+    
     try {
       let userData: any;
       if (location.pathname === '/admin/login') {
-        
         userData = await login(data);
-       
-        dispatch(setCredentials(userData));
-      } else if (location.pathname === '/user/login') {
+        toast.success('Logged In');
+      } else if (location.pathname === '/user/login' || location.pathname === '/') {
         userData = await userLogin(data);
-       
-        dispatch(setCredentials2(userData));
-        navigate(redirect)
-      } else if (location.pathname === '/') {
-        userData = await userLogin(data);
-        dispatch(setCredentials2(userData));
-        navigate(redirect)
+        toast.success('Logged In');
+        // navigate(redirect);
       } else if (location.pathname === '/super-admin/login') {
         userData = await saLogin(data);
+        toast.success('Logged In');
         dispatch(setCredentials3(userData));
-        navigate('/super-admin/orders')
-       
+        
       } else {
         throw new Error('Invalid login path');
       }
-  
-      console.log(userData);
-      
-      // navigate(state.from ? state.from : redirect); something wrong
-      // navigate(redirect)
+ 
+      // Set cookie only if the request is successful
+      if (userData?.data?.token) {
+        setCookie(`auth`, userData.data.token);
+        setMessage("Logged In Successfully");
+      } else {
+        throw new Error('Token not received');
+      }
+       navigate(redirect);
     } catch (err) {
-      console.log(err);
+      console.log(err, 'hiiiiii');
+      toast.error('Invalid Email and Password');
+      setMessage("Login failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -170,7 +173,7 @@ const Login = ({ redirect }: any) => {
                         type="submit"
                         disabled={loading}
                         className="px-7"
-                        onClick={() => toast.success('Logged In')}
+                        
                         variant={
                           isUserLoginPage || isDefaultPage
                             ? "purple"
@@ -216,6 +219,7 @@ const Login = ({ redirect }: any) => {
             </div>
           </form>
         </Form>
+        <div className="text-red-500">{message}</div> 
       </CardWrapper>
    
     </div>

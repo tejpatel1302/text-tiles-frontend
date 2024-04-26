@@ -86,7 +86,7 @@ export const AddProduct = z.object({
         .min(10, { message: 'Description must be at least 10 characters long' }),
     material: z.string(),
     price: z.string(),
-    size: z.string(),
+    size: z.any(),
     colorId: z.string(),
     file: z.any()
                     .refine(value => {

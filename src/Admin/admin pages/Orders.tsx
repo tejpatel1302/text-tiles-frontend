@@ -6,18 +6,20 @@ import { useEffect, useState } from "react";
 import { selectAdminCurrentToken } from "@/features/redux_toolkit/authSlice";
 import { getOrdersApi } from "@/features/api/apicall";
 import { addId } from "@/features/redux_toolkit/orderItemIdSlice";
+import { useCookies } from "react-cookie";
 // import { selectCurrentToken } from "@/features/redux_toolkit/authSlice";
 
 const OrderList = () => {
   // const dispatch = useDispatch()
-  const token = useSelector(selectAdminCurrentToken);
+  // const token = useSelector(selectAdminCurrentToken);
+  const [cookie] = useCookies(["auth"]);
   // const{data: Order}= useAddOrderMutation()
   const [showOrder, setShowOrder]:any = useState([]);
   const [loading, setLoading] = useState(true);
   async function fetchOrderData() {
     try {
       const payload = {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${cookie.auth}`,
        
       };
       
@@ -55,7 +57,7 @@ const OrderList = () => {
 
   return (
     <div className="bg-white">
-      <div className="text-3xl font-bold mt-10 ml-4 ">Orders History</div>
+      <div className="text-3xl font-bold mt-10 ml-4 ">Orders </div>
       {loading ? (
         <div>Loading...</div>
       ) : (

@@ -23,12 +23,14 @@ import { addAddress } from "@/features/redux_toolkit/addressSlice";
 import { addAddressApi, getCartApi } from "@/features/api/apicall";
 import { selectUserCurrentToken } from "@/features/redux_toolkit/userAuthSlice";
 import { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
 
 
 const ProceedToBuy = ({ redirect }: any) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const token = useSelector(selectUserCurrentToken);
+  const [cookie] = useCookies(["auth"]);
+  // const token = useSelector(selectUserCurrentToken);
   const [showProducts, setShowProducts]:any = useState([]);
   const [loading, setLoading] = useState(true);
   const { cartData } = useSelector((state: any) => state.cart);
@@ -67,7 +69,7 @@ const ProceedToBuy = ({ redirect }: any) => {
 
       const config = {
           headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `Bearer ${cookie.auth}`,
             
           }
       };
@@ -91,7 +93,7 @@ const ProceedToBuy = ({ redirect }: any) => {
   async function fetchCartProductsData() {
     try {
       const payload = {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${cookie.auth}`,
       };
 
       const res = await getCartApi(payload);
@@ -105,10 +107,11 @@ const ProceedToBuy = ({ redirect }: any) => {
 console.log(showProducts,'jijiji')
   useEffect(() => {
     fetchCartProductsData();
-  }, [token]);
+  }, [cookie.auth]);
 
   return (
     <div className="h-screen flex w-8/12 gap-4 mx-auto my-10">
+      <div className="text-3xl relative right-[200px] font-bold">CheckOut</div>
       <div className="w-1/2">
         <Card2 headerLabel="ADD ADDRESS">
           <div>
@@ -240,7 +243,7 @@ console.log(showProducts,'jijiji')
       <div className="border-2 border-purple-400 rounded-lg w-1/2 p-4 h-[450px] shadow-md ">
   <div>
     <div className="flex justify-between items-center mb-4 border-b-2 border-purple-400 p-2">
-      <div className="font-semibold text-lg">{`${cartData.length} Items`}</div>
+      <div className="font-semibold text-lg">{`${showProducts.length} Items`}</div>
       <div>
       <Button variant={'purple'}>
         Edit
@@ -251,7 +254,7 @@ console.log(showProducts,'jijiji')
   {showProducts.map((cd:any, index:any) => (
     <div className="flex items-center mb-4" key={index}>
       <div className="w-20 h-20 border-2 border-gray-300 rounded-lg overflow-hidden">
-        <img src={cd.image} alt={cd.title} className="w-full h-full object-cover" />
+        <img src={`data:image/jpeg;base64,${cd?.colorRelation?.image?.buffer}`} alt={cd.title} className="w-full h-full object-cover" />
       </div>
       <div className="ml-4">
         <div className="font-bold text-xl">{`€${cd?.totalPrice}`}</div>
@@ -262,11 +265,8 @@ console.log(showProducts,'jijiji')
   ))}
 </div>
 <div className="mt-4">
-  <div className="flex justify-between mb-2">
-    <div className="font-semibold">Delivery Charges</div>
-    <div className="font-semibold">€5.00</div>
-  </div>
-  <div className="flex justify-between">
+  
+  <div className="flex justify-between  mt-10">
     <div className="font-bold text-xl">Total to Pay</div>
     <div className="font-bold text-xl">
       {/* Dynamically calculate total price */}

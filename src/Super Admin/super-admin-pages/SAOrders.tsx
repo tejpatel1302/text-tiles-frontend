@@ -5,20 +5,22 @@ import { useEffect, useState } from "react";
 import { selectSACurrentToken } from "@/features/redux_toolkit/saSlice";
 import { useSelector } from "react-redux";
 import { getSAOrdersApi } from "@/features/api/apicall";
+import { useCookies } from "react-cookie";
 
 const SAOrders = () => {
-  const token = useSelector(selectSACurrentToken);
+  // const token = useSelector(selectSACurrentToken);
+  const [cookie] = useCookies(["auth"]);
   const [showOrder, setShowOrder]:any = useState([]);
   const [loading, setLoading] = useState(true);
   async function fetchOrderData() {
     try {
       const payload = {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${cookie.auth}`,
        
       };
       
       const res = await getSAOrdersApi(payload);
-      console.log(res, 'getsAmdinOrders')
+      console.log(res, 'getsAmdinOrdershi')
       setShowOrder(res?.data);
       
       setLoading(false);
@@ -33,28 +35,32 @@ const SAOrders = () => {
     fetchOrderData();
     
   }, []);
-  const data: Order[] = OrderDetails.map((order) => ({
-    customerId: order.customerId,
-    OrderID: order.orderId,
-    Name: order.name,
-    city: order.city,
-    email: order.email,
-    mobileNumber: order.mobileNumber,
+  const data: Order[] = showOrder?.map((order) => ({
+    customerId: order?.CustomerId?.id,
+    // OrderID: order?.id,
+    Name: order?.addressId?.billToName,
+    city: order?.addressId?.city,
+    email: order?.orderId?.Customer?.email,
+    mobileNumber: order?.orderId?.Customer?.phoneNum,
     orderDate: order.orderDate,
-    address: order.address,
-    orderDetails: order.orderDetails,
-    status: order.status,
+  
+    orderDetails: 'View',
+    status: order?.status,
   }));
 
 
 
   return (
-    <div >
-       <div className="mt-10 ml-4  text-3xl font-bold">Orders</div>
-       <div className="-mt-12">
-        <DataTable columns={columns} data={data} />
-      </div>
+    <div className="bg-white">
+    <div className="text-3xl font-bold mt-10 ml-4 ">Orders History</div>
+    {loading ? (
+      <div>Loading...</div>
+    ) : (
+      <div className="-mt-12">
+      <DataTable columns={columns} data={data} />
     </div>
+    )}
+  </div>
   );
 };
 

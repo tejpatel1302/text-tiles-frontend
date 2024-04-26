@@ -1,10 +1,12 @@
 import { Button } from "@/components/ui/button";
-import { deleteSubCategoryApi } from "@/features/api/apicall";
+import { deleteSubCategoryApi, updateSubCategoryApi } from "@/features/api/apicall";
 import { selectAdminCurrentToken } from "@/features/redux_toolkit/authSlice";
 import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
 import { Save, X } from "lucide-react";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useCookies } from "react-cookie";
+import { toast, Toaster } from "sonner";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -16,61 +18,100 @@ export type SubCategory = {
 
 const EditCell = ({ row, table, subCategoryId }: any) => {
   const meta = table.options.meta;
-  const setEditedRows = (e: any) => {
-    meta?.setEditedRows((old: []) => ({
-      ...old,
-      [row.id]: !old[row.id],
-    }));
+  const [categoryName, setCategoryName] = useState(row.original.name);
+  // const token = useSelector(selectAdminCurrentToken);
+  const [cookie] = useCookies(["auth"]);
+
+  const setEditedRows = async (action: string) => {
+      if (action === 'done') {
+          try {
+              const payload = {
+                  Authorization: `Bearer ${cookie.auth}`,
+                  // 'Content-Type': 'application/json'
+              };
+              const req = {
+                  name: categoryName,
+              };
+              // Make API call to update subcategory name
+              const res = await updateSubCategoryApi(payload, subCategoryId, req); // Corrected variable name here
+              console.log(res, "hihello");
+
+              // Reset edited state after successful update
+              meta?.setEditedRows((old: []) => ({
+                  ...old,
+                  [row.id]: false,
+              }));
+          } catch (error) {
+              console.error("Error updating subcategory name:", error);
+              toast.success('SubCategory Has Been Updated');
+          }
+      } else {
+          // For cancel action, just reset edited state
+          meta?.setEditedRows((old: []) => ({
+              ...old,
+              [row.id]: false,
+          }));
+      }
   };
-//   const params = useParams();
-// const { productId } = params;
-  const token = useSelector(selectAdminCurrentToken);
+
   const removeRow = async () => {
       meta?.removeRow(row.index);
-     
-        try {
+   
+      try {
           const payload = {
-            Authorization: `Bearer ${token}`,
-            // 'Content-Type': 'application/json'
+              Authorization: `Bearer ${cookie.auth}`,
+              // 'Content-Type': 'application/json'
           };
-    
-          const res = await deleteSubCategoryApi(payload, subCategoryId);
-        
+  
+          const res = await deleteSubCategoryApi(payload, subCategoryId); // Corrected variable name here
+      
           console.log(res, "hihello");
-          
-        } catch (error) {
+        
+      } catch (error) {
           console.error("Error fetching subcategory data:", error);
-          
-        }
+          toast.success('SubCategory Has Been Deleted');
       }
-    
-    
-  //   meta?.editedRows[row.id] ? 
+  };
+
+  const handleCategoryNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+      setCategoryName(event.target.value);
+  };
+
   return (
       <div className="edit-cell-container mr-32">
-      
-      {meta?.editedRows[row.id] ? (
-        <div className="edit-cell-action flex gap-4">
-          <Button onClick={setEditedRows} name="cancel" variant={'ghost'} className="text-red-500" >
-            <X/>
-          </Button>{" "}
-          <Button onClick={setEditedRows} name="done" variant={'ghost'} className="text-green-500">
-            <Save/>
-          </Button>
-        </div>
-      ) : (
-        <div className="edit-cell-action flex gap-4">
-          <Button onClick={setEditedRows} name="edit" variant={'green'}>
-            Edit
-          </Button>
-          <Button onClick={removeRow} name="remove" variant={'red'}>
-            Delete
-          </Button>
-        </div>
-      )}
-    </div>
-  )
+         <div>
+            <Toaster position="top-center" />
+            </div>
+          {meta?.editedRows[row.id] ? (
+              <div className="edit-cell-action flex gap-4">
+                  <Button onClick={() => setEditedRows('cancel')} name="cancel" variant={'ghost'} className="text-red-500" >
+                      <X/>
+                  </Button>{" "}
+                  <Button onClick={() => setEditedRows('done')} name="done" variant={'ghost'} className="text-green-500">
+                      <Save/>
+                  </Button>
+              </div>
+          ) : (
+              <div className="edit-cell-action flex gap-4">
+                  <Button onClick={() => meta?.setEditedRows((old: []) => ({ ...old, [row.id]: true }))} name="edit" variant={'green'}>
+                      Edit
+                  </Button>
+                  <Button onClick={removeRow} name="remove" variant={'red'}>
+                      Delete
+                  </Button>
+              </div>
+          )}
+          {/* Input field for editing category name */}
+          <input
+              type="text"
+              value={categoryName}
+              onChange={handleCategoryNameChange}
+              className="relative right-[130px] -top-[20px] p-1 w-16"
+          />
+      </div>
+  );
 };
+
   const TableCell = ({ getValue, row, column, table }:any) => {
     const initialValue = getValue()
     const columnMeta = column.columnDef.meta
@@ -96,13 +137,7 @@ const EditCell = ({ row, table, subCategoryId }: any) => {
           ))}
         </select>
       ) : (
-        <input
-          value={value}
-          onChange={e => setValue(e.target.value)}
-          onBlur={onBlur}
-          type={columnMeta?.type || "text"}
-          className="border-2 border-black w-8/12 p-4"
-        />
+        <div></div>
       )
     }
     return <span>{value}</span>

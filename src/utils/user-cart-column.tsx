@@ -11,7 +11,7 @@ export type UserCart = {
   id: string,
 
   quantity:any,
-image:any,
+images:any,
 name:any
   
   itemSize: any,
@@ -103,8 +103,8 @@ export const columns = [
         header: "Product ID",
         
     }),
-    columnHelper.accessor("image", {
-        header: "image",
+    columnHelper.accessor("images", {
+        header: "images",
         
     }),
     columnHelper.accessor("name", {

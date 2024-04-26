@@ -21,14 +21,17 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { selectAdminCurrentToken } from "@/features/redux_toolkit/authSlice";
 import { addCategoryApi} from "@/features/api/apicall";
+import { useCookies } from "react-cookie";
+import { Toaster, toast } from 'sonner'
 
 
 
 const AddCategory = ({ redirect }: any) => {
   const navigate = useNavigate();
   
-  const token = useSelector(selectAdminCurrentToken)
-  console.log(token, 'admin token')
+  // const token = useSelector(selectAdminCurrentToken)
+  const [cookie] = useCookies(["auth"]);
+  
   const form = useForm<z.infer<typeof AddCategorySchema>>({
     defaultValues: {
       name: "",
@@ -56,12 +59,13 @@ const AddCategory = ({ redirect }: any) => {
 console.log(formData,'hiiiiiiiiiiiiiiii')
       const config = {
           headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `Bearer ${cookie.auth}`,
               'Content-Type': 'multipart/form-data'
           }
       };
 
       const res = await addCategoryApi(formData, config);
+      toast.success('Category Has Been Added');
       console.log(res, 'addedsubmitData');
       
       
@@ -77,6 +81,7 @@ console.log(formData,'hiiiiiiiiiiiiiiii')
   const fileRef = form.register('file', { required: true });
   return (
     <div className="max-h-screen">
+       <Toaster position="top-center" />
       <div className="h-[600px] flex border-2 border-black w-9/12 rounded-md bg-white justify-center items-center mx-auto p-10 my-4">
         <div className="text-3xl font-bold relative -top-64 right-20">
           Add Category
@@ -101,7 +106,7 @@ console.log(formData,'hiiiiiiiiiiiiiiii')
                         <FormControl>
                           <Input
                             {...field}
-                            placeholder="Enter your Product Name"
+                            placeholder="Enter your Category Name"
                             type="text" className="w-[300px]"
                           />
                         </FormControl>

@@ -7,16 +7,18 @@ import { category } from "@/utils/category";
 import { Category, columns } from "@/utils/category-column";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
+import { useCookies } from "react-cookie";
 
 const ManageCategory = () => {
-  const token = useSelector(selectAdminCurrentToken);
+  // const token = useSelector(selectAdminCurrentToken);
+  const [cookie] = useCookies(["auth"]);
   // const{data: category}= useAddCategoryMutation()
   const [showCategory, setShowCategory]:any = useState([]);
   const [loading, setLoading] = useState(true);
   async function fetchCategoryData() {
     try {
       const payload = {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${cookie.auth}`,
        
       };
       

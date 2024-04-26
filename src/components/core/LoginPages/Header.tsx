@@ -20,7 +20,7 @@ const  Header = ({label}:HeaderProps) => {
   return (
     <div className="flex flex-col gap-y-4 items-center">
       
-        <h1 className={`text-3xl font-bold 
+        <h1 className={`lg:text-3xl font-bold text-2xl
                          ${isUserLoginPage || isDefaultPage || isUserRegisterPage
                           ? "text-[#7346da]"
                           : isAdminLoginPage || isAdminRegisterPage

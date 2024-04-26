@@ -5,11 +5,12 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { getProductsApi } from "@/features/api/apicall";
 import { selectAdminCurrentToken } from "@/features/redux_toolkit/authSlice";
+import { useCookies } from "react-cookie";
 
 
 const Products = () => {
-  const token = useSelector(selectAdminCurrentToken);
-  
+  // const token = useSelector(selectAdminCurrentToken);
+  const [cookie] = useCookies(["auth"]);
   
   const [showProducts, setShowProducts] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -18,7 +19,7 @@ const Products = () => {
   async function fetchProductsData() {
     try {
       const payload = {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${cookie.auth}`,
       };
       
       const res = await getProductsApi(payload);
@@ -49,7 +50,7 @@ console.log(showProducts)
     }
   }
   const data: Product[] = showProducts?.map((product:any) => ({
-    id: product?.id,
+    id: product?.colorRelation[0]?.productId ,
     name: product?.name,
     price : product?.price,
     colors : product?.colorRelation[0]?.color?.name,
@@ -57,7 +58,7 @@ console.log(showProducts)
     images: product?.colorRelation[0]?.image ? createBlobFromBuffer(product?.colorRelation[0]?.image.buffer, product?.colorRelation[0]?.image.mimetype) : null,
     description: product?.description,
     material: product?.material,
-    quantity: product?.quantity 
+   
     
     
     
@@ -66,7 +67,7 @@ console.log(showProducts)
   }));
   return (
     <div >
-       <div className="mt-10 ml-4 text-3xl font-bold">Products</div>
+       <div className="mt-10 ml-4 text-3xl font-bold"> Manage Products</div>
        {loading ? (
         <div>Loading...</div>
       ) : (

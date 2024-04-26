@@ -29,14 +29,18 @@ import { useEffect, useState } from "react";
 import { addProductApi, getCategoryApi, getColorsApi, getSubCategoryApi } from "@/features/api/apicall";
 import { useSelector } from "react-redux";
 import { selectAdminCurrentToken } from "@/features/redux_toolkit/authSlice";
+import { useCookies } from "react-cookie";
+import { Checkbox } from "@/components/ui/checkbox";
+import { toast, Toaster } from "sonner";
 
 const AddProducts = ({ redirect }: any) => {
   const navigate = useNavigate();
   const [showCategory, setShowCategory]: any = useState([]);
   const [showSubCategory, setShowSubCategory]: any = useState([]);
   const [showColors, setShowColors]: any = useState([]);
+  const [cookie] = useCookies(["auth"]);
   const [selectedCategory, setSelectedCategory]: any = useState('');
-  const token = useSelector(selectAdminCurrentToken)
+  // const token = useSelector(selectAdminCurrentToken)
   const form = useForm<z.infer<typeof AddProduct>>({
     resolver: zodResolver(AddProduct),
     defaultValues: {
@@ -52,7 +56,32 @@ const AddProducts = ({ redirect }: any) => {
     },
     mode: 'all'
   });
-
+  const items = [
+    {
+      id: "S",
+      label: "S",
+    },
+    {
+      id: "M",
+      label: "M",
+    },
+    {
+      id: "L",
+      label: "L",
+    },
+    {
+      id: "XL",
+      label: "XL",
+    },
+    {
+      id: "XXL",
+      label: "XXL",
+    },
+    {
+      id: "XXL",
+      label: "XXL",
+    },
+  ] as const
   const submitData = async (data: any) => {
     console.log(data)
     try {
@@ -62,7 +91,7 @@ const AddProducts = ({ redirect }: any) => {
       formData.append('file', data.file[0]);
       formData.append('material', data.material);
       formData.append('price', data.price);
-      formData.append('size', data.size);
+      formData.append('size', "L");
       formData.append('colorId', data.colorId);
 
       formData.append('subcategoryId', data.subcategoryId);
@@ -70,12 +99,13 @@ const AddProducts = ({ redirect }: any) => {
       console.log(formData, 'hiiiiiiiiiiiiiiii')
       const config = {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${cookie.auth}`,
           'Content-Type': 'multipart/form-data'
         }
       };
 
       const res = await addProductApi(formData, config);
+      toast.success('Product Has Been Added');
       console.log(res, 'addedsubmitData');
 
 
@@ -89,7 +119,7 @@ const AddProducts = ({ redirect }: any) => {
   async function fetchCategoryData() {
     try {
       const payload = {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${cookie.auth}`,
 
       };
 
@@ -105,7 +135,7 @@ const AddProducts = ({ redirect }: any) => {
   async function fetchColorsData() {
     try {
       const payload = {
-        Authorization: `Bearer</FormItem> ${token}`,
+        Authorization: `Bearer</FormItem> ${cookie.auth}`,
 
       };
 
@@ -121,7 +151,7 @@ const AddProducts = ({ redirect }: any) => {
   async function fetchSubCategoryData() {
     try {
       const payload = {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${cookie.auth}`,
 
       };
 
@@ -157,9 +187,10 @@ const AddProducts = ({ redirect }: any) => {
   const fileRef = form.register('file', { required: true });
   return (
     <div className="max-h-screen">
+       <Toaster position="top-center" />
       <div className="min-h-screen flex border-2 border-black w-9/12 rounded-md bg-white justify-center mx-auto p-10 my-4">
         <div className="text-3xl font-bold relative top-0 right-20">
-          Add Products:
+          Add Products
         </div>
         <div>
           <div >
@@ -219,7 +250,7 @@ const AddProducts = ({ redirect }: any) => {
                           <FormControl>
                             <Input
                               {...field}
-                              placeholder="Enter Price"
+                              placeholder="        Enter Price"
                               type="number"
                               className="w-[300px]"
                             />
@@ -230,71 +261,57 @@ const AddProducts = ({ redirect }: any) => {
                     )}
                   />
 
-                  <FormField
-                    control={form.control}
-                    name="size"
-                    render={({ field }) => (
-                      <FormItem >
-                        <div className="flex items-center">
-                          <FormLabel className="w-36">Sizes:</FormLabel>
-                          <FormControl>
-                            <div className="flex gap-5">
-                              <label
-                                htmlFor=""
-                                className="flex items-center gap-2"
-                              >
-                                S:
-                                <Input
-                                  {...field}
-                                  value="S"
-                                  type="radio"
-                                  className="radio-large"
-                                />
-                              </label>
-                              <label
-                                htmlFor=""
-                                className="flex items-center gap-2"
-                              >
-                                M:
-                                <Input
-                                  {...field}
-                                  value="M"
-                                  type="radio"
-                                  className="radio-large"
-                                />
-                              </label>
-                              <label
-                                htmlFor=""
-                                className="flex items-center gap-2"
-                              >
-                                L:
-                                <Input
-                                  {...field}
-                                  value="L"
-                                  type="radio"
-                                  className="radio-large"
-                                />
-                              </label>
-                              <label
-                                htmlFor=""
-                                className="flex items-center gap-2"
-                              >
-                                {" "}
-                                XL:
-                                <Input
-                                  {...field}
-                                  value="XL"
-                                  type="radio"
-                                  className="text-sm bg-red-500"
-                                />
-                              </label>
-                            </div>
-                          </FormControl>
-                        </div>
-                        <FormMessage className="relative left-[105px]" />
+<FormField
+          control={form.control}
+          name="size"
+          render={() => (
+            <FormItem className="flex ">
+              <div className="mb-4">
+                <FormLabel className="mr-28">Sizes</FormLabel>
+             
+              </div>
+             <div className="flex gap-5">
+             {items.map((item) => (
+                <FormField
+                  key={item.id}
+                  control={form.control}
+                  name="size"
+                  render={({ field }) => {
+                    return (
+                      <FormItem
+                        key={item.id}
+                        className="flex flex-row items-start space-x-3 space-y-0"
+                      >
+                        <FormControl >
+                         
+                         <Checkbox
+                            checked={field.value?.includes(item.id)}
+                            onCheckedChange={(checked) => {
+                              return checked
+                                ? field.onChange([...field.value, item.id])
+                                : field.onChange(
+                                    field.value?.filter(
+                                      (value) => value !== item.id
+                                    )
+                                  )
+                            }}
+                          />
+                    
+                        </FormControl>
+                        <FormLabel className="font-normal">
+                          {item.label}
+                        </FormLabel>
+                        
                       </FormItem>
-                    )}
-                  />
+                    )
+                  }}
+                />
+              ))}
+             </div>
+             
+            </FormItem>
+          )}
+        />
                   <FormField
                     control={form.control}
                     name="material"
@@ -326,7 +343,7 @@ const AddProducts = ({ redirect }: any) => {
                           <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
                               <SelectTrigger>
-                                <SelectValue placeholder="Select a verified email to display" />
+                                <SelectValue placeholder="Select a Color" />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
@@ -361,7 +378,7 @@ const AddProducts = ({ redirect }: any) => {
                           }} defaultValue={field.value}>
                             <FormControl>
                               <SelectTrigger>
-                                <SelectValue placeholder="Select a verified email to display" />
+                                <SelectValue placeholder="Select a Category" />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>
@@ -396,7 +413,7 @@ const AddProducts = ({ redirect }: any) => {
                           }} defaultValue={field.value}>
                             <FormControl>
                               <SelectTrigger>
-                                <SelectValue placeholder="Select a verified email to display" />
+                                <SelectValue placeholder="Select a Sub-Category" />
                               </SelectTrigger>
                             </FormControl>
                             <SelectContent>

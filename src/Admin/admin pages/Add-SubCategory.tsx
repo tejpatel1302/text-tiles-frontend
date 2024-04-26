@@ -30,11 +30,14 @@ import { selectAdminCurrentToken } from "@/features/redux_toolkit/authSlice";
 import { useSelector } from "react-redux";
 import { addManageCategoryApi, getCategoryApi } from "@/features/api/apicall";
 import { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
+import { Toaster, toast } from 'sonner'
 
 const AddSubCategory = ({ redirect }: any) => {
   const navigate = useNavigate();
   const [showCategory, setShowCategory]:any = useState([]);
-  const token = useSelector(selectAdminCurrentToken)
+  const [cookie] = useCookies(["auth"]);
+  // const token = useSelector(selectAdminCurrentToken)
   const form = useForm<z.infer<typeof AddManageCategorySchema>>({
     resolver: zodResolver(AddManageCategorySchema),
     defaultValues: {
@@ -47,12 +50,12 @@ const AddSubCategory = ({ redirect }: any) => {
   async function fetchCategoryData() {
     try {
       const payload = {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${cookie.auth}`,
        
       };
       
       const res = await getCategoryApi(payload);
-      console.log(res, 'getCategory')
+      console.log(res, 'getSubCategoryhiiiiiii')
       setShowCategory(res?.data);
       
       
@@ -75,12 +78,13 @@ const AddSubCategory = ({ redirect }: any) => {
       
       const config = {
           headers: {
-              Authorization: `Bearer ${token}`,
+              Authorization: `Bearer ${cookie.auth}`,
               'Content-Type': 'multipart/form-data'
           }
       };
 
       const res = await addManageCategoryApi(formData, config);
+      toast.success('SubCategory Has Been Added');
       console.log(res, 'addedsubmitData');
   } catch (error) {
       console.error("Error fetching product data:", error);
@@ -93,6 +97,7 @@ const AddSubCategory = ({ redirect }: any) => {
   const fileRef = form.register('file', { required: true });
   return (
     <div className="max-h-screen">
+       <Toaster position="top-center" />
       <div className="h-[600px] flex border-2 border-black w-9/12 rounded-md bg-white justify-center items-center mx-auto p-12 my-4">
         <div className="text-3xl font-bold relative -top-64 right-10">
           Add SubCategory 
@@ -140,7 +145,7 @@ const AddSubCategory = ({ redirect }: any) => {
                         <FormControl>
                           <Input
                             {...field}
-                            placeholder="Enter Product Name"
+                            placeholder="Enter Your SubCategory Name"
                             type="text" className="w-[300px]"
                           />
                         </FormControl>

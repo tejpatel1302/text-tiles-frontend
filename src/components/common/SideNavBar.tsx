@@ -178,12 +178,7 @@ const clickHandler = async () => {
         icon: FilePlus2Icon,
         variant: "ghost",
       },
-      {
-        title: "Order-Report",
-        href: "/admin/order-report",
-        icon: File,
-        variant: "skyblue",
-      },
+   
       {
         title: "Manage Category",
         href: "/admin/manage-category",

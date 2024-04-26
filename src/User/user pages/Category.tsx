@@ -6,12 +6,13 @@ import { selectUserCurrentToken } from "@/features/redux_toolkit/userAuthSlice";
 import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { useCookies } from "react-cookie";
 
 const Category = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  
-  const token = useSelector(selectUserCurrentToken);
+  const [cookie] = useCookies(["auth"]);
+  // const token = useSelector(selectUserCurrentToken);
   
 
  
@@ -20,7 +21,7 @@ const Category = () => {
   async function fetchCategoryData() {
     try {
       const payload = {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${cookie.auth}`,
       };
       console.log(payload,'payload')
       

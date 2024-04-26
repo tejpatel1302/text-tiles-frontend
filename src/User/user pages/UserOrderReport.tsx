@@ -8,18 +8,19 @@ import { useSelector } from "react-redux";
 import { selectUserCurrentToken } from "@/features/redux_toolkit/userAuthSlice";
 import { selectAdminCurrentToken } from "@/features/redux_toolkit/authSlice";
 import { selectSACurrentToken } from "@/features/redux_toolkit/saSlice";
+import { useCookies } from "react-cookie";
 
 const UserOrderReport = () => {
-  
+  const [cookie] = useCookies(["auth"]);
   let token : any;
   if (location.pathname === '/user/order-report') {
-   token  = useSelector(selectUserCurrentToken);
+   token  = cookie.auth;
    
   } else if (location.pathname === '/admin/order-report') {
-   token  =useSelector(selectAdminCurrentToken);
+   token  = cookie.auth;
    
   } else if (location.pathname === '/super-admin/order-report') {
-   token  = useSelector(selectSACurrentToken);
+   token  =  cookie.auth;
   
   } else {
     throw new Error('Invalid login path');

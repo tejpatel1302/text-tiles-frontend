@@ -43,6 +43,7 @@ import PaymentMethods from "./User/user pages/PaymentMethods.tsx";
 import { OrderReport } from "./utils/order-report.tsx";
 import UserOrderReport from "./User/user pages/UserOrderReport.tsx";
 import SAOrderDetails from "./Super Admin/SAOrderDetails.tsx";
+import UserProtected from "./components/common/UserProtected.tsx";
 
 
 const appRoutes = createBrowserRouter([
@@ -137,7 +138,7 @@ const appRoutes = createBrowserRouter([
       },
       {
         path: "/user/category",
-        element: <Category />,
+        element: (<UserProtected><Category /></UserProtected>),
       },
       {
         path: "/user/sub-category",
@@ -167,7 +168,7 @@ const appRoutes = createBrowserRouter([
       },
       {
         path: "/admin/orders",
-        element: <Orders />,
+        element: ( <Protected><Orders /></Protected>),
       },
       {
         path: "/admin/forgot-password",
