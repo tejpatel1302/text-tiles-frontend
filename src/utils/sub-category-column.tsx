@@ -16,132 +16,164 @@ export type SubCategory = {
   images: string,
 };
 
-const EditCell = ({ row, table, subCategoryId }: any) => {
+const EditCell = ({ row, table }: any) => {
   const meta = table.options.meta;
+  const [isEditing, setIsEditing] = useState(false);
   const [categoryName, setCategoryName] = useState(row.original.name);
-  // const token = useSelector(selectAdminCurrentToken);
+  const [image, setImage] = useState<File | null>(null);
+  const [previewImage, setPreviewImage] = useState<string | null>(row.original.images);
   const [cookie] = useCookies(["auth"]);
 
-  const setEditedRows = async (action: string) => {
-      if (action === 'done') {
-          try {
-              const payload = {
-                  Authorization: `Bearer ${cookie.auth}`,
-                  // 'Content-Type': 'application/json'
-              };
-              const req = {
-                  name: categoryName,
-              };
-              // Make API call to update subcategory name
-              const res = await updateSubCategoryApi(payload, subCategoryId, req); // Corrected variable name here
-              console.log(res, "hihello");
-
-              // Reset edited state after successful update
-              meta?.setEditedRows((old: []) => ({
-                  ...old,
-                  [row.id]: false,
-              }));
-          } catch (error) {
-              console.error("Error updating subcategory name:", error);
-              toast.success('SubCategory Has Been Updated');
-          }
-      } else {
-          // For cancel action, just reset edited state
-          meta?.setEditedRows((old: []) => ({
-              ...old,
-              [row.id]: false,
-          }));
-      }
+  const handleEditClick = () => {
+      setIsEditing(true);
   };
 
-  const removeRow = async () => {
-      meta?.removeRow(row.index);
-   
+  const handleCancelClick = () => {
+      setIsEditing(false);
+      setCategoryName(row.original.name);
+      setPreviewImage(row.original.images);
+  };
+
+  const handleDeleteClick = async () => {
       try {
           const payload = {
               Authorization: `Bearer ${cookie.auth}`,
-              // 'Content-Type': 'application/json'
           };
-  
-          const res = await deleteSubCategoryApi(payload, subCategoryId); // Corrected variable name here
-      
-          console.log(res, "hihello");
-        
+
+          const res = await deleteSubCategoryApi(payload, row.original.subcategoryID);
+          console.log(res, "Delete successful");
+
+          toast.success("Category deleted successfully");
       } catch (error) {
-          console.error("Error fetching subcategory data:", error);
-          toast.success('SubCategory Has Been Deleted');
+          console.error("Error deleting category:", error);
+          toast.error("Error deleting category. Please try again later.");
       }
   };
 
-  const handleCategoryNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      setCategoryName(event.target.value);
+  const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      if (e.target.files && e.target.files[0]) {
+          const selectedImage = e.target.files[0];
+          setImage(selectedImage);
+          const reader = new FileReader();
+          reader.onload = () => {
+              if (reader.readyState === 2) {
+                  setPreviewImage(reader.result as string);
+              }
+          };
+          reader.readAsDataURL(selectedImage);
+      }
+  };
+
+  const handleCategoryUpdate = async () => {
+      try {
+          const formData = new FormData();
+          if (image) {
+              formData.append("file", image);
+          }
+          formData.append("name", categoryName);
+
+          const payload = {
+              Authorization: `Bearer ${cookie.auth}`,
+              'Content-Type': 'multipart/form-data',
+          };
+
+          const res = await updateSubCategoryApi(payload, row.original.subcategoryID, formData);
+          console.log(res, "Update successful");
+
+          setIsEditing(false);
+
+          toast.success("Category updated successfully");
+      } catch (error) {
+          console.error("Error updating category:", error);
+          toast.error("Error updating category. Please try again later.");
+      }
   };
 
   return (
       <div className="edit-cell-container mr-32">
-         <div>
-            <Toaster position="top-center" />
-            </div>
-          {meta?.editedRows[row.id] ? (
-              <div className="edit-cell-action flex gap-4">
-                  <Button onClick={() => setEditedRows('cancel')} name="cancel" variant={'ghost'} className="text-red-500" >
-                      <X/>
-                  </Button>{" "}
-                  <Button onClick={() => setEditedRows('done')} name="done" variant={'ghost'} className="text-green-500">
-                      <Save/>
-                  </Button>
-              </div>
-          ) : (
-              <div className="edit-cell-action flex gap-4">
-                  <Button onClick={() => meta?.setEditedRows((old: []) => ({ ...old, [row.id]: true }))} name="edit" variant={'green'}>
-                      Edit
-                  </Button>
-                  <Button onClick={removeRow} name="remove" variant={'red'}>
-                      Delete
-                  </Button>
-              </div>
-          )}
-          {/* Input field for editing category name */}
-          <input
-              type="text"
-              value={categoryName}
-              onChange={handleCategoryNameChange}
-              className="relative right-[130px] -top-[20px] p-1 w-16"
-          />
+          <div>
+              <Toaster position="top-center" />
+          </div>
+          <div className="edit-cell-action">
+              {!isEditing ? (
+                  <>
+                     <div className="flex gap-5">
+                     <Button onClick={handleEditClick} name="edit" variant={'green'}>
+                          Edit
+                      </Button>
+                      <Button onClick={handleDeleteClick} name="delete" variant={'red'}>
+                          Delete
+                      </Button>
+                     </div>
+                  </>
+              ) : (
+                  <>
+                    <div className="flex items-center">
+                    <div>
+                    <div>
+                    <div className="text-2xl mb-2 font-bold"> Update Image</div>
+                     {previewImage && <img src={previewImage} alt="Preview" className="max-h-20" />}
+                      <input type="file" onChange={handleImageChange} className="my-4"/>
+                    </div>
+                      {/* Input field for editing category name */}
+                      <div className="mt-10">
+                      <div className="text-2xl mb-2 font-bold"> Update Name</div>
+                      <input
+                          type="text"
+                          value={categoryName}
+                          onChange={(e) => setCategoryName(e.target.value)}
+                          className="p-4"
+                      />
+                      </div>
+                     </div>
+                     <div className="flex gap-5">
+                     <Button onClick={handleCancelClick} name="cancel" variant={'red'}>
+                     <X/> Cancel
+                      </Button>
+                      <Button onClick={handleCategoryUpdate} name="update" variant={'green'}>
+                          <Save /> Update
+                      </Button>
+                     </div>
+                    </div>
+                  </>
+              )}
+          </div>
       </div>
   );
 };
 
-  const TableCell = ({ getValue, row, column, table }:any) => {
-    const initialValue = getValue()
-    const columnMeta = column.columnDef.meta
-    const tableMeta = table.options.meta
-    const [value, setValue] = useState(initialValue)
-    useEffect(() => {
+
+const TableCell = ({ getValue, row, column, table }: any) => {
+  const initialValue = getValue()
+  const columnMeta = column.columnDef.meta
+  const tableMeta = table.options.meta
+  const [value, setValue] = useState(initialValue)
+  useEffect(() => {
       setValue(initialValue)
-    }, [initialValue])
-    const onBlur = () => {
+  }, [initialValue])
+  const onBlur = () => {
       tableMeta?.updateData(row.index, column.id, value)
-    }
-    const onSelectChange = (e: any) => {
+  }
+  const onSelectChange = (e: any) => {
       setValue(e.target.value)
       tableMeta?.updateData(row.index, column.id, e.target.value)
-    }
-    if (tableMeta?.editedRows[row.id]) {
-      return columnMeta?.type === "select" ? (
-        <select onChange={onSelectChange} value={initialValue}>
-          {columnMeta?.options?.map((option: any) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-      ) : (
-        <div></div>
-      )
-    }
-    return <span>{value}</span>
   }
+  if (tableMeta?.editedRows[row.id]) {
+      return columnMeta?.type === "select" ? (
+          <select onChange={onSelectChange} value={initialValue}>
+              {columnMeta?.options?.map((option: any) => (
+                  <option key={option.value} value={option.value}>
+                      {option.label}
+                  </option>
+              ))}
+          </select>
+      ) : (
+          <div></div>
+      )
+  }
+  return <span>{value}</span>
+}
+
 
 
 const columnHelper = createColumnHelper<SubCategory>();

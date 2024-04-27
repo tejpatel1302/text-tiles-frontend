@@ -54,7 +54,7 @@ const ManageSubCategory: React.FC<ManageSubCategoryProps> = () => {
   }
 
   const processedData: SubCategory[] = showSubCategory.map((item: any) => ({
-    subcategoryID: item?.categoryId,
+    subcategoryID: item?.id,
     name: item.name,
     images: item.image ? createBlobFromBuffer(item.image.buffer, item.image.mimetype) : null,
   }));

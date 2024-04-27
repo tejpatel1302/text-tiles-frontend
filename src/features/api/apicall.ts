@@ -164,6 +164,22 @@ export const addCategoryApi = async (formData: any, config: any) => {
       }
     });
   };
+  // export const deleteCartApi  = async (payload: any, id:any) => {
+  //   return axios.delete(`${api}/cart/${id}`, {
+  //     headers: payload,
+  //     params:{
+  //       id:id
+  //     }
+  //   });
+  // };
+  export const deleteCartIndividualApi  = async (payload: any, id:any) => {
+    return axios.delete(`${api}/cart/removeItem/${id}`, {
+      headers: payload,
+      params:{
+        id:id
+      }
+    });
+  };
   export const deleteWishlistApi = async (payload: any, id:any) => {
     return axios.delete(`${api}/wishlist/${id}`, {
       headers: payload,
@@ -193,9 +209,26 @@ export const addCategoryApi = async (formData: any, config: any) => {
       headers: payload,
     });
   };
+ 
   export const updateCategoryApi= async (payload: any, id:any,req:any ) => {
     return axios.patch(`${api}/category/${id}`,req ,{
       headers: payload,
+    });
+  };
+  export const updateProductApi= async (payload: any, id:any,req:any ) => {
+    return axios.patch(`${api}/product/${id}`,req ,{
+      headers: payload,
+      params: {
+        id: id
+      }
+    });
+  };
+  export const cartUpdateApi= async (payload: any, id:any,req:any ) => {
+    return axios.patch(`${api}/cart/${id}`,req ,{
+      headers: payload,
+      params: {
+        id: id
+      }
     });
   };
   export const updateSubCategoryApi= async (payload: any, id:any,req:any ) => {
