@@ -177,10 +177,10 @@ const [position, setPosition]:any = useState("bottom")
 
   return (
     <>
-      <div className={`${isWishList || isCart ? 'rounded-md ml-10' : 'rounded-md'}`}>
+      <div className={`${isWishList || isCart ? 'rounded-md ' : 'rounded-md'}`}>
         <div className="text-3xl font-bold flex items-center gap-5 ">
           {!isOrderDetails && !isWishList && !isCheckout && !isSuperAdminReport && !isUserReport &&  !isAdminReport && (
-            <div className={`flex justify-between relative ${isAdminOrders || isUser || isSuperAdminOrders || isSubCategory || isCategory || isAdminProducts || isSuperAdminOrders ? '-top-[125px]': isCart  ? '-top-[165px] left-[350px]' : '-top-[100px]'} left-[160px]  py-4`}>
+            <div className={`flex justify-between relative ${isAdminOrders || isUser || isSuperAdminOrders || isSubCategory || isCategory || isAdminProducts || isSuperAdminOrders ? '-top-[125px]': isCart  ? '-top-[95px] left-[350px]' : '-top-[100px]'} left-[160px]  py-4`}>
               <Input
                 placeholder={placeholder}
                 value={globalFilter} // Changed to use globalFilter state
@@ -231,7 +231,7 @@ const [position, setPosition]:any = useState("bottom")
           <Table className="">
             <TableHeader >
               {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id} className={`${isWishList || isCart ? 'flex space-x-[155px]' : ''}`}>
+                <TableRow key={headerGroup.id} className={`${isWishList || isCart ? 'flex space-x-[108px]' : ''}`}>
                   {headerGroup.headers.map((header) => {
                     return (
                       <TableHead key={header.id}>
@@ -257,7 +257,7 @@ const [position, setPosition]:any = useState("bottom")
                   onClick={()=>{clickHandler2(row.original.id)}}
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
-                    className={`${isWishList || isCart ? 'flex space-x-[80px]' : ''}`}
+                    className={`${isWishList || isCart ? 'flex space-x-[36px]' : ''}`}
                   >
                     {row.getVisibleCells().map((cell) => (
 

@@ -18,21 +18,23 @@ import { useSelector } from "react-redux"
 // import { selectAdminCurrentToken } from "@/features/redux_toolkit/authSlice"
 import { getUserApi } from "@/features/api/apicall"
 import { selectUserCurrentToken } from "@/features/redux_toolkit/userAuthSlice"
+import { useCookies } from "react-cookie";
 
 export function UserDropDown() {
   const navigate = useNavigate()
   const [user, setUser] = React.useState([] as any);
   const [position, setPosition] = React.useState("bottom")
   const [loading, setLoading] = React.useState(true)
-  const token = useSelector(selectUserCurrentToken);
+  const [cookie] = useCookies(["auth"]);
+  // const token = useSelector(selectUserCurrentToken);
   
   const headers = {
-      Authorization: `Bearer ${token}`,
+      Authorization: `Bearer ${cookie.auth}`,
       'Content-Type': 'application/json'
     }
   
   React.useEffect(() => {
-    console.log(token)
+  
 
     async function fetchUserData() {
       try {

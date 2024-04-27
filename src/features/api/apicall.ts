@@ -145,6 +145,11 @@ export const addCategoryApi = async (formData: any, config: any) => {
       headers: payload,
     });
   };
+  export const getWisListApi  = async (payload: any) => {
+    return axios.get(`${api}/wishlist`, {
+      headers: payload,
+    });
+  };
   // export const getOrderDetailApi   = async (payload: any ,req:any) => {
   //   return axios.get(`${api}/order/action`, {
   //     headers: payload,
@@ -159,6 +164,38 @@ export const addCategoryApi = async (formData: any, config: any) => {
       }
     });
   };
+  // export const deleteCartApi  = async (payload: any, id:any) => {
+  //   return axios.delete(`${api}/cart/${id}`, {
+  //     headers: payload,
+  //     params:{
+  //       id:id
+  //     }
+  //   });
+  // };
+  export const deleteCartIndividualApi  = async (payload: any, id:any) => {
+    return axios.delete(`${api}/cart/removeItem/${id}`, {
+      headers: payload,
+      params:{
+        id:id
+      }
+    });
+  };
+  export const deleteWishlistApi = async (payload: any, id:any) => {
+    return axios.delete(`${api}/wishlist/${id}`, {
+      headers: payload,
+      params:{
+        id:id
+      }
+    });
+  };
+  export const deleteProductApi  = async (payload: any, id:any) => {
+    return axios.delete(`${api}/product/${id}`, {
+      headers: payload,
+      params:{
+        id:id
+      }
+    });
+  };
   export const deleteSubCategoryApi  = async (payload: any, id:any) => {
     return axios.delete(`${api}/sub-category/${id}`, {
       headers: payload,
@@ -167,12 +204,41 @@ export const addCategoryApi = async (formData: any, config: any) => {
       }
     });
   };
-  export const ReviewedApi = async (payload: any, id:any, status:any) => {
+  export const ReviewedApi = async (payload: any, id:any,status:any ) => {
     return axios.patch(`${api}/order/${id}`,status ,{
       headers: payload,
-      params:{
-        id:id
+    });
+  };
+ 
+  export const updateCategoryApi= async (payload: any, id:any,req:any ) => {
+    return axios.patch(`${api}/category/${id}`,req ,{
+      headers: payload,
+    });
+  };
+  export const updateProductApi= async (payload: any, id:any,req:any ) => {
+    return axios.patch(`${api}/product/${id}`,req ,{
+      headers: payload,
+      params: {
+        id: id
       }
+    });
+  };
+  export const cartUpdateApi= async (payload: any, id:any,req:any ) => {
+    return axios.patch(`${api}/cart/${id}`,req ,{
+      headers: payload,
+      params: {
+        id: id
+      }
+    });
+  };
+  export const updateSubCategoryApi= async (payload: any, id:any,req:any ) => {
+    return axios.patch(`${api}/sub-category/${id}`,req ,{
+      headers: payload,
+    });
+  };
+  export const productionApi = async (payload: any, id:any,status:any ) => {
+    return axios.patch(`${api}/erp/${id}`,status ,{
+      headers: payload,
     });
   };
   export const actionApi = async (payload: any, req: any) => {
@@ -180,6 +246,12 @@ export const addCategoryApi = async (formData: any, config: any) => {
         headers: payload,
       
     });
+};
+export const WishListApi = async (payload: any, req: any) => {
+  return axios.post(`${api}/wishlist`, req, {
+      headers: payload,
+    
+  });
 };
   export const getSingleProductApi = async (payload:any, id:any) => {
     try {
@@ -200,6 +272,22 @@ export const addCategoryApi = async (formData: any, config: any) => {
   export const  getOrderDetailsApi = async (payload:any, id:any) => {
     try {
       const response = await axios.get(`${api}/order/${id}`, {
+        headers: payload,
+        params: {
+          id: id
+        }
+        
+      });
+      return response.data;
+    } catch (error) {
+      // Handle errors here
+      console.error('Error fetching single product:', error);
+      throw error; // Rethrow the error to handle it in the calling code
+    }
+  };
+  export const  getSAOrderDetailsApi = async (payload:any, id:any) => {
+    try {
+      const response = await axios.get(`${api}/erp/${id}`, {
         headers: payload,
         params: {
           id: id

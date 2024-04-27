@@ -3,16 +3,18 @@ import { useSelector } from 'react-redux';
 import Card2 from '@/User/user pages/Card2';
 import { getAddressApi, getUserApi } from '@/features/api/apicall';
 import { selectUserCurrentToken } from '@/features/redux_toolkit/userAuthSlice';
+import { useCookies } from "react-cookie";
 
 const AddressBook = () => {
   const [user, setUser] = useState(null); // Changed initial state to null
   const [loading, setLoading] = useState(true);
-  const token = useSelector(selectUserCurrentToken);
+  // const token = useSelector(selectUserCurrentToken);
+  const [cookie] = useCookies(["auth"]);
   
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const headers = { Authorization: `Bearer ${token}` };
+        const headers = { Authorization: `Bearer ${cookie.auth}` };
         const res = await getAddressApi(headers);
         setUser(res?.data);
         console.log(res, 'getUser');

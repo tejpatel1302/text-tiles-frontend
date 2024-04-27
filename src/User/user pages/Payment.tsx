@@ -23,11 +23,14 @@ import { addAddress } from "@/features/redux_toolkit/addressSlice";
 import { useEffect, useState } from "react";
 import { OrderApi, PaymentApi, getAddressApi, getCartApi } from "@/features/api/apicall";
 import { selectUserCurrentToken } from "@/features/redux_toolkit/userAuthSlice";
+import { useCookies } from "react-cookie";
+import { Toaster, toast } from 'sonner'
 
 const Payment = ({ redirect }: any) => {
   const [displayPayment, setDisplayPayment] = useState(false);
   const dispatch = useDispatch();
-  const token = useSelector(selectUserCurrentToken)
+  // const token = useSelector(selectUserCurrentToken)
+  const [cookie] = useCookies(["auth"]);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
   const [showProducts, setShowProducts]:any = useState([]);
@@ -62,7 +65,7 @@ const Payment = ({ redirect }: any) => {
   
       const config = {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${cookie.auth}`,
         }
       };
   
@@ -87,15 +90,17 @@ const Payment = ({ redirect }: any) => {
   
       const config = {
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${cookie.auth}`,
         }
       };
   
       const res = await OrderApi(FilteredData2, config);
       console.log(res, 'addedordertddsf ,fsdData');
+      toast.success('The order has been successfully made');
       navigate('/user/payment');
     } catch (error) {
       console.error("Error submitting data:", error);
+      toast.success('The order has been sent');
       // Handle error appropriately, like showing a user-friendly message
     }
   };
@@ -112,7 +117,7 @@ const Payment = ({ redirect }: any) => {
   async function fetchCategoryData() {
     try {
       const payload = {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${cookie.auth}`,
        
       };
       
@@ -137,7 +142,7 @@ const Payment = ({ redirect }: any) => {
   async function fetchCartProductsData() {
     try {
       const payload = {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${cookie.auth}`,
       };
 
       const res = await getCartApi(payload);
@@ -153,7 +158,7 @@ const Payment = ({ redirect }: any) => {
 console.log(showProducts,'jijiji')
   useEffect(() => {
     fetchCartProductsData();
-  }, [token]);
+  }, [cookie.auth]);
 
   const handleAddressSelection = (address: any) => {
     setSelectedAddressId(address.id);
@@ -161,6 +166,7 @@ console.log(showProducts,'jijiji')
   };
   return (
     <div className=" flex w-8/12 gap-4 mx-auto my-10">
+       <Toaster position="top-center" />
       <div className="w-1/2">
         <Card2 headerLabel="Payment">
           <div>
@@ -301,7 +307,7 @@ console.log(showProducts,'jijiji')
       <div className="border-2 border-purple-400 rounded-lg w-1/2 p-4 h-[450px] shadow-md ">
         <div>
           <div className="flex justify-between items-center mb-4 border-b-2 border-purple-400 p-2">
-            <div className="font-semibold text-lg">{`${cartData.length} Items`}</div>
+            <div className="font-semibold text-lg">{`$${showProducts.length} Items`}</div>
             <div>
               <Button variant={"purple"}>Edit</Button>
             </div>
@@ -310,11 +316,8 @@ console.log(showProducts,'jijiji')
             {showProducts.map((cd: any, index: any) => (
               <div className="flex items-center mb-4" key={index}>
                 <div className="w-20 h-20 border-2 border-gray-300 rounded-lg overflow-hidden">
-                  <img
-                    src={cd.image}
-                    alt={cd.title}
-                    className="w-full h-full object-cover"
-                  />
+                <img src={`data:image/jpeg;base64,${cd?.colorRelation?.image?.buffer}`} alt={cd.title} className="w-full h-full object-cover" />
+
                 </div>
                 <div className="ml-4">
                 <div className="font-bold text-xl">{`${cd?.totalPrice.toFixed(2)} \u20AC`}</div>
@@ -326,13 +329,10 @@ console.log(showProducts,'jijiji')
             ))}
           </div>
           <div className="mt-4">
-  <div className="flex justify-between mb-2">
-    <div className="font-semibold">Delivery Charges</div>
-    <div className="font-semibold">€5.00</div>
-  </div>
-  <div className="flex justify-between">
-    <div className="font-bold text-xl">Total to Pay</div>
-    <div className="font-bold text-xl">{`${(totalPrice + 5).toFixed(2)} \u20AC`}</div>
+
+  <div className="flex justify-between mt-10">
+    <div className="font-bold text-xl ">Total to Pay</div>
+    <div className="font-bold text-xl">{`${(totalPrice ).toFixed(2)} \u20AC`}</div>
   </div>
 </div>
         </div>

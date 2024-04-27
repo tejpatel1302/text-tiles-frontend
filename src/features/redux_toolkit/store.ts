@@ -11,6 +11,7 @@ import addCategoryReducer from './addCategorySlice'
 import categoryIdReducer from './categoryIdSlice'
 import subIdReducer from './subIdSlice '
 import orderItemIdReducer from './orderItemIdSlice'
+import wishListIdReducer from './wishlistDeleteSlice'
 
 
 const store = configureStore({
@@ -26,7 +27,9 @@ const store = configureStore({
         addCategory:addCategoryReducer,
         categoryId:categoryIdReducer,
         subId: subIdReducer,
-        orderItemId:orderItemIdReducer
+        orderItemId:orderItemIdReducer,
+        wishListId:wishListIdReducer
+      
     },
     middleware: getDefaultMiddleware =>
         getDefaultMiddleware().concat(apiSlice.middleware),

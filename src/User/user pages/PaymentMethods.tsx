@@ -3,16 +3,18 @@ import { getPaymentApi } from '@/features/api/apicall';
 import { selectUserCurrentToken } from '@/features/redux_toolkit/userAuthSlice';
 import React, { useEffect, useState } from 'react';
 import { useSelector } from 'react-redux';
+import { useCookies } from "react-cookie";
 
 const PaymentMethods = () => {
   const [user, setUser] = useState(null); // Changed initial state to null
   const [loading, setLoading] = useState(true);
-  const token = useSelector(selectUserCurrentToken);
+  const [cookie] = useCookies(["auth"]);
+  // const token = useSelector(selectUserCurrentToken);
   
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const headers = { Authorization: `Bearer ${token}` };
+        const headers = { Authorization: `Bearer ${cookie.auth}` };
         const res = await getPaymentApi(headers);
         setUser(res?.data);
         console.log(res, 'getUser');

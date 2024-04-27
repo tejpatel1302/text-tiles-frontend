@@ -6,6 +6,7 @@ import { selectSACurrentToken } from "@/features/redux_toolkit/saSlice";
 import { useEffect, useState } from "react";
 import { actionApi } from "@/features/api/apicall";
 import { selectAdminCurrentToken } from "@/features/redux_toolkit/authSlice";
+import { useCookies } from "react-cookie";
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -70,13 +71,14 @@ export const columns: ColumnDef<View>[] = [
         accessorKey: "Actions",
         header: 'Actions',
         cell: ({row}:any) => {
-            const token = useSelector(selectAdminCurrentToken);
+            // const token = useSelector(selectAdminCurrentToken);
+            const [cookie] = useCookies(["auth"]);
             const [loading, setLoading] = useState(false);
             const handleApprove = async () => {
                 try {
                     setLoading(true);
                     const payload = {
-                        Authorization: `Bearer ${token}`,
+                        Authorization: `Bearer ${cookie.auth}`,
                     };
                     const req  ={
                         orderItemId: row.getValue('id'),

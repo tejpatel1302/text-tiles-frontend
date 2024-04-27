@@ -8,7 +8,7 @@ type Props = {
   children: JSX.Element;
 };
 
-const Protected: React.FC<Props> = ({ children }) => {
+const UserProtected: React.FC<Props> = ({ children }) => {
   const [cookie] = useCookies(["auth"]);
   console.log(cookie.auth)
 
@@ -17,8 +17,8 @@ const Protected: React.FC<Props> = ({ children }) => {
   return cookie.auth ? (
     children
   ) : (
-    <Navigate to={"/admin/login"} state={{ from: location }} replace />
+    <Navigate to={"/user/login"} state={{ from: location }} replace />
   );
 };
 
-export default Protected;
+export default UserProtected;

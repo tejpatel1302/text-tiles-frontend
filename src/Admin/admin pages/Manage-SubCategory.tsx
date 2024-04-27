@@ -4,24 +4,26 @@ import { getSubCategoryApi } from "@/features/api/apicall";
 import { useSelector } from "react-redux";
 import { selectAdminCurrentToken } from "@/features/redux_toolkit/authSlice";
 import { useEffect, useState } from "react";
+import { useCookies } from "react-cookie";
 
 interface ManageSubCategoryProps {
   // Add props if needed
 }
 
 const ManageSubCategory: React.FC<ManageSubCategoryProps> = () => {
-  const token = useSelector(selectAdminCurrentToken);
-
+  // const token = useSelector(selectAdminCurrentToken);
+  const [cookie] = useCookies(["auth"]);
   const [showSubCategory, setShowSubCategory] = useState<SubCategory[]>([]);
   const [loading, setLoading] = useState(true);
 
   async function fetchSubCategoryData() {
     try {
       const payload = {
-        Authorization: `Bearer ${token}`,
+        Authorization: `Bearer ${cookie.auth}`,
       };
       
       const res = await getSubCategoryApi(payload);
+      console.log(res,'hi')
       setShowSubCategory(res?.data);
       setLoading(false);
     } catch (error) {
@@ -52,7 +54,7 @@ const ManageSubCategory: React.FC<ManageSubCategoryProps> = () => {
   }
 
   const processedData: SubCategory[] = showSubCategory.map((item: any) => ({
-    subcategoryID: item.id,
+    subcategoryID: item?.id,
     name: item.name,
     images: item.image ? createBlobFromBuffer(item.image.buffer, item.image.mimetype) : null,
   }));

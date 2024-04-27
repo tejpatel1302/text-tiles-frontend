@@ -59,15 +59,7 @@ export const AddCategorySchema = z.object({
 
 export const AddManageCategorySchema = z.object({
     categoryId: z.string(),
-    name: z.string()
-                    .min(2, { message: 'Product name must be at least 2 characters long' })
-                    .refine(value => {
-                        // Custom validation logic for product_name
-                        if (value.includes('a')) {
-                            return false; // Return false to indicate validation failure
-                        }
-                        return true; // Return true if validation passes
-                    }, { message: 'Invalid product name' }),
+    name: z.string(),
     description: z.string()
                     .refine(value => {
                         // Custom validation logic for description
@@ -94,7 +86,7 @@ export const AddProduct = z.object({
         .min(10, { message: 'Description must be at least 10 characters long' }),
     material: z.string(),
     price: z.string(),
-    size: z.string(),
+    size: z.any(),
     colorId: z.string(),
     file: z.any()
                     .refine(value => {

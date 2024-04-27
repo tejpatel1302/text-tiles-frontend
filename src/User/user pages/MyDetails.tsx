@@ -3,16 +3,18 @@ import { useSelector } from 'react-redux';
 import Card2 from '@/User/user pages/Card2';
 import { getUserApi } from '@/features/api/apicall';
 import { selectUserCurrentToken } from '@/features/redux_toolkit/userAuthSlice';
+import { useCookies } from "react-cookie";
 
 const MyDetails = () => {
   const [user, setUser] = useState(null); // Changed initial state to null
   const [loading, setLoading] = useState(true);
-  const token = useSelector(selectUserCurrentToken);
+  const [cookie] = useCookies(["auth"]);
+  // const token = useSelector(selectUserCurrentToken);
   
   useEffect(() => {
     const fetchUserData = async () => {
       try {
-        const headers = { Authorization: `Bearer ${token}` };
+        const headers = { Authorization: `Bearer ${cookie.auth}` };
         const res = await getUserApi(headers);
         setUser(res?.data);
         console.log(res, 'getUser');
@@ -25,7 +27,7 @@ const MyDetails = () => {
     };
     
     fetchUserData();
-  }, [token]); // Added token as dependency
+  }, [ cookie.auth]); // Added token as dependency
   
   return (
     <div className='max-h-screen mx-auto w-10/12'>

@@ -1,139 +1,193 @@
 import { Button } from "@/components/ui/button";
-import { deleteCategoryApi } from "@/features/api/apicall";
-import { selectAdminCurrentToken } from "@/features/redux_toolkit/authSlice";
-import { ColumnDef, createColumnHelper } from "@tanstack/react-table";
-import { Cross, Save, X } from "lucide-react";
+import { updateCategoryApi, deleteCategoryApi } from "@/features/api/apicall";
+import { createColumnHelper } from "@tanstack/react-table";
 import { useEffect, useState } from "react";
-import { IconRight } from "react-day-picker";
-import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useCookies } from "react-cookie";
+import { toast, Toaster } from "sonner";
+import { Cross, CrossIcon, Save, X } from "lucide-react";
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
 export type Category = {
   categoryID: number;
   categoryName: string;
-  
-  images: string
+  images: string;
 };
-const EditCell = ({ row, table, categoryId }: any) => {
+
+const EditCell = ({ row, table }: any) => {
     const meta = table.options.meta;
-    const setEditedRows = (e: any) => {
-      meta?.setEditedRows((old: []) => ({
-        ...old,
-        [row.id]: !old[row.id],
-      }));
+    const [isEditing, setIsEditing] = useState(false);
+    const [categoryName, setCategoryName] = useState(row.original.categoryName);
+    const [image, setImage] = useState<File | null>(null);
+    const [previewImage, setPreviewImage] = useState<string | null>(row.original.images);
+    const [cookie] = useCookies(["auth"]);
+
+    const handleEditClick = () => {
+        setIsEditing(true);
     };
-  //   const params = useParams();
-  // const { productId } = params;
-    const token = useSelector(selectAdminCurrentToken);
-    const removeRow = async () => {
-        meta?.removeRow(row.index);
-       
-          try {
+
+    const handleCancelClick = () => {
+        setIsEditing(false);
+        setCategoryName(row.original.categoryName);
+        setPreviewImage(row.original.images);
+    };
+
+    const handleDeleteClick = async () => {
+        try {
             const payload = {
-              Authorization: `Bearer ${token}`,
-              // 'Content-Type': 'application/json'
+                Authorization: `Bearer ${cookie.auth}`,
             };
-      
-            const res = await deleteCategoryApi(payload, categoryId);
-          
-            console.log(res, "hihello");
-            
-          } catch (error) {
-            console.error("Error fetching subcategory data:", error);
-            
-          }
+
+            const res = await deleteCategoryApi(payload, row.original.categoryID);
+            console.log(res, "Delete successful");
+
+            toast.success("Category deleted successfully");
+        } catch (error) {
+            console.error("Error deleting category:", error);
+            toast.error("Error deleting category. Please try again later.");
         }
-      
-      
-    //   meta?.editedRows[row.id] ? 
+    };
+
+    const handleImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files[0]) {
+            const selectedImage = e.target.files[0];
+            setImage(selectedImage);
+            const reader = new FileReader();
+            reader.onload = () => {
+                if (reader.readyState === 2) {
+                    setPreviewImage(reader.result as string);
+                }
+            };
+            reader.readAsDataURL(selectedImage);
+        }
+    };
+
+    const handleCategoryUpdate = async () => {
+        try {
+            const formData = new FormData();
+            if (image) {
+                formData.append("file", image);
+            }
+            formData.append("name", categoryName);
+
+            const payload = {
+                Authorization: `Bearer ${cookie.auth}`,
+                'Content-Type': 'multipart/form-data',
+            };
+
+            const res = await updateCategoryApi(payload, row.original.categoryID, formData);
+            console.log(res, "Update successful");
+
+            setIsEditing(false);
+
+            toast.success("Category updated successfully");
+        } catch (error) {
+            console.error("Error updating category:", error);
+            toast.error("Error updating category. Please try again later.");
+        }
+    };
+
     return (
         <div className="edit-cell-container mr-32">
-        
-        {meta?.editedRows[row.id] ? (
-          <div className="edit-cell-action flex gap-4">
-            <Button onClick={setEditedRows} name="cancel" variant={'ghost'} className="text-red-500" >
-              <X/>
-            </Button>{" "}
-            <Button onClick={setEditedRows} name="done" variant={'ghost'} className="text-green-500">
-              <Save/>
-            </Button>
-          </div>
-        ) : (
-          <div className="edit-cell-action flex gap-4">
-            <Button onClick={setEditedRows} name="edit" variant={'green'}>
-              Edit
-            </Button>
-            <Button onClick={removeRow} name="remove" variant={'red'}>
-              Delete
-            </Button>
-          </div>
-        )}
-      </div>
-    )
-  };
+            <div>
+                <Toaster position="top-center" />
+            </div>
+            <div className="edit-cell-action">
+                {!isEditing ? (
+                    <>
+                       <div className="flex gap-5">
+                       <Button onClick={handleEditClick} name="edit" variant={'green'}>
+                            Edit
+                        </Button>
+                        <Button onClick={handleDeleteClick} name="delete" variant={'red'}>
+                            Delete
+                        </Button>
+                       </div>
+                    </>
+                ) : (
+                    <>
+                      <div className="flex items-center">
+                      <div>
+                      <div>
+                      <div className="text-2xl mb-2 font-bold"> Update Image</div>
+                       {previewImage && <img src={previewImage} alt="Preview" className="max-h-20" />}
+                        <input type="file" onChange={handleImageChange} className="my-4"/>
+                      </div>
+                        {/* Input field for editing category name */}
+                        <div className="mt-10">
+                        <div className="text-2xl mb-2 font-bold"> Update Name</div>
+                        <input
+                            type="text"
+                            value={categoryName}
+                            onChange={(e) => setCategoryName(e.target.value)}
+                            className="p-4"
+                        />
+                        </div>
+                       </div>
+                       <div className="flex gap-5">
+                       <Button onClick={handleCancelClick} name="cancel" variant={'red'}>
+                       <X/> Cancel
+                        </Button>
+                        <Button onClick={handleCategoryUpdate} name="update" variant={'green'}>
+                            <Save /> Update
+                        </Button>
+                       </div>
+                      </div>
+                    </>
+                )}
+            </div>
+        </div>
+    );
+};
 
-  const TableCell = ({ getValue, row, column, table }:any) => {
+
+const TableCell = ({ getValue, row, column, table }: any) => {
     const initialValue = getValue()
     const columnMeta = column.columnDef.meta
     const tableMeta = table.options.meta
     const [value, setValue] = useState(initialValue)
     useEffect(() => {
-      setValue(initialValue)
+        setValue(initialValue)
     }, [initialValue])
     const onBlur = () => {
-      tableMeta?.updateData(row.index, column.id, value)
+        tableMeta?.updateData(row.index, column.id, value)
     }
     const onSelectChange = (e: any) => {
-      setValue(e.target.value)
-      tableMeta?.updateData(row.index, column.id, e.target.value)
+        setValue(e.target.value)
+        tableMeta?.updateData(row.index, column.id, e.target.value)
     }
     if (tableMeta?.editedRows[row.id]) {
-      return columnMeta?.type === "select" ? (
-        <select onChange={onSelectChange} value={initialValue}>
-          {columnMeta?.options?.map((option: any) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-      ) : (
-        <input
-          value={value}
-          onChange={e => setValue(e.target.value)}
-          onBlur={onBlur}
-          type={columnMeta?.type || "text"}
-          className="border-2 border-black w-8/12 p-4"
-        />
-      )
+        return columnMeta?.type === "select" ? (
+            <select onChange={onSelectChange} value={initialValue}>
+                {columnMeta?.options?.map((option: any) => (
+                    <option key={option.value} value={option.value}>
+                        {option.label}
+                    </option>
+                ))}
+            </select>
+        ) : (
+            <div></div>
+        )
     }
     return <span>{value}</span>
-  }
+}
 
 const columnHelper = createColumnHelper<Category>();
 export const columns = [
-  columnHelper.accessor("categoryID", {
-    header: "Category ID",
-   
-    meta: {
-      type: "number",
-    },
-  }),
-  columnHelper.accessor("images", {
-    header: "images",
-   
-  }),
-  columnHelper.accessor("categoryName", {
-    header: "Category Name",
-    cell: TableCell
-  }),
-  
-  
-  columnHelper.display({
-    header: 'Actions',
-    id: "edit",
-    cell: ({ row, table }) => <EditCell row={row} categoryId={row.original.categoryID} table={table} />,
-}),
-
+    columnHelper.accessor("categoryID", {
+        header: "Category ID",
+        meta: {
+            type: "number",
+        },
+    }),
+    columnHelper.accessor("images", {
+        header: "images",
+    }),
+    columnHelper.accessor("categoryName", {
+        header: "Category Name",
+        cell: TableCell
+    }),
+    columnHelper.display({
+        header: 'Actions',
+        id: "edit",
+        cell: ({ row, table }: any) => <EditCell row={row} table={table} />
+    }),
 ];

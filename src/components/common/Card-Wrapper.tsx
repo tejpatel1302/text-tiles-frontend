@@ -41,12 +41,12 @@ const CardWrapper = ({ children,
   const part1 = backButtonLabel.split("?")[0]
   return (
     // width and height dynamic
-    <Card className="relative ">
+    <Card className="lg:relative lg:w-[950px] relative right-[30px] w-[300px]">
       
         <div >
-          <img src={image} alt="" className={`h-24 ml-10 mt-2`} />
+          <img src={image} alt="" className={`lg:h-24 lg:ml-10 lg:mt-2  h-16 m-4`} />
         </div>
-      <div className={`${isUserRegisterPage || isAdminRegister ? 'w-10/12 -top-[8px] left-[80px]' : 'w-4/12'} mx-auto absolute top-10 left-80`}>
+      <div className={`${isUserRegisterPage || isAdminRegister ? 'lg:w-10/12 lg:-top-[8px] lg:left-[80px]' : 'lg:w-4/12'} lg:mx-auto absolute lg:top-10 lg:left-80 left-30 top-16`}>
         <CardHeader >
           <Header label={headerLabel} />
         </CardHeader>
@@ -57,7 +57,7 @@ const CardWrapper = ({ children,
         {!isSuperAdminLogin && <CardFooter className="flex justify-center">
           {backButtonLabel != '' && (
             <div onClick={clickHandler}>
-              <div className={`cursor-pointer fixed top-[590px]  ${isRegister ? 'left-[670px]': isAdminForgotPassoword || isUserForgotPassoword || isSAForgotPassoword ? 'left-[720px]': 'left-[650px]'}`}>{part1} ?<span className={`cursor-pointer fixed top-[590px] left-[830px]
+              <div className={`cursor-pointer lg:fixed lg:top-[580px]  ${isRegister ? 'lg:left-[670px] lg:top-[580px] ': isAdminForgotPassoword || isUserForgotPassoword || isSAForgotPassoword ? 'lg:left-[720px]': 'lg:left-[650px]'}`}>{part1} ?<span className={`cursor-pointer lg:fixed lg:top-[580px] lg:left-[830px]
                          ${isUserLoginPage || isDefaultPage || isUserRegisterPage
                           ? "text-[#7346da] "
                           : isAdminLoginPage || isAdminRegister
