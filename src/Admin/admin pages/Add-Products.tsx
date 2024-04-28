@@ -56,6 +56,7 @@ const AddProducts = ({ redirect }: any) => {
     },
     mode: 'all'
   });
+  
   const items = [
     {
       id: "S",
@@ -188,7 +189,7 @@ const AddProducts = ({ redirect }: any) => {
   return (
     <div className="max-h-screen">
        <Toaster position="top-center" />
-      <div className="min-h-screen flex border-2 border-black w-9/12 rounded-md bg-white justify-center mx-auto p-10 my-4">
+      <div className="min-h-screen flex border border-black w-9/12 rounded-md bg-white justify-center mx-auto p-10 my-4">
         <div className="text-3xl font-bold relative top-0 right-20">
           Add Products
         </div>

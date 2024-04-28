@@ -9,7 +9,7 @@ const PaymentMethods = () => {
   const [user, setUser] = useState(null); // Changed initial state to null
   const [loading, setLoading] = useState(true);
   const [cookie] = useCookies(["auth"]);
-  // const token = useSelector(selectUserCurrentToken);
+  // const token = useSelector(selectUserCurrentToken);     
   
   useEffect(() => {
     const fetchUserData = async () => {
@@ -27,7 +27,7 @@ const PaymentMethods = () => {
     };
     
     fetchUserData();
-  }, [token]); 
+  }, [cookie.auth]); 
 
   return (
     <div className='max-h-screen mx-auto w-10/12'>

@@ -27,7 +27,7 @@ const AddressBook = () => {
     };
     
     fetchUserData();
-  }, [token]); // Added token as dependency
+  }, [cookie.auth]); // Added token as dependency
   console.log(user,'hi payment')
   return (
     <div className='max-h-screen mx-auto w-10/12'>
