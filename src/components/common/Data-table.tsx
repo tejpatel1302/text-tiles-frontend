@@ -262,7 +262,7 @@ const [position, setPosition]:any = useState("bottom")
                     {row.getVisibleCells().map((cell) => (
 
                       <TableCell key={cell.id}  className={`${isWishList || isCart ? 'w-[150px]' : ''}`}>
-                        {(isAdminProducts || isCart || isCheckout || isSubCategory || isCategory ) && 
+                        {(isAdminProducts || isCart || isCheckout || isSubCategory || isCategory || isSuperAdminDetails ) && 
                         cell.column.columnDef.header === "images" ? (
 
                           <img

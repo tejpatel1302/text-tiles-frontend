@@ -38,11 +38,11 @@ const UserHistory = () => {
   }, []);
  
   const data: Order[] = showHistory?.map((order: any) => ({
-    orderid: order.id,
+    orderid: order?.id,
     orderDate: order?.orderDate,
-    Name: order.Address.billToName,
-    total: order.totalAmount,
-    city: order.Address.city,
+    Name: order?.Address?.billToName,
+    total: order?.totalAmount,
+    city: order?.Address?.city,
 
 
     

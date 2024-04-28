@@ -72,6 +72,7 @@ const ProductInDetail = () => {
         };
 
         const res = await getSingleProductApi(payload, productId);
+        console.log(res, 'proucts hhhhh')
         setProduct(res);
         setLoading(false);
       } catch (error) {
@@ -95,35 +96,35 @@ const ProductInDetail = () => {
       }
     }
 
-    async function fetchColorsData() {
-      try {
-        const payload = {
-          Authorization: `Bearer ${cookie.auth}`,
-        };
-        const res = await getColorsApi(payload);
-        setShowColors(res?.data || []);
-      } catch (error) {
-        console.error("Error fetching colors data:", error);
-      }
-    }
+    // async function fetchColorsData() {
+    //   try {
+    //     const payload = {
+    //       Authorization: `Bearer ${cookie.auth}`,
+    //     };
+    //     const res = await getColorsApi(payload);
+    //     setShowColors(res?.data || []);
+    //   } catch (error) {
+    //     console.error("Error fetching colors data:", error);
+    //   }
+    // }
 
-    async function fetchColorsRelation() {
-      try {
-        const payload = {
-          Authorization: `Bearer ${cookie.auth}`,
-        };
-        const res = await getProductsWithColorIdApi(payload, productId);
-        setShowColorsRel(res || []);
-      } catch (error) {
-        console.error("Error fetching product colors data:", error);
-      }
-    }
+    // async function fetchColorsRelation() {
+    //   try {
+    //     const payload = {
+    //       Authorization: `Bearer ${cookie.auth}`,
+    //     };
+    //     const res = await getProductsWithColorIdApi(payload, productId);
+    //     setShowColorsRel(res || []);
+    //   } catch (error) {
+    //     console.error("Error fetching product colors data:", error);
+    //   }
+    // }
 
     if (productId) {
       fetchProductsData();
       fetchUserData();
-      fetchColorsData();
-      fetchColorsRelation();
+      // fetchColorsData();
+      // fetchColorsRelation();
     }
   }, [productId, cookie.auth]);
 
@@ -133,7 +134,7 @@ const ProductInDetail = () => {
         productId: product?.product?.id,
         quantity: Number(data.quantity),
         itemSize: data.itemSize,
-        colorRelationId: showColorsRel[0]?.id
+        colorRelationId: product?.product?.colorRelation[0]?.id
       };
 
       const config = {
@@ -178,7 +179,7 @@ const ProductInDetail = () => {
         {product && (
           <div className="flex gap-8">
             <div className="border border-gray-300 h-[450px] w-[400px] rounded-lg overflow-hidden flex justify-center items-center">
-              <img src={`data:image/jpeg;base64,${showColorsRel[0]?.image?.buffer}`} alt={product?.title} className="h-96" />
+              <img src={`data:image/jpeg;base64,${product?.product?.colorRelation[0]?.image?.buffer}`} alt={product?.title} className="h-96" />
               <Heart className=" text-gray-600 inline-block relative right-[30px] top-[200px]" size={'100'} onClick={() => clickHandler(product?.id)} />
             </div>
             <div className="flex flex-col justify-center max-w-[500px]">
@@ -192,14 +193,15 @@ const ProductInDetail = () => {
                 <div>
                   <div className="mb-2">Colors</div>
                   <div className="flex gap-3">
-                    {showColors.map((color:any, index:number) => (
+                    {product?.product?.colorRelation?.map((color:any, index:number) => (
                       <div 
-                        onClick={() => clickHandler1(color.id)} 
+                        onClick={() => clickHandler1(color?.color?.id)} 
                         key={index}
-                        className={`h-8 w-8 rounded-full ${
-                          color.id === showColorsRel[0]?.colorId ? 'border-4 border-black' : ''
-                        }`}
-                        style={{ backgroundColor: color.hexCode }}
+                        className="h-8 w-8 rounded-full"
+                        // className={`h-8 w-8 rounded-full ${
+                        //   color.id === showColorsRel[0]?.colorId ? 'border-4 border-black' : ''
+                        // }`}
+                        style={{ backgroundColor: color?.color?.hexCode }}
                       ></div>
                     ))}
                   </div>

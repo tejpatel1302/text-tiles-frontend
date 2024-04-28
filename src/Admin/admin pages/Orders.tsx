@@ -44,9 +44,9 @@ const OrderList = () => {
     customerId: order?.CustomerId,
     id: order?.id,
     Name: order?.OrderItem[0]?.logObject?.name,
-    city: 'Ireland',
-    email: '@xsdf',
-    mobileNumber: '123456',
+    city: order?.Address?.city,
+    email: order?.Customer?.email,
+    mobileNumber: order?.Customer?.phoneNum,
     orderDate: order?.orderDate,
   
     orderDetails: 'View',

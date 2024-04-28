@@ -204,6 +204,22 @@ export const addCategoryApi = async (formData: any, config: any) => {
       }
     });
   };
+  export const deletePaymentMethodsApi  = async (payload: any, id:any) => {
+    return axios.delete(`${api}/paymentcard/${id}`, {
+      headers: payload,
+      params:{
+        id:id
+      }
+    });
+  };
+  export const deleteAddressApi  = async (payload: any, id:any) => {
+    return axios.delete(`${api}/address/${id}`, {
+      headers: payload,
+      params:{
+        id:id
+      }
+    });
+  };
   export const ReviewedApi = async (payload: any, id:any,status:any ) => {
     return axios.patch(`${api}/order/${id}`,status ,{
       headers: payload,
@@ -217,6 +233,22 @@ export const addCategoryApi = async (formData: any, config: any) => {
   };
   export const updateProductApi= async (payload: any, id:any,req:any ) => {
     return axios.patch(`${api}/product/${id}`,req ,{
+      headers: payload,
+      params: {
+        id: id
+      }
+    });
+  };
+  export const updateAddressApi= async (payload: any, id:any,req:any ) => {
+    return axios.patch(`${api}/address/${id}`,req ,{
+      headers: payload,
+      params: {
+        id: id
+      }
+    });
+  };
+  export const updatePaymentCardApi= async (payload: any, id:any,req:any ) => {
+    return axios.patch(`${api}/paymentcard/${id}`,req ,{
       headers: payload,
       params: {
         id: id

@@ -1,4 +1,4 @@
-import { Order, columns } from "@/utils/column";
+import { Order, columns } from "@/utils/saorderscolumn";
 import { DataTable } from "@/components/common/Data-table";
 import { OrderDetails } from "@/utils/Order-details";
 import { useEffect, useState } from "react";
@@ -36,7 +36,7 @@ const SAOrders = () => {
     
   }, []);
   const data: Order[] = showOrder?.map((order) => ({
-    customerId: order?.CustomerId?.id,
+    id: order?.id,
     // OrderID: order?.id,
     Name: order?.addressId?.billToName,
     city: order?.addressId?.city,

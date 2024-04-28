@@ -56,9 +56,8 @@ export default function MyDetails() {
       };
 
       const payload = {
-        headers: {
-          Authorization: `Bearer ${cookie.auth}`,
-        },
+        Authorization: `Bearer ${cookie.auth}`,
+
       };
 
       const res = await updateMyDetailsApi(payload, req);
