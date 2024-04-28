@@ -24,8 +24,8 @@ const SAOrderDetails= () => {
       };
       
       const res = await  getSAOrderDetailsApi(payload,orderItemId);
-      console.log(res, 'getOrdersdetails')
-      setShowOrderDetails(res?.orderItems)
+      console.log(res, 'getOrdersdetailsypoooo')
+      setShowOrderDetails(res)
 
       setLoading(false);
       
@@ -39,11 +39,26 @@ const SAOrderDetails= () => {
     fetchOrderData();
     
   }, []);
+  function createBlobFromBuffer(bufferString: string, mimetype: string): string | null {
+    try {
+      const binary = atob(bufferString);
+      const buffer = new ArrayBuffer(binary.length);
+      const view = new Uint8Array(buffer);
+      for (let i = 0; i < binary.length; i++) {
+        view[i] = binary.charCodeAt(i);
+      }
+      const blob = new Blob([view], { type: mimetype });
+      return URL.createObjectURL(blob);
+    } catch (error) {
+      console.error("Error creating Blob:", error);
+      return null;
+    }
+  }
  console.log(showOrderDetails,'yeah')
   const data: View[] = showOrderDetails?.map((order:any) => ({
     
-      id:order?.productId?.id,
-      image: order?.colorRelationId?.image,
+      id:order?.colorRelationId?.Product?.id,
+      images: order?.colorRelationId?.image ? createBlobFromBuffer(order?.colorRelationId?.image?.buffer, order?.colorRelationId?.image?.mimetype) : null,
       name: order?.logObject?.name,
       color:  order?.colorRelationId?.color?.name,
       size: order?.logObject?.size,

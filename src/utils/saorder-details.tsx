@@ -27,7 +27,7 @@ export const columns: ColumnDef<View>[] = [
     },
     {
         accessorKey: "images",
-        header: 'image'
+        header: 'images'
     },
     {
         accessorKey: "name",

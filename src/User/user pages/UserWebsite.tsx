@@ -51,7 +51,7 @@ console.log(subId ,'hihellocho')
       <div className='flex flex-wrap gap-10'>
         {showProducts?.map((product: any) => (
           <div key={product?.title}>
-            <ProductCard image={subId ? product?.image : product?.colorRelation[0]?.image} title={subId ? product?.name : product.title} price={subId ? product?.price :product.price} id={subId ? product?.id :product.id} productid={subId ? product?.id : product?.colorRelation[0]?.productId}/>
+            <ProductCard image={subId ? product?.colorRelation[0]?.image : product?.colorRelation[0]?.image} title={subId ? product?.name : product.title} price={subId ? product?.price :product.price} id={subId ? product?.id :product.id} productid={subId ? product?.id : product?.colorRelation[0]?.productId}/>
           </div>
         ))}
       </div>

@@ -8,19 +8,15 @@ import { IconRight } from "react-day-picker";
 import { useLocation } from "react-router-dom";
 import { Toaster, toast } from "sonner";
 
-// This type is used to define the shape of our data.
-// You can use a Zod schema here if you want.
 export type UserCart = {
   id: string,
-
-  quantity:any,
-images:any,
-name:any
-  
+  quantity: any,
+  images: any,
+  name: any,
   itemSize: any,
   totalPrice: any,
-  // image / name pending
 };
+
 const EditCell = ({ row, table }: any) => {
   const meta = table.options.meta;
   const [isEditing, setIsEditing] = useState(false);
@@ -147,7 +143,6 @@ const EditCell = ({ row, table }: any) => {
   );
 };
 
-
 const columnHelper = createColumnHelper<UserCart >();
 export const columns = [
     columnHelper.accessor("id", {
@@ -174,24 +169,13 @@ export const columns = [
         header: "Price",
         
     }),
-    // columnHelper.accessor("quantity", {
-    //     header: "Quantity",
-    //     cell: TableCell
-        
-    // }),
-    // columnHelper.accessor("category", {
-    //   header: "Category",
-     
-    //   meta: {
-    //     type: "number",
-    //   },
-    // }),
     {
       accessorKey: "total",
       header: "Total",
       cell: ({row}:any) => {
           const result = row.getValue('quantity') * row.getValue('totalPrice');
           const formattedResult = result.toFixed(2); // Limit to 2 decimal places
+          console.log(formattedResult,'ko')
           return (
               <div>
                   {formattedResult}
@@ -207,3 +191,4 @@ export const columns = [
   }),
   
 ];
+
