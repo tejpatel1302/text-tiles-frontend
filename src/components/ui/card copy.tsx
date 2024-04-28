@@ -2,20 +2,20 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
-const Card = React.forwardRef<
+const Card3 = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
   <div
     ref={ref}
     className={cn(
-      "rounded-lg bg-card text-card-foreground shadow-lg w-[900px] h-[530px]",
+      "rounded-lg bg-card text-card-foreground shadow-2xl w-[500px] h-[500px]",
       className
     )}
     {...props}
   />
 ))
-Card.displayName = "Card"
+Card3.displayName = "Card"
 
 const CardHeader = React.forwardRef<
   HTMLDivElement,
@@ -76,4 +76,4 @@ const CardFooter = React.forwardRef<
 ))
 CardFooter.displayName = "CardFooter"
 
-export { Card, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }
+export { Card3, CardHeader, CardFooter, CardTitle, CardDescription, CardContent }

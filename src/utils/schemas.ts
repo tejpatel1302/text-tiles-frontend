@@ -105,6 +105,14 @@ export const AddToCartSchema = z.object({
     colorRelationId: z.string(),
     quantity: z.any()
 });
+export const UpdateUserDetailsSchema = z.object({
+   name:z.any(),    
+    email: z.any(),
+    password: z.any(),
+    phoneNum: z.any(),
+    dob: z.any(),
+    gender:z.any()
+});
 export const ResetSchema = z.object({
     email: z.string().email(),
     password: z.string().min(8),

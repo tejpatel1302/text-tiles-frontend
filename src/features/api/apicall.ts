@@ -231,6 +231,12 @@ export const addCategoryApi = async (formData: any, config: any) => {
       }
     });
   };
+  export const updateMyDetailsApi= async (payload: any, req:any ) => {
+    return axios.patch(`${api}/user`,req ,{
+      headers: payload,
+      
+    });
+  };
   export const updateSubCategoryApi= async (payload: any, id:any,req:any ) => {
     return axios.patch(`${api}/sub-category/${id}`,req ,{
       headers: payload,
