@@ -323,6 +323,22 @@ export const WishListApi = async (payload: any, req: any) => {
       throw error; // Rethrow the error to handle it in the calling code
     }
   };
+  export const  getUserOrderDetailsApi = async (payload:any, id:any) => {
+    try {
+      const response = await axios.get(`${api}/order/${id}`, {
+        headers: payload,
+        params: {
+          id: id
+        }
+        
+      });
+      return response.data;
+    } catch (error) {
+      // Handle errors here
+      console.error('Error fetching single product:', error);
+      throw error; // Rethrow the error to handle it in the calling code
+    }
+  };
   export const  getSAOrderDetailsApi = async (payload:any, id:any) => {
     try {
       const response = await axios.get(`${api}/erp/${id}`, {

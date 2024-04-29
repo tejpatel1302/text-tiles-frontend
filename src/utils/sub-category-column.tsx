@@ -7,6 +7,18 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { useCookies } from "react-cookie";
 import { toast, Toaster } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
+
 
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
@@ -98,9 +110,58 @@ const EditCell = ({ row, table }: any) => {
               {!isEditing ? (
                   <>
                      <div className="flex gap-5">
-                     <Button onClick={handleEditClick} name="edit" variant={'green'}>
-                          Edit
-                      </Button>
+                     <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="green">Edit</Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>Edit Products</DialogTitle>
+                    <DialogDescription>
+                      Make changes to your sub-category here. Click save when you're
+                      done.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="grid gap-4 py-4">
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="name">Image:</Label>
+                      <div>
+                        {previewImage && (
+                          <img
+                            src={previewImage}
+                            alt="Preview"
+                            className="max-h-20"
+                          />
+                        )}
+                        <Input
+                          type="file"
+                          onChange={handleImageChange}
+                          className="my-4 w-60"
+                        />
+                      </div>
+                    </div>
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      <Label htmlFor="description">Name:</Label>
+
+                      <Input
+                        type="text"
+                        value={categoryName}
+                        onChange={(e) => setCategoryName(e.target.value)}
+                        className="p-4 w-60"
+                      />
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button
+                      type="submit"
+                      variant={"green"}
+                      onClick={handleCategoryUpdate}
+                    >
+                      Save changes
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
                       <Button onClick={handleDeleteClick} name="delete" variant={'red'}>
                           Delete
                       </Button>
@@ -109,23 +170,7 @@ const EditCell = ({ row, table }: any) => {
               ) : (
                   <>
                     <div className="flex items-center">
-                    <div>
-                    <div>
-                    <div className="text-2xl mb-2 font-bold"> Update Image</div>
-                     {previewImage && <img src={previewImage} alt="Preview" className="max-h-20" />}
-                      <input type="file" onChange={handleImageChange} className="my-4"/>
-                    </div>
-                      {/* Input field for editing category name */}
-                      <div className="mt-10">
-                      <div className="text-2xl mb-2 font-bold"> Update Name</div>
-                      <input
-                          type="text"
-                          value={categoryName}
-                          onChange={(e) => setCategoryName(e.target.value)}
-                          className="p-4"
-                      />
-                      </div>
-                     </div>
+                    
                      <div className="flex gap-5">
                      <Button onClick={handleCancelClick} name="cancel" variant={'red'}>
                      <X/> Cancel

@@ -1,4 +1,4 @@
-import { deleteProductApi, updateProductApi } from "@/features/api/apicall";
+import { deleteAddressApi, deletePaymentMethodsApi, deleteProductApi, updateAddressApi, updatePaymentCardApi, updateProductApi } from "@/features/api/apicall";
 import { selectAdminCurrentToken } from "@/features/redux_toolkit/authSlice";
 import { createColumnHelper } from "@tanstack/react-table";
 import { Save, X } from "lucide-react";
@@ -19,22 +19,20 @@ import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 
 
-export type Product = {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  size: string;
-  material: string;
-  colors:any;
-  images:any;
+export type PaymentMethods = {
+  cardType: string,
+  cardNumber: string,
+  cardHolderName: string,
+  expiryDate: string,
+  cvv: string,
+  id:string
 };
 
 const EditCell = ({ row, table }: any) => {
   const meta = table.options.meta;
   const [isEditing, setIsEditing] = useState(false);
-  const [productData, setProductData] = useState<Product>(row.original);
-  const [initialProductData, setInitialProductData] = useState<Product>(row.original); // to store initial product data
+  const [productData, setProductData] = useState<PaymentMethods>(row.original);
+  const [initialProductData, setInitialProductData] = useState<PaymentMethods>(row.original); // to store initial product data
   const [cookie] = useCookies(["auth"]);
 
   useEffect(() => {
@@ -53,52 +51,40 @@ const EditCell = ({ row, table }: any) => {
     setIsEditing(false);
   };
 
-  const handleDeleteClick = async () => {
+  const handleRemoveAddress = async () => {
     try {
       const payload = {
         Authorization: `Bearer ${cookie.auth}`,
       };
-      
-      // Make API call to delete the product
-      const res = await deleteProductApi(payload, row.original.id);
-      
-      console.log(res, "Product deleted successfully");
-      toast.success('Product deleted successfully');
+
+      const res = await deletePaymentMethodsApi(payload, row.original.id);
+      console.log(res, "hihello");
     } catch (error) {
-      console.error("Error deleting product:", error);
-      toast.error("Error deleting product. Please try again later.");
+      console.error("Error fetching subcategory data:", error);
     }
   };
 
   const handleProductUpdate = async () => {
     try {
+      const req = {
+        cardType: productData.cardType,
+        cardNumber: productData.cardNumber,
+        cardHolderName: productData.cardHolderName,
+        expiryDate: productData.expiryDate,
+        cvv: productData.cvv,
+        // Add other fields here
+      };
+
       const payload = {
         Authorization: `Bearer ${cookie.auth}`,
       };
-  
-      // Initialize editedFields with the fields that must always be present
-      const editedFields: Partial<Product> = {
-        name: productData.name,
-        description: productData.description,
-        price: parseFloat(productData.price),
-        size: productData.size,
-        material: productData.material,
-      };
-  
-      // Send the edited fields in the request body
-      const res = await updateProductApi(
-        payload,
-        row.original.id,
-        editedFields
-      );
-      console.log(res, "Update successful");
-  
-      setIsEditing(false);
-  
-      toast.success("Product updated successfully");
+
+      const res = await updatePaymentCardApi(payload, row.original.id , req);
+      toast.success("User details updated successfully");
+   
     } catch (error) {
-      console.error("Error updating product:", error);
-      toast.error("Error updating product. Please try again later.");
+      console.error("Error updating user details:", error);
+      toast.error("Failed to update user details");
     }
   };
   
@@ -127,44 +113,44 @@ const EditCell = ({ row, table }: any) => {
         <DialogHeader>
           <DialogTitle>Edit Products</DialogTitle>
           <DialogDescription>
-            Make changes to your product here. Click save when you're done.
+            Make changes to your payment-method here. Click save when you're done.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
           <div className="grid grid-cols-4 items-center gap-4">
-          <Label htmlFor="name">Name:</Label>
+          <Label htmlFor="name">cardType:</Label>
 <Input
   type="text"
   id="name"
-  name="name"
+  name="cardType"
   placeholder="Enter product name"
-  value={productData.name}
+  value={productData.cardType}
   onChange={handleInputChange}
   className="p-4 w-60"
 />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
            
-<Label htmlFor="description">Description:</Label>
+<Label htmlFor="description">cardNumber:</Label>
 <Input
   type="text"
   id="description"
-  name="description"
-  placeholder="Enter product description"
-  value={productData.description}
+  name="cardNumber"
+  placeholder="Enter product cardNumber"
+  value={productData.cardNumber}
   onChange={handleInputChange}
   className="p-4 w-60"
 />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
            
-          <Label htmlFor="price">Price:</Label>
+          <Label htmlFor="price">cardHolder:</Label>
 <Input
-  type="number"
+  type="text"
   id="price"
-  name="price"
-  placeholder="Enter product price"
-  value={productData.price}
+  name="cardHolderName"
+  placeholder="Enter product cardHolderName"
+  value={productData.cardHolderName}
   onChange={handleInputChange}
   className="p-4 w-60"
 />
@@ -172,37 +158,39 @@ const EditCell = ({ row, table }: any) => {
           <div className="grid grid-cols-4 items-center gap-4">
            
 
-          <Label htmlFor="size">Size:</Label>
+          <Label htmlFor="size">expiryDate:</Label>
 <Input
   type="text"
   id="size"
-  name="size"
-  placeholder="Enter product size"
-  value={productData.size}
+  name="expiryDate"
+  placeholder="Enter product expiryDate"
+  value={productData.expiryDate}
   onChange={handleInputChange}
   className="p-4 w-60"
 />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
            
-          <Label htmlFor="material">Material:</Label>
+          <Label htmlFor="material">cvv:</Label>
 <Input
   type="text"
   id="material"
-  name="material"
-  placeholder="Enter product material"
-  value={productData.material}
+  name="cvv"
+  placeholder="Enter product cvv"
+  value={productData.cvv}
   onChange={handleInputChange}
   className="p-4 w-60"
 />
+
           </div>
+          
         </div>
         <DialogFooter>
           <Button type="submit" variant={'green'} onClick={handleProductUpdate}>Save changes</Button>
         </DialogFooter>
       </DialogContent>
     </Dialog>
-            <Button onClick={handleDeleteClick} name="delete" variant={"red"}>
+            <Button onClick={handleRemoveAddress} name="delete" variant={"red"}>
               Delete
             </Button>
            </div>
@@ -210,17 +198,65 @@ const EditCell = ({ row, table }: any) => {
         ) : (
           <>
            <div className="flex flex-col gap-4">
-           
+           <label htmlFor="name">Product Name:</label>
+<input
+  type="text"
+  id="name"
+  name="cardType"
+  placeholder="Enter product name"
+  value={productData.cardType}
+  onChange={handleInputChange}
+  className="p-4"
+/>
 
+<label htmlFor="description">Product Description:</label>
+<input
+  type="text"
+  id="description"
+  name="cardNumber"
+  placeholder="Enter product description"
+  value={productData.cardNumber}
+  onChange={handleInputChange}
+  className="p-4"
+/>
 
+<label htmlFor="price">Product Price:</label>
+<input
+  type="text"
+  id="price"
+  name="cardHolderName"
+  placeholder="Enter product price"
+  value={productData.cardHolderName}
+  onChange={handleInputChange}
+  className="p-4"
+/>
 
+<label htmlFor="size">Product Size:</label>
+<input
+  type="text"
+  id="size"
+  name="expiryDate"
+  placeholder="Enter product size"
+  value={productData.expiryDate}
+  onChange={handleInputChange}
+  className="p-4"
+/>
 
-
+<label htmlFor="material">Product Material:</label>
+<input
+  type="text"
+  id="material"
+  name="cvv"
+  placeholder="Enter product material"
+  value={productData.cvv}
+  onChange={handleInputChange}
+  className="p-4"
+/>
 
 
            </div>
            <div className="flex gap-5 mt-10">
-           <Button name="update" variant={"green"}>
+           <Button onClick={handleProductUpdate} name="update" variant={"green"}>
               Update
             </Button>
             <Button onClick={handleCancelClick} name="cancel" variant={"red"}>
@@ -271,45 +307,38 @@ const TableCell = ({ getValue, row, column, table }: any) => {
   return <span>{value}</span>;
 };
 
-const columnHelper = createColumnHelper<Product>();
-export const columns = [
+const columnHelper = createColumnHelper<PaymentMethods>();
+export const  columns = [
   columnHelper.accessor("id", {
-    header: "Product ID",
+    header: "id",
     meta: {
       type: "number",
     },
   }),
- columnHelper.accessor("images", {
-      header: "images",
-      cell: TableCell
-    }),
-  columnHelper.accessor("name", {
-    header: "Name",
+  columnHelper.accessor("cardType", {
+    header: "cardType",
     cell: TableCell,
   }),
-  columnHelper.accessor("description", {
-    header: "Description",
-    cell: TableCell,
-  }),
-  columnHelper.accessor("colors", {
-      header: "Colors",
+ columnHelper.accessor("cardNumber", {
+      header: "cardNumber",
       cell: TableCell
     }),
-  columnHelper.accessor("price", {
-    header: "Price",
+  columnHelper.accessor("cardHolderName", {
+    header: "cardHolderName",
+    cell: TableCell,
+  }),
+  columnHelper.accessor("expiryDate", {
+      header: "expiryDate",
+      cell: TableCell
+    }),
+  columnHelper.accessor("cvv", {
+    header: "cvv",
     meta: {
       type: "number",
     },
     cell: TableCell,
   }),
-  columnHelper.accessor("size", {
-    header: "Size",
-    cell: TableCell,
-  }),
-  columnHelper.accessor("material", {
-    header: "Material",
-    cell: TableCell,
-  }),
+
   columnHelper.display({
     header: "Actions",
     id: "edit",

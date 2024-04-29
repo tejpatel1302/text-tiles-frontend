@@ -7,6 +7,17 @@ import { useCookies } from "react-cookie";
 import { IconRight } from "react-day-picker";
 import { useLocation } from "react-router-dom";
 import { Toaster, toast } from "sonner";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog"
+import { Label } from "@/components/ui/label";
+import { Input } from "@/components/ui/input";
 
 export type UserCart = {
   id: string,
@@ -95,17 +106,54 @@ const EditCell = ({ row, table }: any) => {
   };
 
   return (
-    <div className="edit-cell-container mr-32">
+    <div className="edit-cell-container">
       <div> 
         <Toaster position="top-center" />
       </div>
-      <div className="edit-cell-action">
+      <div className="edit-cell-action -ml-16">
         {!isEditing ? (
           <>
            <div className="flex gap-5">
-           <Button onClick={handleEditClick} name="edit" variant={"green"}>
-              Edit
-            </Button>
+           <Dialog>
+                <DialogTrigger asChild>
+                  <Button variant="green">Edit</Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>Edit Cart</DialogTitle>
+                    <DialogDescription>
+                      Make changes to your cart here. Click save when you're
+                      done.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="grid gap-4 py-4">
+                    
+                    <div className="grid grid-cols-4 items-center gap-4">
+                      
+
+                      <Label htmlFor="name">Product Quantity:</Label>
+<input
+  type="number"
+  id="quantity"
+  name="quantity"
+  placeholder="Enter product name"
+  value={productData.quantity}
+  onChange={handleInputChange}
+  className="p-4 w-40"
+/>
+                    </div>
+                  </div>
+                  <DialogFooter>
+                    <Button
+                      type="submit"
+                      variant={"green"}
+                      onClick={handleProductUpdate}
+                    >
+                      Save changes
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             <Button onClick={handleDeleteClick} name="delete" variant={"red"}>
               Delete
             </Button>
@@ -129,7 +177,7 @@ const EditCell = ({ row, table }: any) => {
 
            </div>
            <div className="flex gap-5 mt-10">
-           <Button onClick={handleProductUpdate} name="update" variant={"green"}>
+           <Button  name="update" variant={"green"}>
               Update
             </Button>
             <Button onClick={handleCancelClick} name="cancel" variant={"red"}>

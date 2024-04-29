@@ -143,6 +143,8 @@ const isCheckout  = location.pathname === "/user/checkout";
 const isSuperAdminReport = location.pathname === "/super-admin/order-report";
 const isAdminReport = location.pathname === "/admin/order-report";
 const isUserReport = location.pathname === "/user/order-report";
+const isUserPM = location.pathname === "/user/payment-methods";
+const isUserA = location.pathname === "/user/address-book";
 const [position, setPosition]:any = useState("bottom")
 
 
@@ -174,12 +176,14 @@ const [position, setPosition]:any = useState("bottom")
   function clickHandler2(id:any){
     dispatch(addId(id))
   }
-
+  const totalPrice = useMemo(() => {
+    return d.reduce((total, row) => total + row.totalPrice, 0);
+  }, [d]);
   return (
     <>
       <div className={`${isWishList || isCart ? 'rounded-md ' : 'rounded-md'}`}>
         <div className="text-3xl font-bold flex items-center gap-5 ">
-          {!isOrderDetails && !isWishList && !isCheckout && !isSuperAdminReport && !isUserReport &&  !isAdminReport && (
+          {!isOrderDetails && !isWishList && !isCheckout && !isSuperAdminReport && !isUserReport &&  !isAdminReport && !isUserPM && !isUserA && (
             <div className={`flex justify-between relative ${isAdminOrders || isUser || isSuperAdminOrders || isSubCategory || isCategory || isAdminProducts || isSuperAdminOrders ? '-top-[125px]': isCart  ? '-top-[95px] left-[350px]' : '-top-[100px]'} left-[160px]  py-4`}>
               <Input
                 placeholder={placeholder}
@@ -196,7 +200,7 @@ const [position, setPosition]:any = useState("bottom")
             !isWishList &&
           !isCart &&
           !isCheckout && !isAdminDetails &&
-          !isSuperAdminDetails) && (
+          !isSuperAdminDetails && !isUserPM && !isUserA) && (
               <div
                 className={`${isUser || isSuperAdminReport  ? "mb-10 " : "relative -top-[15px] right-[50px]"
                   } `}
@@ -313,6 +317,9 @@ const [position, setPosition]:any = useState("bottom")
             </TableBody>
           </Table>
         </div>
+      { isCart && <div className="absolute left-[1100px] text-2xl font-bold">
+       Total Price: {totalPrice} 
+       </div>}
       </div>
      {!isCheckout && !isUserReport && !isAdminReport && !isSuperAdminReport ? <div className="flex items-center justify-end space-x-2 py-4">
         <Button
