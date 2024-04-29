@@ -1,4 +1,4 @@
-import { deleteProductApi, updateProductApi } from "@/features/api/apicall";
+import { deleteAddressApi, deleteProductApi, updateAddressApi, updateProductApi } from "@/features/api/apicall";
 import { selectAdminCurrentToken } from "@/features/redux_toolkit/authSlice";
 import { createColumnHelper } from "@tanstack/react-table";
 import { Save, X } from "lucide-react";
@@ -18,23 +18,21 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 
-
-export type Product = {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  size: string;
-  material: string;
-  colors:any;
-  images:any;
+export type Address = {
+  billToName: string,
+  address1: string,
+  address2: string,
+  city: string,
+  county: string,
+  eir: string,
+  id: string
 };
 
 const EditCell = ({ row, table }: any) => {
   const meta = table.options.meta;
   const [isEditing, setIsEditing] = useState(false);
-  const [productData, setProductData] = useState<Product>(row.original);
-  const [initialProductData, setInitialProductData] = useState<Product>(row.original); // to store initial product data
+  const [productData, setProductData] = useState<Address>(row.original);
+  const [initialProductData, setInitialProductData] = useState<Address>(row.original); // to store initial product data
   const [cookie] = useCookies(["auth"]);
 
   useEffect(() => {
@@ -53,52 +51,42 @@ const EditCell = ({ row, table }: any) => {
     setIsEditing(false);
   };
 
-  const handleDeleteClick = async () => {
+  const handleRemoveAddress = async () => {
     try {
       const payload = {
         Authorization: `Bearer ${cookie.auth}`,
       };
-      
-      // Make API call to delete the product
-      const res = await deleteProductApi(payload, row.original.id);
-      
-      console.log(res, "Product deleted successfully");
-      toast.success('Product deleted successfully');
+
+      const res = await deleteAddressApi(payload, row.original.id);
+      console.log(res, "hihello");
     } catch (error) {
-      console.error("Error deleting product:", error);
-      toast.error("Error deleting product. Please try again later.");
+      console.error("Error fetching subcategory data:", error);
     }
   };
 
   const handleProductUpdate = async () => {
     try {
+      const req = {
+        address1: productData.address1,
+        address2: productData.address2,
+        billToName: productData.billToName,
+        city: productData.city,
+        county: productData.county,
+        eir: productData.eir,
+        // Add other fields here
+      };
+
       const payload = {
         Authorization: `Bearer ${cookie.auth}`,
       };
-  
-      // Initialize editedFields with the fields that must always be present
-      const editedFields: Partial<Product> = {
-        name: productData.name,
-        description: productData.description,
-        price: parseFloat(productData.price),
-        size: productData.size,
-        material: productData.material,
-      };
-  
-      // Send the edited fields in the request body
-      const res = await updateProductApi(
-        payload,
-        row.original.id,
-        editedFields
-      );
-      console.log(res, "Update successful");
-  
-      setIsEditing(false);
-  
-      toast.success("Product updated successfully");
+
+      const res = await updateAddressApi(payload, row.original.id , req);
+
+      toast.success("User details updated successfully");
+   
     } catch (error) {
-      console.error("Error updating product:", error);
-      toast.error("Error updating product. Please try again later.");
+      console.error("Error updating user details:", error);
+      toast.error("Failed to update user details");
     }
   };
   
@@ -127,7 +115,7 @@ const EditCell = ({ row, table }: any) => {
         <DialogHeader>
           <DialogTitle>Edit Products</DialogTitle>
           <DialogDescription>
-            Make changes to your product here. Click save when you're done.
+            Make changes to your address here. Click save when you're done.
           </DialogDescription>
         </DialogHeader>
         <div className="grid gap-4 py-4">
@@ -136,35 +124,35 @@ const EditCell = ({ row, table }: any) => {
 <Input
   type="text"
   id="name"
-  name="name"
+  name="billToName"
   placeholder="Enter product name"
-  value={productData.name}
+  value={productData.billToName}
   onChange={handleInputChange}
   className="p-4 w-60"
 />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
            
-<Label htmlFor="description">Description:</Label>
+<Label htmlFor="description">Address 1:</Label>
 <Input
   type="text"
   id="description"
-  name="description"
-  placeholder="Enter product description"
-  value={productData.description}
+  name="address1"
+  placeholder="Enter product address1"
+  value={productData.address1}
   onChange={handleInputChange}
   className="p-4 w-60"
 />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
            
-          <Label htmlFor="price">Price:</Label>
+          <Label htmlFor="price">Address 2:</Label>
 <Input
-  type="number"
+  type="text"
   id="price"
-  name="price"
-  placeholder="Enter product price"
-  value={productData.price}
+  name="address2"
+  placeholder="Enter product address2"
+  value={productData.address2}
   onChange={handleInputChange}
   className="p-4 w-60"
 />
@@ -172,29 +160,45 @@ const EditCell = ({ row, table }: any) => {
           <div className="grid grid-cols-4 items-center gap-4">
            
 
-          <Label htmlFor="size">Size:</Label>
+          <Label htmlFor="size">City:</Label>
 <Input
   type="text"
   id="size"
-  name="size"
-  placeholder="Enter product size"
-  value={productData.size}
+  name="city"
+  placeholder="Enter product city"
+  value={productData.city}
   onChange={handleInputChange}
   className="p-4 w-60"
 />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
            
-          <Label htmlFor="material">Material:</Label>
+          <Label htmlFor="material">County:</Label>
 <Input
   type="text"
   id="material"
-  name="material"
-  placeholder="Enter product material"
-  value={productData.material}
+  name="county"
+  placeholder="Enter product county"
+  value={productData.county}
   onChange={handleInputChange}
   className="p-4 w-60"
 />
+
+          </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+           
+          
+          <Label htmlFor="material">eir:</Label>
+<Input
+  type="text"
+  id="material"
+  name="eir"
+  placeholder="Enter product eir"
+  value={productData.eir}
+  onChange={handleInputChange}
+  className="p-4 w-60"
+/>
+
           </div>
         </div>
         <DialogFooter>
@@ -202,7 +206,7 @@ const EditCell = ({ row, table }: any) => {
         </DialogFooter>
       </DialogContent>
     </Dialog>
-            <Button onClick={handleDeleteClick} name="delete" variant={"red"}>
+            <Button onClick={handleRemoveAddress} name="delete" variant={"red"}>
               Delete
             </Button>
            </div>
@@ -210,17 +214,74 @@ const EditCell = ({ row, table }: any) => {
         ) : (
           <>
            <div className="flex flex-col gap-4">
-           
+           <label htmlFor="name">Product Name:</label>
+<input
+  type="text"
+  id="name"
+  name="billToName"
+  placeholder="Enter product name"
+  value={productData.billToName}
+  onChange={handleInputChange}
+  className="p-4"
+/>
 
+<label htmlFor="description">Product Description:</label>
+<input
+  type="text"
+  id="description"
+  name="address1"
+  placeholder="Enter product description"
+  value={productData.address1}
+  onChange={handleInputChange}
+  className="p-4"
+/>
 
+<label htmlFor="price">Product Price:</label>
+<input
+  type="text"
+  id="price"
+  name="address2"
+  placeholder="Enter product price"
+  value={productData.address2}
+  onChange={handleInputChange}
+  className="p-4"
+/>
 
+<label htmlFor="city">Product city:</label>
+<input
+  type="text"
+  id="city"
+  name="city"
+  placeholder="Enter product city"
+  value={productData.city}
+  onChange={handleInputChange}
+  className="p-4"
+/>
 
-
-
+<label htmlFor="material">Product Material:</label>
+<input
+  type="text"
+  id="material"
+  name="county"
+  placeholder="Enter product material"
+  value={productData.county}
+  onChange={handleInputChange}
+  className="p-4"
+/>
+<label htmlFor="material">Product Material:</label>
+<input
+  type="text"
+  id="material"
+  name="eir"
+  placeholder="Enter product material"
+  value={productData.eir}
+  onChange={handleInputChange}
+  className="p-4"
+/>
 
            </div>
            <div className="flex gap-5 mt-10">
-           <Button name="update" variant={"green"}>
+           <Button onClick={handleProductUpdate} name="update" variant={"green"}>
               Update
             </Button>
             <Button onClick={handleCancelClick} name="cancel" variant={"red"}>
@@ -271,48 +332,45 @@ const TableCell = ({ getValue, row, column, table }: any) => {
   return <span>{value}</span>;
 };
 
-const columnHelper = createColumnHelper<Product>();
+const columnHelper = createColumnHelper<Address>();
 export const columns = [
   columnHelper.accessor("id", {
-    header: "Product ID",
+    header: "Address ID",
     meta: {
       type: "number",
     },
   }),
- columnHelper.accessor("images", {
-      header: "images",
-      cell: TableCell
-    }),
-  columnHelper.accessor("name", {
-    header: "Name",
+  columnHelper.accessor("billToName", {
+    header: "billToName",
     cell: TableCell,
   }),
-  columnHelper.accessor("description", {
-    header: "Description",
-    cell: TableCell,
-  }),
-  columnHelper.accessor("colors", {
-      header: "Colors",
+ columnHelper.accessor("address1", {
+      header: "address1",
       cell: TableCell
     }),
-  columnHelper.accessor("price", {
-    header: "Price",
+  columnHelper.accessor("address2", {
+    header: "address2",
+    cell: TableCell,
+  }),
+  columnHelper.accessor("city", {
+      header: "city",
+      cell: TableCell
+    }),
+  columnHelper.accessor("county", {
+    header: "county",
     meta: {
       type: "number",
     },
     cell: TableCell,
   }),
-  columnHelper.accessor("size", {
-    header: "Size",
+  columnHelper.accessor("eir", {
+    header: "eir",
     cell: TableCell,
   }),
-  columnHelper.accessor("material", {
-    header: "Material",
-    cell: TableCell,
-  }),
+
   columnHelper.display({
     header: "Actions",
     id: "edit",
-    cell: ({ row, table }: any) => <EditCell row={row} table={table} />,
+    cell: ({ row, table }: any) => <EditCell row={row} table={table}  />,
   }),
 ];

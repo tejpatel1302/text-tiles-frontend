@@ -26,7 +26,7 @@ import { selectUserCurrentToken } from "@/features/redux_toolkit/userAuthSlice";
 import { useCookies } from "react-cookie";
 import { Toaster, toast } from 'sonner'
 
-const Payment = ({ redirect }: any) => {
+const Payment = ({ selectedAddressId}: any) => {
   const [displayPayment, setDisplayPayment] = useState(false);
   const dispatch = useDispatch();
   // const token = useSelector(selectUserCurrentToken)
@@ -37,10 +37,10 @@ const Payment = ({ redirect }: any) => {
   const [selectedCard, setSelectedCard] = useState(null);
   const { addressData } = useSelector((state: any) => state.address);
   const { cartData } = useSelector((state: any) => state.cart);
-  const [showAddress, setShowAddress]:any = useState([]);
+
   const [cartId, setCartId]:any = useState([]);
   const [paymentData, setPaymentData]:any = useState([]);
-  const [selectedAddressId, setSelectedAddressId] = useState(null);
+ 
   const [totalPrice, setTotalPrice] = useState(0);
   const form = useForm<z.infer<typeof  CardSchema >>({
     resolver: zodResolver( CardSchema ),
@@ -73,7 +73,7 @@ const Payment = ({ redirect }: any) => {
       console.log(res,'ppaaaaaappp')
       setPaymentData(res)
       console.log(res, 'addedsubmitData');
-      navigate('/user/payment');
+      navigate('/user/checkout');
     } catch (error) {
       console.error("Error submitting data:", error);
       // Handle error appropriately, like showing a user-friendly message
@@ -97,7 +97,7 @@ const Payment = ({ redirect }: any) => {
       const res = await OrderApi(FilteredData2, config);
       console.log(res, 'addedordertddsf ,fsdData');
       toast.success('The order has been successfully made');
-      navigate('/user/payment');
+      navigate('/user/checkout');
     } catch (error) {
       console.error("Error submitting data:", error);
       toast.success('The order has been sent');
@@ -114,26 +114,7 @@ const Payment = ({ redirect }: any) => {
     setDisplayPayment(true)
     setSelectedCard(cardtype);
   }
-  async function fetchCategoryData() {
-    try {
-      const payload = {
-        Authorization: `Bearer ${cookie.auth}`,
-       
-      };
-      
-      const res = await getAddressApi(payload);
-      console.log(res, 'getaddress')
-      setShowAddress(res?.data);
-      
-      
-    } catch (error) {
-      console.error("Error fetching product data:", error);
-    }
-  }
-  useEffect(() => {
-    fetchCategoryData();
-    
-  }, []);
+ 
   useEffect(() => {
     // Calculate total price whenever showProducts changes
     const calculatedTotalPrice = showProducts.reduce((acc, cd) => acc + cd.totalPrice, 0);
@@ -160,46 +141,14 @@ console.log(showProducts,'jijiji')
     fetchCartProductsData();
   }, [cookie.auth]);
 
-  const handleAddressSelection = (address: any) => {
-    setSelectedAddressId(address.id);
-    console.log(address.id, 'selected address id'); // Accessing address.id here
-  };
   return (
-    <div className=" flex w-8/12 gap-4 mx-auto my-10">
+    <div className=" flex w-[1020px] gap-4 ml-[490px] ">
        <Toaster position="top-center" />
       <div className="w-1/2">
         <Card2 headerLabel="Payment">
           <div>
            { !displayPayment && (<>
-            <div className="bg-gray-100 p-6 rounded-lg shadow-md">
-              <div className="flex justify-between items-center mb-4">
-                <div className="text-lg font-bold">Billing Address</div>
-                <div>
-                  <Button variant={"purple"}>Change</Button>
-                </div>
-              </div>
-              <div>
-  {showAddress.map((address:any, index:any) => (
-    <div key={index} className="flex">
-      <div>
-      <input
-  type="radio"
-  name="selectedAddress"
-  value={index}
-  onChange={() => handleAddressSelection(address)}
-/>
-      </div>
-      <div className="mb-2">{address.billToName}</div>
-      <div className="mb-2">{address.address1}</div>
-      <div className="mb-2">{address.address2}</div>
-      <div className="mb-2">{address.city}</div>
-      <div className="mb-2">{address.county}</div>
-      <div className="mb-2">{address.eir}</div>
-    </div>
-  ))}
-</div>
-
-            </div>
+           
             <div>
               <div className="text-2xl font-bold my-4">Payment Type:</div>
               <div>
@@ -304,7 +253,7 @@ console.log(showProducts,'jijiji')
           </div>
         </Card2>
       </div>
-      <div className="border-2 border-purple-400 rounded-lg w-1/2 p-4 h-[450px] shadow-md ">
+      {/* <div className="border-2 border-purple-400 rounded-lg w-1/2 p-4 h-[450px] shadow-md ">
         <div>
           <div className="flex justify-between items-center mb-4 border-b-2 border-purple-400 p-2">
             <div className="font-semibold text-lg">{`$${showProducts.length} Items`}</div>
@@ -336,7 +285,7 @@ console.log(showProducts,'jijiji')
   </div>
 </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 };

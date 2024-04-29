@@ -20,10 +20,12 @@ import { LockIcon, Mail, UserRound } from "lucide-react";
 import Card2 from "./Card2";
 import { useDispatch, useSelector } from "react-redux";
 import { addAddress } from "@/features/redux_toolkit/addressSlice";
-import { addAddressApi, getCartApi } from "@/features/api/apicall";
+import { addAddressApi, getAddressApi, getCartApi } from "@/features/api/apicall";
 import { selectUserCurrentToken } from "@/features/redux_toolkit/userAuthSlice";
 import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
+import Payment from "./Payment";
+import AddressCard from "./AddressCard";
 
 
 const ProceedToBuy = ({ redirect }: any) => {
@@ -32,6 +34,9 @@ const ProceedToBuy = ({ redirect }: any) => {
   const [cookie] = useCookies(["auth"]);
   // const token = useSelector(selectUserCurrentToken);
   const [showProducts, setShowProducts]:any = useState([]);
+  const [showAddress, setShowAddress]:any = useState([]);
+  const [showAddressForm, setShowAddressForm]:any = useState(false);
+  const [selectedAddressId, setSelectedAddressId] = useState(null);
   const [loading, setLoading] = useState(true);
   const { cartData } = useSelector((state: any) => state.cart);
   const form = useForm<z.infer<typeof AddressSchema>>({
@@ -76,7 +81,7 @@ const ProceedToBuy = ({ redirect }: any) => {
 
       const res = await addAddressApi   (FilteredData, config);
       console.log(res, 'addedsubmitData');
-      navigate('/user/payment');
+     setShowAddressForm(false)
       
       
 
@@ -85,7 +90,26 @@ const ProceedToBuy = ({ redirect }: any) => {
   }
 
   };
-
+  async function fetchCategoryData() {
+    try {
+      const payload = {
+        Authorization: `Bearer ${cookie.auth}`,
+       
+      };
+      
+      const res = await getAddressApi(payload);
+      console.log(res, 'getaddress')
+      setShowAddress(res?.data);
+      
+      
+    } catch (error) {
+      console.error("Error fetching product data:", error);
+    }
+  }
+  useEffect(() => {
+    fetchCategoryData();
+    
+  }, []);
   // const loginClickHanlder = () => {
   //   navigate('/user/payment');
     
@@ -109,14 +133,53 @@ console.log(showProducts,'jijiji')
     fetchCartProductsData();
   }, [cookie.auth]);
 
+  const handleAddressSelection = (address: any) => {
+    setSelectedAddressId(address.id);
+    console.log(address.id, 'selected address id'); // Accessing address.id here
+  };
+  function addressFormClickHandler(){
+    setShowAddressForm(true)
+  }
   return (
-    <div className="h-screen flex w-8/12 gap-4 mx-auto my-10">
-      <div className="text-3xl relative right-[200px] font-bold">CheckOut</div>
-      <div className="w-1/2">
-        <Card2 headerLabel="ADD ADDRESS">
+    <div className=" flex w-10/12 gap-4 ml-10  mt-10 ">
+      <div className="text-3xl relative right-[10px] font-bold">CheckOut</div>
+      <div className="w-[50%] min-h-[100px] border-2 border-purple-400 rounded-md flex flex-col items-center">
+        <div className="my-10">
           <div>
             <div>
-              <Form {...form}>
+            {showAddress.length > 0 && (<div className="bg-gray-100 p-6 rounded-lg shadow-md">
+              <div className="flex justify-between items-center mb-4">
+                <div className="text-lg font-bold">Delivery Address</div>
+                <div>
+                  <Button variant={"purple"} onClick={addressFormClickHandler}>Add New Address</Button>
+                </div>
+              </div>
+              <div>
+  {showAddress.map((address:any, index:any) => (
+    <div key={index} className="flex">
+      <div>
+      <input
+  type="radio"
+  name="selectedAddress"
+  value={index}
+  onChange={() => handleAddressSelection(address)}
+/>
+      </div>
+      <div className="mb-2">{address.billToName}</div>
+      <div className="mb-2">{address.address1}</div>
+      <div className="mb-2">{address.address2}</div>
+      <div className="mb-2">{address.city}</div>
+      <div className="mb-2">{address.county}</div>
+      <div className="mb-2">{address.eir}</div>
+    </div>
+  ))}
+</div>
+
+            </div>) } 
+            {showAddress.length === 0 || showAddressForm && ( 
+            <div>
+              <div className="text-muted-foreground text-2xl font-bold my-10">Add Address</div>
+                <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(submitData)}
                   className="space-y-4"
@@ -237,8 +300,12 @@ console.log(showProducts,'jijiji')
                 </form>
               </Form>
             </div>
+          )}
+            </div>
           </div>
-        </Card2>
+        </div>
+             <Payment selectedAddressId={selectedAddressId}/>
+        
       </div>
       <div className="border-2 border-purple-400 rounded-lg w-1/2 p-4 h-[450px] shadow-md ">
   <div>

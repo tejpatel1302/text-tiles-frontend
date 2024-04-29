@@ -14,14 +14,14 @@ interface CardWrapperProps {
    
 };
 
-const Card2 = ({children,
+const AddressCard = ({children,
     headerLabel,
   
     }: CardWrapperProps) => {
       const location = useLocation()
       const isPayment = location.pathname === "/user/payment";
   return (
-    <Card className={`w-full ${isPayment ? 'h-screen':'h-[500px]'} shadow-md border-2 border-purple-400`}>
+    <Card className={`w-full ${isPayment ? 'h-screen':'min-h-[1100px]'} shadow-md border-2 border-purple-400`}>
         <CardHeader>
             <Header label={headerLabel}/>
         </CardHeader>
@@ -37,4 +37,4 @@ const Card2 = ({children,
   )
 }
 
-export default Card2
+export default AddressCard

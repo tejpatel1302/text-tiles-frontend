@@ -40,7 +40,7 @@ function App() {
   
   return (
     <>
-      <div>
+      <div className="min-h-screen">
         {/* bg- dynamic */}
         
        {(!isAdminLoginPage  && !isUserLoginPage && !isUserRegisterPage  && !isForgotPassword && !isAdminRegister && !isSuperAdminLogin && !isDefaultPage &&!isSAForgotPassword && !isUserForgotPassword) &&  <div className={`${ isUserDashboard ? 'bg-[#7346da]': isAdminDashboard ? "bg-[#79a9ed]" : isSuperAdminDashboard ? 'bg-red-500' : ''}`}>

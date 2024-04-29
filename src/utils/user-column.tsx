@@ -18,14 +18,14 @@ export type Order = {
     address: string;
     orderDetails: string;
     orderstatus: string;
-    orderid:string
+    id:string
   };
   
   
 
   export const columns: ColumnDef<Order>[] = [
     {
-        accessorKey: "orderid",
+        accessorKey: "id",
         header: "Order Id",
       },
       {

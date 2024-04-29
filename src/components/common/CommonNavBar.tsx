@@ -30,6 +30,8 @@ const CommonNavBar = () => {
   const isSuperAdminDetails =
     location.pathname === "/super-admin/order-details";
     const isSuperAdminOrders = location.pathname === "/super-admin/orders";
+    const isUserPM = location.pathname === "/user/payment-methods";
+const isUserA = location.pathname === "/user/address-book";
 
   console.log(selectedCategories);
   useEffect(() => {
@@ -112,7 +114,7 @@ const CommonNavBar = () => {
             )}
 
           
-{!isMyAccount && !isMyAddressBook && !isSuperAdminOrders && !isSuperAdminDetails && !isSuperAdminReport && (
+{!isMyAccount && !isMyAddressBook && !isSuperAdminOrders && !isSuperAdminDetails && !isSuperAdminReport && !isUserA && !isUserPM && (
             <div className="flex items-center gap-5">
               <div className="flex gap-8 ">
                 {!isUser && !isOrderDetails && (
