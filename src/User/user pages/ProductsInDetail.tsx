@@ -57,7 +57,8 @@ const ProductInDetail = () => {
   const [product, setProduct] = useState<any>(null);
   const [showColors, setShowColors] = useState<any[]>([]);
   const [showColorsRel, setShowColorsRel] = useState<any[]>([]);
-  const [colorId, setColorId] = useState('');
+  const [wishlistColor, setwishlistColor] = useState<any>();
+  const [colorId, setColorId] = useState("");
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>({});
   const params = useParams();
@@ -68,11 +69,11 @@ const ProductInDetail = () => {
       try {
         const payload = {
           Authorization: `Bearer ${cookie.auth}`,
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         };
 
         const res = await getSingleProductApi(payload, productId);
-        console.log(res, 'proucts hhhhh')
+        console.log(res, "proucts hhhhh");
         setProduct(res);
         setLoading(false);
       } catch (error) {
@@ -85,7 +86,7 @@ const ProductInDetail = () => {
       try {
         const payload = {
           Authorization: `Bearer ${cookie.auth}`,
-          'Content-Type': 'application/json'
+          "Content-Type": "application/json",
         };
         const res = await getUserApi(payload);
         setUser(res?.data || {});
@@ -134,7 +135,7 @@ const ProductInDetail = () => {
         productId: product?.product?.id,
         quantity: Number(data.quantity),
         itemSize: data.itemSize,
-        colorRelationId: product?.product?.colorRelation[0]?.id
+        colorRelationId: product?.product?.colorRelation[0]?.id,
       };
 
       const config = {
@@ -150,22 +151,23 @@ const ProductInDetail = () => {
     }
   };
 
-  const clickHandler = async (id:any) => {
+  const clickHandler = async (id: any) => {
+    console.log(id, "wishlisid");
     try {
-        setLoading(true);
-        const payload = {
-            Authorization: `Bearer ${cookie.auth}`,
-        };
-        const req  ={
-            productId: id,
-        };
-        const res = await WishListApi(payload, req);
-        console.log(res);
-        dispatch(addId(res?.data?.id));
+      setLoading(true);
+      const payload = {
+        Authorization: `Bearer ${cookie.auth}`,
+      };
+      const req = {
+        productId: id,
+      };
+      const res = await WishListApi(payload, req);
+      setwishlistColor(res?.data?.productId)
+      dispatch(addId(res?.data?.id));
     } catch (error) {
-        console.error("Error adding to wishlist:", error);
+      console.error("Error adding to wishlist:", error);
     } finally {
-        setLoading(false);
+      setLoading(false);
     }
   };
 
@@ -179,8 +181,18 @@ const ProductInDetail = () => {
         {product && (
           <div className="flex gap-8">
             <div className="border border-gray-300 h-[450px] w-[400px] rounded-lg overflow-hidden flex justify-center items-center">
-              <img src={`data:image/jpeg;base64,${product?.product?.colorRelation[0]?.image?.buffer}`} alt={product?.title} className="h-96" />
-              <Heart className=" text-gray-600 inline-block relative right-[30px] top-[200px]" size={'100'} onClick={() => clickHandler(product?.id)} />
+              <img
+                src={`data:image/jpeg;base64,${product?.product?.colorRelation[0]?.image?.buffer}`}
+                alt={product?.title}
+                className="h-96"
+              />
+             <div className="cursor-pointer relative right-[30px] top-[190px]">
+             <Heart
+                className={`${wishlistColor === product?.product?.id ? 'text-red-500  ': 'text-gray-600'}  inline-block h-6 w-6  hover: `
+                }
+                onClick={() => clickHandler(product?.product?.id)}
+              />
+             </div>
             </div>
             <div className="flex flex-col justify-center max-w-[500px]">
               <h2 className="text-3xl font-semibold mb-4 ">
@@ -193,22 +205,27 @@ const ProductInDetail = () => {
                 <div>
                   <div className="mb-2">Colors</div>
                   <div className="flex gap-3">
-                    {product?.product?.colorRelation?.map((color:any, index:number) => (
-                      <div 
-                        onClick={() => clickHandler1(color?.color?.id)} 
-                        key={index}
-                        className="h-8 w-8 rounded-full"
-                        // className={`h-8 w-8 rounded-full ${
-                        //   color.id === showColorsRel[0]?.colorId ? 'border-4 border-black' : ''
-                        // }`}
-                        style={{ backgroundColor: color?.color?.hexCode }}
-                      ></div>
-                    ))}
+                    {product?.product?.colorRelation?.map(
+                      (color: any, index: number) => (
+                        <div
+                          onClick={() => clickHandler1(color?.color?.id)}
+                          key={index}
+                          className="h-8 w-8 rounded-full"
+                          // className={`h-8 w-8 rounded-full ${
+                          //   color.id === showColorsRel[0]?.colorId ? 'border-4 border-black' : ''
+                          // }`}
+                          style={{ backgroundColor: color?.color?.hexCode }}
+                        ></div>
+                      )
+                    )}
                   </div>
                 </div>
               </div>
               <Form {...form}>
-                <form onSubmit={form.handleSubmit(submitData)} className="space-y-4">
+                <form
+                  onSubmit={form.handleSubmit(submitData)}
+                  className="space-y-4"
+                >
                   <div className="space-y-4">
                     <FormField
                       control={form.control}
@@ -216,20 +233,27 @@ const ProductInDetail = () => {
                       render={({ field }) => (
                         <FormItem>
                           <div className="flex flex-col items-center">
-                            <FormLabel className="w-36 relative -top-4 right-32 text-xl">Sizes:</FormLabel>
+                            <FormLabel className="w-36 relative -top-4 right-32 text-xl">
+                              Sizes:
+                            </FormLabel>
                             <FormControl>
-                              <Select onValueChange={field.onChange} defaultValue={field.value}>
+                              <Select
+                                onValueChange={field.onChange}
+                                defaultValue={field.value}
+                              >
                                 <FormControl>
                                   <SelectTrigger>
                                     <SelectValue placeholder="Select Your Size" />
                                   </SelectTrigger>
                                 </FormControl>
-                                <SelectContent >
-                                  {["S", "M", "L", "XL", "XXL"].map((size: string) => (
-                                    <SelectItem key={size} value={size}>
-                                      {size}
-                                    </SelectItem>
-                                  ))}
+                                <SelectContent>
+                                  {["S", "M", "L", "XL", "XXL"].map(
+                                    (size: string) => (
+                                      <SelectItem key={size} value={size}>
+                                        {size}
+                                      </SelectItem>
+                                    )
+                                  )}
                                 </SelectContent>
                               </Select>
                             </FormControl>
@@ -244,9 +268,16 @@ const ProductInDetail = () => {
                       render={({ field }) => (
                         <div>
                           <FormItem className="flex flex-col items-center">
-                            <FormLabel className="w-36 relative -top-2 right-32 text-xl">Quantity:</FormLabel>
+                            <FormLabel className="w-36 relative -top-2 right-32 text-xl">
+                              Quantity:
+                            </FormLabel>
                             <FormControl>
-                              <Input {...field} placeholder="Quantity" className="w-[300px]" type="number" />
+                              <Input
+                                {...field}
+                                placeholder="Quantity"
+                                className="w-[300px]"
+                                type="number"
+                              />
                             </FormControl>
                           </FormItem>
                           <div className="flex justify-center mx-auto gap-5 my-4">
@@ -265,7 +296,10 @@ const ProductInDetail = () => {
                 </form>
               </Form>
               <div className="w-96">
-                <Accordian />
+                <Accordian
+                  description={product?.product?.description}
+                  material={product?.product?.material}
+                />
               </div>
             </div>
           </div>

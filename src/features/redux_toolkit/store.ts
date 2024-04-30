@@ -12,6 +12,7 @@ import categoryIdReducer from './categoryIdSlice'
 import subIdReducer from './subIdSlice '
 import orderItemIdReducer from './orderItemIdSlice'
 import wishListIdReducer from './wishlistDeleteSlice'
+import updatedAddressReducer from './updateAddressSlice'
 
 
 const store = configureStore({
@@ -28,7 +29,8 @@ const store = configureStore({
         categoryId:categoryIdReducer,
         subId: subIdReducer,
         orderItemId:orderItemIdReducer,
-        wishListId:wishListIdReducer
+        wishListId:wishListIdReducer,
+        updatedAddress: updatedAddressReducer
       
     },
     middleware: getDefaultMiddleware =>

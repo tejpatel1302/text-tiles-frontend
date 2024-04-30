@@ -55,15 +55,17 @@ const Login = ({ redirect }: any) => {
       let userData: any;
       if (location.pathname === '/admin/login') {
         userData = await login(data);
+        dispatch(setCredentials(cookie.auth));
         toast.success('Logged In');
       } else if (location.pathname === '/user/login' || location.pathname === '/') {
         userData = await userLogin(data);
         toast.success('Logged In');
+        dispatch(setCredentials(userData));
         // navigate(redirect);
       } else if (location.pathname === '/super-admin/login') {
         userData = await saLogin(data);
         toast.success('Logged In');
-        dispatch(setCredentials3(userData));
+        dispatch(setCredentials(userData));
         
       } else {
         throw new Error('Invalid login path');

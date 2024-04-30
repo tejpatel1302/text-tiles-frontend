@@ -66,7 +66,7 @@ export function DataTable<TData extends OrderDetails, TValue>({
   }, [data, startDate, endDate]);
 
   const [d, setD] = useState(() => [...filteredData]);
-
+console.log('hiiiiiiiiiiiiiiiiiiiiiiiiiii')
   const table = useReactTable({
     state: {
       sorting,
@@ -213,7 +213,7 @@ const [position, setPosition]:any = useState("bottom")
               </div>
             )}
         </div>
-        {( isSuperAdminReport && isAdminReport && isUserReport) && 
+        {isSuperAdminReport && 
       (<div className="relative left-[900px]">
         <DropdownMenu>
           
@@ -225,7 +225,7 @@ const [position, setPosition]:any = useState("bottom")
         <DropdownMenuSeparator />
         <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
           <DropdownMenuRadioItem value="top">Reviewed</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="bottom" onClick={clickHandler}>Production</DropdownMenuRadioItem>
+          <DropdownMenuRadioItem value="bottom" >Production</DropdownMenuRadioItem>
           <DropdownMenuRadioItem value="right">Completed</DropdownMenuRadioItem>
         </DropdownMenuRadioGroup>
       </DropdownMenuContent>

@@ -6,20 +6,20 @@ import {
   } from "@/components/ui/accordion"
 
 
-const Accordian = () => {
+const Accordian = ({description,material}:any) => {
   return (
     <div>
         <Accordion type="single" collapsible>
   <AccordionItem value="item-1">
     <AccordionTrigger>Product Details</AccordionTrigger>
     <AccordionContent>
-      Yes. It adheres to the WAI-ARIA design pattern.
+    {description}
     </AccordionContent>
   </AccordionItem>
   <AccordionItem value="item-2">
     <AccordionTrigger>Material Composition</AccordionTrigger>
     <AccordionContent>
-      Yes. It adheres to the WAI-ARIA design pattern.
+      {material}
     </AccordionContent>
   </AccordionItem>
  
