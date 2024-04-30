@@ -179,6 +179,9 @@ const [position, setPosition]:any = useState("bottom")
   const totalPrice = useMemo(() => {
     return d.reduce((total, row) => total + row.totalPrice, 0);
   }, [d]);
+  const totalPrice2 = useMemo(() => {
+    return d.reduce((total, row) => total + row.price, 0);
+  }, [d]);
   return (
     <>
       <div className={`${isWishList || isCart ? 'rounded-md ' : 'rounded-md'}`}>
@@ -319,6 +322,9 @@ const [position, setPosition]:any = useState("bottom")
         </div>
       { isCart && <div className="absolute left-[1100px] text-2xl font-bold">
        Total Price: {totalPrice} 
+       </div>}
+       { isAdminDetails && <div className="absolute left-[1100px] text-2xl font-bold">
+       Total Price: {totalPrice2} 
        </div>}
       </div>
      {!isCheckout && !isUserReport && !isAdminReport && !isSuperAdminReport ? <div className="flex items-center justify-end space-x-2 py-4">

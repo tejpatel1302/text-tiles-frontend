@@ -48,7 +48,7 @@ const AdminOrderDetails= () => {
       color: '',
       size: order?.logObject?.size,
       price: order?.logObject?.price,
-      quantity: '',
+      quantity: order?.CartItem?.quantity,
       status: order?.status
 
       
