@@ -44,6 +44,7 @@ import { OrderReport } from "./utils/order-report.tsx";
 import UserOrderReport from "./User/user pages/UserOrderReport.tsx";
 import SAOrderDetails from "./Super Admin/SAOrderDetails.tsx";
 import UserProtected from "./components/common/UserProtected.tsx";
+import SAOrderReport from "./Super Admin/super-admin-pages/SAOrderReport.tsx";
 
 
 const appRoutes = createBrowserRouter([
@@ -85,7 +86,7 @@ const appRoutes = createBrowserRouter([
       },
       {
         path: "/super-admin/order-report",
-        element: <UserOrderReport/>,
+        element: <SAOrderReport/>,
       },
       {
         path: "/user/payment-methods",

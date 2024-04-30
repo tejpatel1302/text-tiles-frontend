@@ -20,9 +20,9 @@ const authSlice = createSlice({
   initialState,
   reducers: {
     setCredentials: (state, action: PayloadAction<Credentials>) => {
-      const { data }:any = action.payload;
-      state.user = data.updatedAdminSession
-      state.token = data.token;
+      const token :any = action.payload;
+      // state.user = data.updatedAdminSession
+      state.token = token;
     },
     logOut: (state:any) => {
     

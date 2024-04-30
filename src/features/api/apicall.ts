@@ -135,6 +135,11 @@ export const addCategoryApi = async (formData: any, config: any) => {
       headers: payload,
     });
   };
+  export const getOrdersErpApi  = async (payload: any) => {
+    return axios.get(`${api}/erp`, {
+      headers: payload,
+    });
+  };
   export const getCartApi  = async (payload: any) => {
     return axios.get(`${api}/cart`, {
       headers: payload,

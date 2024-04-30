@@ -2,7 +2,7 @@ import { OrderReportc, columns } from "@/utils/order-report-column";
 import { DataTable } from "@/components/common/Data-table";
 
 import { OrderReport } from "@/utils/order-report"; 
-import { getOrdersApi } from "@/features/api/apicall";
+import { getOrdersApi, getOrdersErpApi } from "@/features/api/apicall";
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { selectUserCurrentToken } from "@/features/redux_toolkit/userAuthSlice";
@@ -10,7 +10,7 @@ import { selectAdminCurrentToken } from "@/features/redux_toolkit/authSlice";
 import { selectSACurrentToken } from "@/features/redux_toolkit/saSlice";
 import { useCookies } from "react-cookie";
 
-const UserOrderReport = () => {
+const SAOrderReport = () => {
   const [cookie] = useCookies(["auth"]);
  
   const [showOrder, setShowOrder] = useState([]);
@@ -22,7 +22,8 @@ const UserOrderReport = () => {
         Authorization: `Bearer ${cookie.auth}`,
       };
 
-      const res = await getOrdersApi(payload);
+      const res = await getOrdersErpApi(payload);
+      console.log(res, 'orderserppp')
       setShowOrder(res?.data);
       setLoading(false);
     } catch (error) {
@@ -38,7 +39,8 @@ const UserOrderReport = () => {
   const totalOrders = showOrder.length;
 
   // Calculate the total amount from all orders
-  const totalMoney = showOrder.reduce((total, order) => total + order.totalAmount, 0);
+  const totalMoney = showOrder.reduce((total, order) => total + parseInt(order.totalAmount), 0);
+
 
   // Create final data object with total orders and total money
   const finalData = [
@@ -68,4 +70,4 @@ const UserOrderReport = () => {
   );
 };
 
-export default UserOrderReport;
+export default SAOrderReport;
