@@ -18,6 +18,7 @@ import {
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import DataTableRowActions from "./DataTableRowAction";
 
 export type UserCart = {
   id: string,
@@ -191,33 +192,32 @@ const EditCell = ({ row, table }: any) => {
   );
 };
 
-const columnHelper = createColumnHelper<UserCart >();
-export const columns = [
-    columnHelper.accessor("id", {
-        header: "Product ID",
-        
-    }),
-    columnHelper.accessor("images", {
-        header: "images",
-        
-    }),
-    columnHelper.accessor("name", {
-        header: "Name",
-        
-    }),
-    columnHelper.accessor("itemSize", {
+export const getCartColumns = ({ onEdit, onDelete }: any) => [
+  {
+      accessorKey: "id",
+      header: "Product ID",
+  },
+  {
+      accessorKey: "images",
+      header: "images",
+  },
+  {
+      accessorKey: "name",
+      header: "Name",
+  },
+  {
+      accessorKey: "itemSize",
       header: "Size",
-      
-  }),
-    columnHelper.accessor("quantity", {
+  },
+  {
+      accessorKey: "quantity",
       header: "Quantity",
-      
-  }),
-    columnHelper.accessor("totalPrice", {
-        header: "Price",
-        
-    }),
-    {
+  },
+  {
+      accessorKey: "totalPrice",
+      header: "Price",
+  },
+  {
       accessorKey: "total",
       header: "Total",
       cell: ({row}:any) => {
@@ -231,12 +231,12 @@ export const columns = [
           );
       }
   },
-    
-  columnHelper.display({
-    
-    id: "edit",
-    cell: ({ row, table }: any) => <EditCell row={row} table={table} />,
-  }),
-  
+  {
+      id: "edit",
+      cell: ({ row }: any) => (
+        <DataTableRowActions row={row} onEdit={onEdit} onDelete={onDelete} />
+      ),
+    }
 ];
+
 

@@ -79,8 +79,8 @@ const AddProducts = ({ redirect }: any) => {
       label: "XXL",
     },
     {
-      id: "XXL",
-      label: "XXL",
+      id: "XXXL",
+      label: "XXXL",
     },
   ] as const
   const submitData = async (data: any) => {
@@ -92,7 +92,7 @@ const AddProducts = ({ redirect }: any) => {
       formData.append('file', data.file[0]);
       formData.append('material', data.material);
       formData.append('price', data.price);
-      formData.append('size', "L");
+      formData.append('size', data.size.join(","));
       formData.append('colorId', data.colorId);
 
       formData.append('subcategoryId', data.subcategoryId);
@@ -292,7 +292,7 @@ const AddProducts = ({ redirect }: any) => {
                                 ? field.onChange([...field.value, item.id])
                                 : field.onChange(
                                     field.value?.filter(
-                                      (value) => value !== item.id
+                                      (value:any) => value !== item.id
                                     )
                                   )
                             }}

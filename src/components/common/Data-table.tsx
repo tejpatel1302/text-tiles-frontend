@@ -146,6 +146,9 @@ const isUserReport = location.pathname === "/user/order-report";
 const isUserPM = location.pathname === "/user/payment-methods";
 const isUserA = location.pathname === "/user/address-book";
 const [position, setPosition]:any = useState("bottom")
+const isAdminDashboard = location.pathname.startsWith("/admin/order-details");
+const isSuperAdminDashboard = location.pathname.startsWith("/super-admin/order-details");
+const isUserDashboard = location.pathname.startsWith("/user/order-details");
 
 
   const [placeholder, setPlaceholder] = useState(isUser ? "Search Order History" : isWishList ? "Search Wishlist"  : isSuperAdminDetails ? "Search Order Details" : isAdminProducts ? "Search Products" : isAdminOrders ? "Search Orders" : isSuperAdminOrders ? "Search Orders": isOrderDetails ? "Search Order Details" : isCategory ? "Search Categories" : isSubCategory ? "Search Sub-Categories" : isCart ? "Search Order" : isAdminDetails ? 'Search Admin Order Details' : '' );
@@ -202,7 +205,7 @@ const [position, setPosition]:any = useState("bottom")
             !isAdminProducts &&
             !isWishList &&
           !isCart &&
-          !isCheckout && !isAdminDetails &&
+          !isCheckout && !isAdminDashboard && !isUserDashboard  && !isSuperAdminDashboard && 
           !isSuperAdminDetails && !isUserPM && !isUserA) && (
               <div
                 className={`${isUser || isSuperAdminReport  ? "mb-10 " : "relative -top-[15px] right-[50px]"
@@ -269,7 +272,7 @@ const [position, setPosition]:any = useState("bottom")
                     {row.getVisibleCells().map((cell) => (
 
                       <TableCell key={cell.id}  className={`${isWishList || isCart ? 'w-[150px]' : ''}`}>
-                        {(isAdminProducts || isCart || isCheckout || isSubCategory || isCategory || isSuperAdminDetails ) && 
+                        {(isAdminProducts || isCart || isCheckout || isSubCategory || isCategory || isSuperAdminDetails || isOrderDetails || isUserDashboard || isAdminDashboard || isSuperAdminDashboard ) && 
                         cell.column.columnDef.header === "images" ? (
 
                           <img
@@ -280,23 +283,7 @@ const [position, setPosition]:any = useState("bottom")
                             alt="Product image"
                             style={{ width: 70, height: 70 }}
                           />
-                        ) : (isAdminOrders || isUser || isSuperAdminOrders) &&
-                          cell.column.columnDef.header === "Order Details" ? (
-                          <Button  variant={
-                            isUser
-                              ? "purple"
-                              : isAdminOrders
-                              ? "skyblue"
-                              : isSuperAdminOrders
-                              ? "red"
-                              : "default"
-                          }
-                         onClick={clickHandler}>
-                            {row.getValue("orderDetails")}
-                          </Button>
-                        ) 
-                        
-                        : (
+                        ) : (
                           // For any other paths or headers, display cell content using flexRender
                           flexRender(
                             cell.column.columnDef.cell,

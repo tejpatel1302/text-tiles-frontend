@@ -45,7 +45,7 @@ import UserOrderReport from "./User/user pages/UserOrderReport.tsx";
 import SAOrderDetails from "./Super Admin/SAOrderDetails.tsx";
 import UserProtected from "./components/common/UserProtected.tsx";
 import SAOrderReport from "./Super Admin/super-admin-pages/SAOrderReport.tsx";
-
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 
 const appRoutes = createBrowserRouter([
   {
@@ -113,10 +113,26 @@ const appRoutes = createBrowserRouter([
         path: "/user/order-details",
         element: <UserOrderDetails />,
       },
+      // {
+      //   path: "/admin/order-details",
+      //   element: <AdminOrderDetails />,
+      // },
       {
-        path: "/admin/order-details",
+        path: "/admin/order-details/:id",
+
         element: <AdminOrderDetails />,
       },
+      {
+        path: "/user/order-details/:id",
+
+        element: <UserOrderDetails />,
+      },
+      {
+        path: "/super-admin/order-details/:id",
+
+        element: <SAOrderDetails />,
+      },
+      
       {
         path: "/user/selected-categories",
         element: <SelectedCategories />,
@@ -210,9 +226,13 @@ const appRoutes = createBrowserRouter([
     ],
   },
 ]);
+const client = new QueryClient();
 
 ReactDOM.createRoot(document.getElementById("root")!).render(
-  <Provider store={store}>
+  <QueryClientProvider client={client}>
+    <Provider store={store}>
     <RouterProvider router={appRoutes} />
   </Provider>
+  </QueryClientProvider>
+  
 );

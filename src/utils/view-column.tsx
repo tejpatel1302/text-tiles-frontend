@@ -3,11 +3,12 @@
     // Import toast
     import { useSelector } from "react-redux";
     import { selectSACurrentToken } from "@/features/redux_toolkit/saSlice";
-    import { useEffect, useState } from "react";
+    import { useCallback, useEffect, useState } from "react";
     import { actionApi } from "@/features/api/apicall";
     import { selectAdminCurrentToken } from "@/features/redux_toolkit/authSlice";
     import { useCookies } from "react-cookie";
     import { Toaster, toast } from "sonner";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 
     // This type is used to define the shape of our data.
@@ -27,6 +28,17 @@
         {
             accessorKey: "id",
             header: "Product ID",
+            cell: ({row}:any) => {
+                const result = row.getValue('id');
+                const hyphenIndex = result.indexOf('-');
+                const formattedResult = hyphenIndex !== -1 ? result.substring(0, hyphenIndex) : result;
+                return (
+                    <div>
+                        {formattedResult}
+                    </div>
+                );
+            }
+            
         },
         {
             accessorKey: "images",
@@ -75,29 +87,47 @@
             cell: ({row}:any) => {
                 // const token = useSelector(selectAdminCurrentToken);
                 const [cookie] = useCookies(["auth"]);
+                const queryClient = useQueryClient();
                 const [loading, setLoading] = useState(false);
-                const handleApprove = async () => {
+                const handleApprove = async (status:any) => {
                     try {
-                        setLoading(true);
+                   
                         const payload = {
                             Authorization: `Bearer ${cookie.auth}`,
                         };
                         const req  ={
-                            orderItemId: row.getValue('id'),
-                            status: "APPROVED"
+                            orderItemId: status.id,
+                            status: status?.status
                         };
                         const res = await actionApi(payload, req);
-                        console.log(res, 'getApproval');
+                        console.log(res, 'getApproval');    
                         // Update UI or state based on response if needed
                         toast.success('Item Approved');
                     } catch (error) {
                         console.error("Error approving item:", error);
                         toast.error('Failed to approve item');
-                    } finally {
-                        setLoading(false);
-                    }
+                    } 
                 };
-
+                const approveMutation = useMutation({
+                    mutationFn: handleApprove,
+                    onSuccess: async () => {
+                      await queryClient.invalidateQueries({ queryKey:  ["orderDetailData"] });
+                    },
+                  });
+                  const onApprove = useCallback(() => {
+                    const status = {
+                      status: "APPROVED",
+                      id: row.getValue('id')
+                    };
+                    approveMutation.mutate(status, {
+                      onSuccess: () => {
+                        toast('success');
+                      },
+                      onError: () => {
+                        toast('error');
+                      },
+                    });
+                  }, []);
                 const handleReject = () => {
                     const currentQuantity = row.getValue('quantity');
                     const currentPrice = row.getValue('price');
@@ -115,7 +145,7 @@
                         <div> 
             <Toaster position="top-center" />
         </div>
-                        <Button variant={"green"} onClick={handleApprove} disabled={loading}>Approve</Button>
+                        <Button variant={"green"} onClick={onApprove} disabled={loading}>Approve</Button>
                         <Button variant={'red'} onClick={handleReject}>Reject</Button>
                     </div>
                 );

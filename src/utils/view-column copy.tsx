@@ -8,7 +8,7 @@ import { ColumnDef } from "@tanstack/react-table";
 // You can use a Zod schema here if you want.
 export type UserView = {
     id: number;
-    image: string;
+    images: string;
     name: string;
     color: string;
     size: string;
@@ -27,8 +27,8 @@ export type UserView = {
         header: "Product ID",
       },
       {
-        accessorKey: "image",
-        header: 'image'
+        accessorKey: "images",
+        header: 'images'
       },
       {
         accessorKey: "name",

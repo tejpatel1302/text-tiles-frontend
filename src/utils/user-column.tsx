@@ -4,6 +4,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import {  ArrowUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import OrderTableRowView from "@/Admin/admin pages/OrderTableRowView";
 
 
 // This type is used to define the shape of our data.
@@ -25,9 +26,19 @@ export type Order = {
 
   export const columns: ColumnDef<Order>[] = [
     {
-        accessorKey: "id",
-        header: "Order Id",
-      },
+      accessorKey: "id",
+      header: "Order Id",
+      cell: ({row}:any) => {
+        const result = row.getValue('id');
+        const hyphenIndex = result.indexOf('-');
+        const formattedResult = hyphenIndex !== -1 ? result.substring(0, hyphenIndex) : result;
+        return (
+            <div>
+                {formattedResult}
+            </div>
+        );
+    }
+    },
       {
         accessorKey: "orderDate",
         header: ({ column }) => {
@@ -58,10 +69,12 @@ export type Order = {
       //   accessorKey: "deliverydate",
       //   header: "Delivery Date",
       // },
-      
       {
         accessorKey: "orderDetails",
         header: "Order Details",
+        cell: ({ row }: any) => (
+          <OrderTableRowView row={row}/>
+        ),
       },
       {
         accessorKey: "orderstatus",

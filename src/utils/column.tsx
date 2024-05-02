@@ -1,9 +1,9 @@
-"use client";
-
 import { ColumnDef } from "@tanstack/react-table";
 import {  ArrowUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import DataTableRowActionsP from "./DataTableRowActionP";
+import OrderTableRowView from "@/Admin/admin pages/OrderTableRowView";
 
 
 // This type is used to define the shape of our data.
@@ -28,6 +28,16 @@ export type Order = {
     {
       accessorKey: "id",
       header: "Customer ID",
+      cell: ({row}:any) => {
+        const result = row.getValue('id');
+        const hyphenIndex = result.indexOf('-');
+        const formattedResult = hyphenIndex !== -1 ? result.substring(0, hyphenIndex) : result;
+        return (
+            <div>
+                {formattedResult}
+            </div>
+        );
+    }
     },
     // {
     //   accessorKey: "id",
@@ -61,7 +71,7 @@ export type Order = {
     },
     {
       accessorKey: "orderDate",
-      header: ({ column }) => {
+      header: ({ column }:any) => {
         return (
           <Button
             variant="ghost"
@@ -77,11 +87,13 @@ export type Order = {
     {
       accessorKey: "orderDetails",
       header: "Order Details",
-      
+      cell: ({ row }: any) => (
+        <OrderTableRowView row={row}/>
+      ),
     },
     {
       accessorKey: "status",
-      header: ({ column }) => {
+      header: ({ column }:any) => {
         return (
           <Button
             variant="ghost"
@@ -92,11 +104,11 @@ export type Order = {
           </Button>
         );
       },
-      cell: ({row})=>{
+      cell: ({row}:any)=>{
         return ( 
         <div className={cn('font-medium w-fit px-4 py-2 rounded-lg',{
-            'text-red-500' : row.getValue('status') === 'Not Reviewed',
-            'text-green-500' : row.getValue('status') === 'Reviewed'
+            'text-red-500' : row.getValue('status') === 'pending',
+            'text-green-500' : row.getValue('status') === 'REVIEWED'
 
         })}>
             {row.getValue('status')}

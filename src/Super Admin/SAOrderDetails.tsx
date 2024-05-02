@@ -8,12 +8,15 @@ import { useSelector } from "react-redux";
 import { useEffect, useState } from "react";
 import { getSAOrderDetailsApi, productionApi } from "@/features/api/apicall";
 import { useCookies } from "react-cookie";
+import { useParams } from "react-router-dom";
 
 const SAOrderDetails= () => {
   const [cookie] = useCookies(["auth"]);
+  const params = useParams();
+  const { id } = params;
   // const token = useSelector(selectSACurrentToken);
-  const { orderItemId} = useSelector((state: any) => state.orderItemId);
-  console.log(orderItemId,'idthrough')
+  // const { orderItemId} = useSelector((state: any) => state.orderItemId);
+  // console.log(orderItemId,'idthrough')
   const [showOrderDetails, setShowOrderDetails]:any = useState([]);
   const [loading, setLoading] = useState(true);
   async function fetchOrderData() {
@@ -23,7 +26,7 @@ const SAOrderDetails= () => {
        
       };
       
-      const res = await  getSAOrderDetailsApi(payload,orderItemId);
+      const res = await  getSAOrderDetailsApi(payload, id);
       console.log(res, 'getOrdersdetailsypoooo')
       setShowOrderDetails(res)
 

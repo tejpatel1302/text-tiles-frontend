@@ -88,6 +88,18 @@ export const addCategoryApi = async (formData: any, config: any) => {
       throw error; // You can handle errors in the calling function
     }
   };
+  export const addColorsApi = async (formData: any, config: any) => {
+    try {
+      const response = await axios.post(
+        `${api}/product/add-color`,
+        formData,
+        config
+      );
+      return response.data;
+    } catch (error) {
+      throw error; // You can handle errors in the calling function
+    }
+  };
   export const getCategoryApi  = async (payload: any) => {
     return axios.get(`${api}/category`, {
       headers: payload,

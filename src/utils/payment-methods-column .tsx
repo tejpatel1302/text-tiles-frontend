@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dialog"
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
+import DataTableRowActions from "./DataTableRowAction";
 
 
 export type PaymentMethods = {
@@ -270,78 +271,49 @@ const EditCell = ({ row, table }: any) => {
   );
 };
 
-const TableCell = ({ getValue, row, column, table }: any) => {
-  const initialValue = getValue();
-  const columnMeta = column.columnDef.meta;
-  const tableMeta = table.options.meta;
-  const [value, setValue] = useState(initialValue);
-  useEffect(() => {
-    setValue(initialValue);
-  }, [initialValue]);
-  const onBlur = () => {
-    tableMeta?.updateData(row.index, column.id, value);
-  };
-  const onSelectChange = (e: any) => {
-    setValue(e.target.value);
-    tableMeta?.updateData(row.index, column.id, e.target.value);
-  };
-  if (tableMeta?.editedRows[row.id]) {
-    return columnMeta?.type === "select" ? (
-      <select onChange={onSelectChange} value={initialValue}>
-        {columnMeta?.options?.map((option: any) => (
-          <option key={option.value} value={option.value}>
-            {option.label}
-          </option>
-        ))}
-      </select>
-    ) : (
-      <input
-        value={value}
-        onChange={(e) => setValue(e.target.value)}
-        onBlur={onBlur}
-        type={columnMeta?.type || "text"}
-        className="border-2 border-black w-8/12 p-4"
-      />
-    );
-  }
-  return <span>{value}</span>;
-};
 
-const columnHelper = createColumnHelper<PaymentMethods>();
-export const  columns = [
-  columnHelper.accessor("id", {
-    header: "id",
+
+export const getPaymentColumns = ({ onEdit, onDelete }: any) => [
+  {
+    accessorKey: "id",
+    header: "ID",
     meta: {
       type: "number",
     },
-  }),
-  columnHelper.accessor("cardType", {
-    header: "cardType",
-    cell: TableCell,
-  }),
- columnHelper.accessor("cardNumber", {
-      header: "cardNumber",
-      cell: TableCell
-    }),
-  columnHelper.accessor("cardHolderName", {
-    header: "cardHolderName",
-    cell: TableCell,
-  }),
-  columnHelper.accessor("expiryDate", {
-      header: "expiryDate",
-      cell: TableCell
-    }),
-  columnHelper.accessor("cvv", {
-    header: "cvv",
+  },
+  {
+    accessorKey: "cardType",
+    header: "Card Type",
+    
+  },
+  {
+    accessorKey: "cardNumber",
+    header: "Card Number",
+    
+  },
+  {
+    accessorKey: "cardHolderName",
+    header: "Card Holder Name",
+    
+  },
+  {
+    accessorKey: "expiryDate",
+    header: "Expiry Date",
+    
+  },
+  {
+    accessorKey: "cvv",
+    header: "CVV",
     meta: {
       type: "number",
     },
-    cell: TableCell,
-  }),
-
-  columnHelper.display({
+    
+  },
+  {
     header: "Actions",
     id: "edit",
-    cell: ({ row, table }: any) => <EditCell row={row} table={table} />,
-  }),
+    cell: ({ row }: any) => (
+      <DataTableRowActions row={row} onEdit={onEdit} onDelete={onDelete} />
+    ),
+  },
 ];

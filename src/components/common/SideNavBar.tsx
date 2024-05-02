@@ -42,6 +42,10 @@ export default function SideBar({ }: Props) {
   const isAdminReport = location.pathname === "/admin/order-report";
   const isSuperAdminDetails = location.pathname === "/super-admin/order-details";
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const isAdminDashboard2 = location.pathname.startsWith("/admin/order-details");
+const isSuperAdminDashboard = location.pathname.startsWith("/super-admin/order-details");
+const isUserDashboard = location.pathname.startsWith("/user/order-details");
+
 
   // function toggleSideBar() {
   //   setIsCollapsed(!isCollapsed);
@@ -74,7 +78,7 @@ const clickHandler = async () => {
 };
 
   // Define links array based on userOrderHistory
-  const links: any = (userOrderHistory || userSelected || userHistory || isOrderDetails || isUserReport)
+  const links: any = (userOrderHistory || userSelected || userHistory || isUserDashboard || isUserReport)
     ? [
       {
         title: "Home",
@@ -132,7 +136,7 @@ const clickHandler = async () => {
         variant: "ghost",
       },
       
-    ] : (isSuperAdminOrders || isSuperAdminDetails || isSuperAdminReport)? [
+    ] : (isSuperAdminOrders || isSuperAdminDashboard || isSuperAdminReport)? [
     
       {
         title: "My Orders",

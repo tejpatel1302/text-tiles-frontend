@@ -100,7 +100,7 @@ const Payment = ({ selectedAddressId}: any) => {
       navigate('/user/checkout');
     } catch (error) {
       console.error("Error submitting data:", error);
-      toast.success('The order has been sent');
+      
       // Handle error appropriately, like showing a user-friendly message
     }
   };
@@ -142,16 +142,16 @@ console.log(showProducts,'jijiji')
   }, [cookie.auth]);
 
   return (
-    <div className=" flex w-[1020px] gap-4 ml-[490px] ">
+    <div className=" flex w-full gap-4 ">
        <Toaster position="top-center" />
-      <div className="w-1/2">
-        <Card2 headerLabel="Payment">
+      <div className="w-full">
+        <Card2 headerLabel="">
           <div>
            { !displayPayment && (<>
            
             <div>
-              <div className="text-2xl font-bold my-4">Payment Type:</div>
-              <div>
+              <div className="text-2xl font-bold my-4">Payment Type</div>
+              <div className="w-1/2 mx-auto mt-4">
                 <div className="border-2 border-black rounded-lg p-6 text-center" onClick={() => clickHandler('Credit Card')}>
                   Credit Card
                 </div>
@@ -162,7 +162,7 @@ console.log(showProducts,'jijiji')
               </div>
             </div>
            </>)}
-            {displayPayment && <div>
+            {displayPayment && <div className="mx-auto w-[60%]">
               <Form {...form}>
                 <form
                   onSubmit={form.handleSubmit(submitData)}

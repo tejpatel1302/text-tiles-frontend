@@ -80,8 +80,8 @@ export const AddManageCategorySchema = z.object({
 
 
 export const AddProduct = z.object({
-    name: z.string()
-        .min(2, { message: 'Product name must be at least 2 characters long' }),
+    name: z.string(),
+
     description: z.string()
         .min(10, { message: 'Description must be at least 10 characters long' }),
     material: z.string(),
@@ -99,11 +99,54 @@ export const AddProduct = z.object({
     categoryId: z.string(),
     subcategoryId: z.string(),
 });
+export const UpdateProduct = z.object({
+    name: z.string(),
+
+    description: z.string()
+        .min(10, { message: 'Description must be at least 10 characters long' }),
+    material: z.string(),
+    price: z.any(),
+    size: z.any(),
+    
+
+});
 export const AddToCartSchema = z.object({
     productId: z.string(),
     itemSize: z.string(),
     colorRelationId: z.string(),
     quantity: z.any()
+});
+export const AddColorSchema = z.object({
+    productId: z.string(),
+    colorId: z.string(),
+    file: z.any()
+    .refine(value => {
+        // Custom validation logic for file
+        if (!value) {
+            return { message: 'Image is required' };
+        }
+        return true; // Return true if validation passes
+    }),
+   
+});
+export const UpdateCategorySchema = z.object({
+    name: z.string(),
+  
+    file: z.any()
+    .refine(value => {
+        // Custom validation logic for file
+        if (!value) {
+            return { message: 'Image is required' };
+        }
+        return true; // Return true if validation passes
+    }),
+   
+});
+export const UpdateCartSchema = z.object({
+    quantity: z.any(),
+  
+    
+   
 });
 export const UpdateUserDetailsSchema = z.object({
    name:z.any(),    

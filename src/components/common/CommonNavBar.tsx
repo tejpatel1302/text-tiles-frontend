@@ -32,6 +32,9 @@ const CommonNavBar = () => {
     const isSuperAdminOrders = location.pathname === "/super-admin/orders";
     const isUserPM = location.pathname === "/user/payment-methods";
 const isUserA = location.pathname === "/user/address-book";
+const isAdminDashboard2 = location.pathname.startsWith("/admin/order-details");
+const isSuperAdminDashboard = location.pathname.startsWith("/super-admin/order-details");
+const isUserDashboard = location.pathname.startsWith("/user/order-details");
 
   console.log(selectedCategories);
   useEffect(() => {
@@ -114,10 +117,10 @@ const isUserA = location.pathname === "/user/address-book";
             )}
 
           
-{!isMyAccount && !isMyAddressBook && !isSuperAdminOrders && !isSuperAdminDetails && !isSuperAdminReport && !isUserA && !isUserPM && (
+{!isMyAccount && !isMyAddressBook && !isSuperAdminOrders && !isSuperAdminDashboard && !isSuperAdminReport && !isUserA && !isUserPM && (
             <div className="flex items-center gap-5">
               <div className="flex gap-8 ">
-                {!isUser && !isOrderDetails && (
+                {!isUser && !isUserDashboard && (
                   <div className="flex gap-8">
                     <UserDropDown />
                     <Heart size={35} onClick={clickHandler3} />

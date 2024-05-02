@@ -21,7 +21,7 @@ const Card2 = ({children,
       const location = useLocation()
       const isPayment = location.pathname === "/user/payment";
   return (
-    <Card className={`w-full ${isPayment ? 'h-screen':'h-[500px]'} shadow-md border-2 border-purple-400`}>
+    <Card className={`w-full ${isPayment ? 'h-screen':'h-[500px]'} shadow-md`}>
         <CardHeader>
             <Header label={headerLabel}/>
         </CardHeader>

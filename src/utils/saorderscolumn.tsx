@@ -1,9 +1,8 @@
-"use client";
-
 import { ColumnDef } from "@tanstack/react-table";
 import {  ArrowUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
+import OrderTableRowView from "@/Admin/admin pages/OrderTableRowView";
 
 
 // This type is used to define the shape of our data.
@@ -77,7 +76,9 @@ export type Order = {
     {
       accessorKey: "orderDetails",
       header: "Order Details",
-      
+      cell: ({ row }: any) => (
+        <OrderTableRowView row={row}/>
+      ),
     },
     {
       accessorKey: "status",

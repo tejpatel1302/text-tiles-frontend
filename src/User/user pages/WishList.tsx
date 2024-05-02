@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { removeFromWishlist } from '@/features/redux_toolkit/wishlistSlice';  // Import your Redux action
 import { useCookies } from 'react-cookie';
 import { deleteWishlistApi, getWisListApi } from '@/features/api/apicall';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 const UserWishList = () => {
+  const queryClient = useQueryClient();
   const { wishListId } = useSelector((state: any) => state.wishListId);
   console.log(wishListId, 'hiii');
   const dispatch = useDispatch();
@@ -20,20 +23,13 @@ const UserWishList = () => {
       
       const res = await getWisListApi(payload);
       console.log(res, 'getsAmdinOrdershi');
-      setShowOrder(res?.data || []); // Provide default empty array if res?.data is undefined
-      setLoading(false);
+      return res.data;
+      
     } catch (error) {
       console.error("Error fetching product data:", error);
       setLoading(false);
     }
   }
-  
-  useEffect(() => {
-    fetchOrderData();
-  }, []);
-  
-  console.log(showOrder.length > 0 ? showOrder[0]?.id : 'No ID available', 'jiiii');
-
   const handleRemoveFromWishlist = async (id: any) => {
     try {
       const payload = {
@@ -46,12 +42,36 @@ const UserWishList = () => {
       console.error("Error fetching subcategory data:", error);
     }
   };
+  const { isFetching,  data: WistData } = useQuery({
+    queryKey: ["wishListData"],
+    queryFn: fetchOrderData,
+  });
 
+  const deleteMutation = useMutation({
+    mutationFn: handleRemoveFromWishlist,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey:  ["wishListData"] });
+    },
+  });
+  const onDelete = useCallback((id: any) => {
+    deleteMutation.mutate(id, {
+      onSuccess: () => {
+        toast('success');
+      },
+      onError: () => {
+        toast('error');
+      },
+    });
+  }, []);
+  
+
+
+ 
   return (
     <div className="w-[95%] mx-auto">
       <div className="text-3xl font-bold m-4">Wish List</div>
       <div className="w-full flex flex-wrap justify-center">
-        {showOrder && showOrder.length > 0 && showOrder.map((product: any) => (
+        {WistData && WistData.length > 0 && WistData.map((product: any) => (
           <div
             key={product?.id}
             className="rounded-lg border border-gray-300 overflow-hidden shadow-lg relative h-[350px] w-[300px] transition duration-300 ease-in-out transform hover:scale-105 flex flex-col items-center justify-center mx-4 my-4"
@@ -64,7 +84,7 @@ const UserWishList = () => {
                 <h3 className="text-xl text-center font-semibold mb-2">{product?.Product?.name}</h3>
                 <p className="text-gray-800">${product?.Product?.price}</p>
                 <button
-                  onClick={() => handleRemoveFromWishlist(product?.id)}
+                  onClick={() =>onDelete(product?.id)}
                   className="mt-2 bg-red-500 hover:bg-red-600 text-white font-semibold px-4 py-2 rounded focus:outline-none focus:ring focus:ring-red-300"
                 >
                   Remove

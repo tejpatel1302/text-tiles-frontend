@@ -42,6 +42,7 @@ import { addId } from "@/features/redux_toolkit/orderItemIdSlice";
 
 const ProductInDetail = () => {
   const dispatch = useDispatch();
+
   const [cookie] = useCookies(["auth"]);
   const form = useForm<z.infer<typeof AddToCartSchema>>({
     defaultValues: {
@@ -55,15 +56,20 @@ const ProductInDetail = () => {
   });
 
   const [product, setProduct] = useState<any>(null);
-  const [showColors, setShowColors] = useState<any[]>([]);
-  const [showColorsRel, setShowColorsRel] = useState<any[]>([]);
+  const [colorImage, setColorImage] = useState(product?.product?.colorRelation[0]?.image);
+
+  const [colorId, setColorId] = useState(product?.product?.colorRelation[0]?.color?.id);
   const [wishlistColor, setwishlistColor] = useState<any>();
-  const [colorId, setColorId] = useState("");
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState<any>({});
   const params = useParams();
   const { productId } = params;
-
+  useEffect(() => {
+    if (product && product.product && product.product.colorRelation && product.product.colorRelation.length > 0) {
+      setColorImage(product.product.colorRelation[0]?.image);
+      setColorId(product?.product?.colorRelation[0]?.color?.id)
+    }
+  }, [product]);
   useEffect(() => {
     async function fetchProductsData() {
       try {
@@ -81,7 +87,7 @@ const ProductInDetail = () => {
         setLoading(false);
       }
     }
-
+   
     async function fetchUserData() {
       try {
         const payload = {
@@ -96,9 +102,9 @@ const ProductInDetail = () => {
         setLoading(false);
       }
     }
-
+    
     // async function fetchColorsData() {
-    //   try {
+      //   try {
     //     const payload = {
     //       Authorization: `Bearer ${cookie.auth}`,
     //     };
@@ -171,8 +177,9 @@ const ProductInDetail = () => {
     }
   };
 
-  const clickHandler1 = (colorId: any) => {
+  const clickHandler1 = (colorId: any, colorImage: any) => {
     setColorId(colorId);
+    setColorImage(colorImage);
   };
 
   return (
@@ -182,7 +189,7 @@ const ProductInDetail = () => {
           <div className="flex gap-8">
             <div className="border border-gray-300 h-[450px] w-[400px] rounded-lg overflow-hidden flex justify-center items-center">
               <img
-                src={`data:image/jpeg;base64,${product?.product?.colorRelation[0]?.image?.buffer}`}
+                src={`data:image/jpeg;base64,${colorImage?.buffer}`}
                 alt={product?.title}
                 className="h-96"
               />
@@ -205,20 +212,15 @@ const ProductInDetail = () => {
                 <div>
                   <div className="mb-2">Colors</div>
                   <div className="flex gap-3">
-                    {product?.product?.colorRelation?.map(
-                      (color: any, index: number) => (
-                        <div
-                          onClick={() => clickHandler1(color?.color?.id)}
-                          key={index}
-                          className="h-8 w-8 rounded-full"
-                          // className={`h-8 w-8 rounded-full ${
-                          //   color.id === showColorsRel[0]?.colorId ? 'border-4 border-black' : ''
-                          // }`}
-                          style={{ backgroundColor: color?.color?.hexCode }}
-                        ></div>
-                      )
-                    )}
-                  </div>
+        {product?.product?.colorRelation?.map((color: any, index: number) => (
+          <div
+            onClick={() => clickHandler1(color?.color?.id, color?.image)}
+            key={index}
+            className={`h-8 w-8 rounded-full ${color?.color?.id === colorId ? 'border-4 border-black' : ''}`}
+            style={{ backgroundColor: color?.color?.hexCode }}
+          ></div>
+        ))}
+      </div>
                 </div>
               </div>
               <Form {...form}>

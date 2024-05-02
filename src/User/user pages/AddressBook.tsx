@@ -1,278 +1,114 @@
-import React, { useEffect, useState } from "react";
+import { Address, getAddressColumns } from "@/utils/address-column";
 import { DataTable } from "@/components/common/Data-table";
-import { getAddressApi, updateAddressApi, deleteAddressApi } from "@/features/api/apicall";
+import { useCallback, useMemo, useState } from "react"; // Removed unused imports
+import { useSelector } from "react-redux";
+import { deleteAddressApi, getAddressApi } from "@/features/api/apicall"; // Removed unused import
 import { useCookies } from "react-cookie";
-import { Button } from "@/components/ui/button";
-import { toast, Toaster } from "sonner";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
-import { Label } from "@/components/ui/label";
-import { Input } from "@/components/ui/input";
-import { Address } from "@/utils/address-column";
-import { createColumnHelper } from "@tanstack/react-table";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Toaster, toast } from "sonner";
+import { CardHeader, CardTitle, TableCard } from "@/components/common/TableCard";
+import UpdateAddressForm from "./UpdateAddressForm";
+import { CardContent } from "@/components/ui/card";
 
 const AddressBook = () => {
   const [cookie] = useCookies(["auth"]);
-  const [showAddresses, setShowAddresses] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchUserData = async () => {
-      try {
-        const headers = { Authorization: `Bearer ${cookie.auth}` };
-        const res = await getAddressApi(headers);
-        setShowAddresses(res?.data);
-        setLoading(false);
-      } catch (error) {
-        console.error("Error fetching user data:", error);
-        setLoading(false);
-      }
-    };
-    fetchUserData();
-  }, [cookie.auth]);
-
-  const handleRemoveAddress = async (id) => {
+  const [isDialogOpen, setIsDialogOpen]:any = useState(false);
+  const [selectedAddress, setSelectedAddress]:any = useState(null)
+  const queryClient = useQueryClient();
+  const getAddresses = async () => {
     try {
-      const payload = {
-        Authorization: `Bearer ${cookie.auth}`,
-      };
-      const res = await deleteAddressApi(payload, id);
-      toast.success("Address deleted successfully");
-      setShowAddresses(showAddresses.filter((address) => address.id !== id));
+      const headers = { Authorization: `Bearer ${cookie.auth}` };
+      const res = await getAddressApi(headers);
+      return res.data; // Removed commented out code
     } catch (error) {
-      console.error("Error deleting address:", error);
-      toast.error("Failed to delete address");
+      console.error("Error fetching user data:", error);
     }
   };
+  const handleRemoveAddress = async (id:any) => {
+          try {
+            const payload = {
+              Authorization: `Bearer ${cookie.auth}`,
+            };
+      
+            const res = await deleteAddressApi(payload, id);
+            console.log(res, "hihello");
+          } catch (error) {
+            console.error("Error fetching subcategory data:", error);
+          }
+        };
 
-  const handleProductUpdate = async (id, updatedData) => {
-    try {
-      const payload = {
-        Authorization: `Bearer ${cookie.auth}`,
-      };
-      const res = await updateAddressApi(payload, id, updatedData);
-      toast.success("Address updated successfully");
-      // You may want to update the local state here with the updated data
-    } catch (error) {
-      console.error("Error updating address:", error);
-      toast.error("Failed to update address");
-    }
-  };
+  const { isFetching,  data: AddressData } = useQuery({
+    queryKey: ["addressData"],
+    queryFn: getAddresses,
+  });
 
-  const handleInputChange = (e, id) => {
-    const { name, value } = e.target;
-    setShowAddresses((prevAddresses) =>
-      prevAddresses.map((address) =>
-        address.id === id ? { ...address, [name]: value } : address
-      )
-    );
-  };
+  const data: Address[] = AddressData
+    ? AddressData.map((address: any) => ({
+        id: address.id,
+        address1: address.address1,
+        address2: address.address2,
+        billToName: address.billToName,
+        city: address.city,
+        county: address.county,
+        eir: address.eir,
+      }))
+    : [];
 
-  const columnHelper = createColumnHelper<Address>();
-  const columns = [
-    columnHelper.accessor("id", {
-      header: "Address ID",
-      meta: {
-        type: "number",
+    const deleteMutation = useMutation({
+      mutationFn: handleRemoveAddress,
+      onSuccess: async () => {
+        await queryClient.invalidateQueries({ queryKey:  ["addressData"] });
       },
-    }),
-    columnHelper.accessor("billToName", {
-      header: "billToName",
-      
-    }),
-   columnHelper.accessor("address1", {
-        header: "address1",
-       
-      }),
-    columnHelper.accessor("address2", {
-      header: "address2",
-      
-    }),
-    columnHelper.accessor("city", {
-        header: "city",
+    });
+
+    const onDelete = useCallback((address: any) => {
+      deleteMutation.mutate(address.id, {
+        onSuccess: () => {
+          toast('success');
+        },
+        onError: () => {
+          toast('error');
+        },
+      });
+    }, []);
+
+  const onEdit = useCallback((address: any) => {
+    setSelectedAddress(address)
+    setIsDialogOpen(true)
     
-      }),
-    columnHelper.accessor("county", {
-      header: "county",
-      meta: {
-        type: "number",
-      },
-      
-    }),
-    columnHelper.accessor("eir", {
-      header: "eir",
-      
-    }),
-    {
-      header: "Actions",
-      id: "actions",
-      cell: ({ row }) => (
-        <ActionsCell
-          address={row.original}
-          handleRemoveAddress={handleRemoveAddress}
-          handleProductUpdate={handleProductUpdate}
-        />
-      ),
-    },
-  ];
-  const data: Address[] = showAddresses?.map((data:any) => ({
-    id: data?.id,
-    address1: data?.address1,
-    address2: data?.address2,
-    billToName: data?.billToName,
-    city: data?.city,
-    county: data?.county,
-    eir: data?.eir,
-    
-    
-    
-    
-    
-  }));
-  console.log(data,'mainmapdata')
+  }, []);
+
+  const columns = useMemo(() => getAddressColumns({ onEdit, onDelete }), [
+    onDelete,
+    onEdit,
+  ]); // Added missing dependencies
+
   return (
-    <div className="p-8">
-      <div className="my-8 text-3xl font-bold">Manage Address Book</div>
-      {loading ? (
-        <div>Loading...</div>
-      ) : (
-        <div>
-          <DataTable columns={columns} data={data} />
+    <TableCard className="h-full">
+            <Toaster/>
+      <CardHeader>
+        <CardTitle>Bank Accounts</CardTitle>
+        <div className="flex justify-between">
+          <div />
+          <div className="flex-nowrap">
+            <UpdateAddressForm
+              isOpen={isDialogOpen}
+              address={selectedAddress}
+              onOpenChange={(value:any) => {
+                setIsDialogOpen(value);
+                if (!value) {
+                  setSelectedAddress(null);
+                }
+              }}
+            />
+          </div>
         </div>
-      )}
-    </div>
-  );
-};
-
-const ActionsCell = ({ address, handleRemoveAddress, handleProductUpdate }) => {
-  const [isEditing, setIsEditing] = useState(false);
-  const [updatedData, setUpdatedData] = useState(address);
-  const [initialData, setInitialData] = useState(address);
-
-  const handleEditClick = () => {
-    setIsEditing(true);
-    setUpdatedData(initialData);
-  };
-
-  const handleCancelClick = () => {
-    setIsEditing(false);
-  };
-
-  const handleSaveClick = () => {
-    setIsEditing(false);
-    handleProductUpdate(address.id, updatedData);
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setUpdatedData((prevData) => ({ ...prevData, [name]: value }));
-  };
-
-  return (
-    <div className="flex gap-5">
-      {!isEditing ? (
-        <>
-          <Button onClick={handleEditClick} variant="green">
-            Edit
-          </Button>
-          <Button onClick={() => handleRemoveAddress(address.id)} variant="red">
-            Delete
-          </Button>
-        </>
-      ) : (
-        <>
-          <div className="grid gap-4 py-4">
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="name">Name:</Label>
-              <Input
-                type="text"
-                id="name"
-                name="billToName"
-                placeholder="Enter bill to name"
-                value={updatedData.billToName}
-                onChange={handleInputChange}
-                className="p-4 w-60"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="address1">Address 1:</Label>
-              <Input
-                type="text"
-                id="address1"
-                name="address1"
-                placeholder="Enter address 1"
-                value={updatedData.address1}
-                onChange={handleInputChange}
-                className="p-4 w-60"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="address2">Address 2:</Label>
-              <Input
-                type="text"
-                id="address2"
-                name="address2"
-                placeholder="Enter address 2"
-                value={updatedData.address2}
-                onChange={handleInputChange}
-                className="p-4 w-60"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="city">City:</Label>
-              <Input
-                type="text"
-                id="city"
-                name="city"
-                placeholder="Enter city"
-                value={updatedData.city}
-                onChange={handleInputChange}
-                className="p-4 w-60"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="county">County:</Label>
-              <Input
-                type="text"
-                id="county"
-                name="county"
-                placeholder="Enter county"
-                value={updatedData.county}
-                onChange={handleInputChange}
-                className="p-4 w-60"
-              />
-            </div>
-            <div className="grid grid-cols-4 items-center gap-4">
-              <Label htmlFor="eir">EIR:</Label>
-              <Input
-                type="text"
-                id="eir"
-                name="eir"
-                placeholder="Enter eir"
-                value={updatedData.eir}
-                onChange={handleInputChange}
-                className="p-4 w-60"
-              />
-            </div>
-          </div>
-          <div className="flex gap-5">
-            <Button onClick={handleSaveClick} variant="green">
-              Save
-            </Button>
-            <Button onClick={handleCancelClick} variant="red">
-              Cancel
-            </Button>
-          </div>
-        </>
-      )}
-    </div>
+      </CardHeader>
+      <CardContent>
+        {isFetching && <span>Loading</span>}
+        {!isFetching && <DataTable data={data} columns={columns} />}
+      </CardContent>
+    </TableCard>
   );
 };
 

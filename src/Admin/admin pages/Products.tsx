@@ -1,39 +1,59 @@
-import { Product,columns } from "@/utils/product-column";
+import { Product, getProductColumns } from "@/utils/product-column";
 import { DataTable } from "@/components/common/Data-table";
 import { products } from "@/utils/products";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSelector } from "react-redux";
-import { getProductsApi } from "@/features/api/apicall";
+import { deleteProductApi, getProductsApi } from "@/features/api/apicall";
 import { selectAdminCurrentToken } from "@/features/redux_toolkit/authSlice";
 import { useCookies } from "react-cookie";
+import UpdateProductForm from "./UpdateProductForm";
+import { CardContent, CardHeader, CardTitle, TableCard } from "@/components/common/TableCard";
+import { Toaster, toast } from "sonner";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 
 const Products = () => {
-  // const token = useSelector(selectAdminCurrentToken);
   const [cookie] = useCookies(["auth"]);
+  const [isDialogOpen, setIsDialogOpen]:any = useState(false);
+  const [selectedProduct, setSelectedProduct]:any = useState(null)
+  const queryClient = useQueryClient();
   
-  const [showProducts, setShowProducts] = useState([]);
-  const [loading, setLoading] = useState(true);
   
-  
-  async function fetchProductsData() {
+  async function getProducts() {
     try {
       const payload = {
         Authorization: `Bearer ${cookie.auth}`,
       };
       
       const res = await getProductsApi(payload);
-      setShowProducts(res?.data);
-      setLoading(false);
+      return res.data;
     } catch (error) {
       console.error("Error fetching subcategory data:", error);
-      setLoading(false);
+     
     }
   }
-console.log(showProducts)
-  useEffect(() => {
-    fetchProductsData();
-  }, []);
+  const handleDeleteProduct = async (id:any) => {
+    try {
+      const payload = {
+        Authorization: `Bearer ${cookie.auth}`,
+      };
+      
+      // Make API call to delete the product
+      const res = await deleteProductApi(payload, id);
+      
+      console.log(res, "Product deleted successfully");
+      toast.success('Product deleted successfully');
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      toast.error("Error deleting product. Please try again later.");
+    }
+  };
+  const { isFetching,  data: ProductData } = useQuery({
+    queryKey: ["productData"],
+    queryFn: getProducts,
+  });
+  console.log(ProductData,'finalData')
+ 
   function createBlobFromBuffer(bufferString: string, mimetype: string): string | null {
     try {
       const binary = atob(bufferString);
@@ -49,10 +69,11 @@ console.log(showProducts)
       return null;
     }
   }
-  const data: Product[] = showProducts?.map((product:any) => ({
+  
+  const data: Product[] = ProductData?.map((product:any) => ({
     id: product?.colorRelation[0]?.productId ,
     name: product?.name,
-    price : product?.price,
+    price : parseFloat(product?.price),
     colors : product?.colorRelation[0]?.color?.name,
     size : product?.size[0],
     images: product?.colorRelation[0]?.image ? createBlobFromBuffer(product?.colorRelation[0]?.image.buffer, product?.colorRelation[0]?.image.mimetype) : null,
@@ -65,17 +86,58 @@ console.log(showProducts)
     
     
   }));
+  const deleteMutation = useMutation({
+    mutationFn:  handleDeleteProduct ,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey:  ["productData"] });
+    },
+  });
+  const onDelete = useCallback((product: any) => {
+    deleteMutation.mutate(product.id, {
+      onSuccess: () => {
+        toast('success');
+      },
+      onError: () => {
+        toast('error');
+      },
+    });
+  }, []);
+  const onEdit = useCallback((product: any) => {
+    setSelectedProduct(product)
+    setIsDialogOpen(true)
+    
+  }, []);
+
+  const columns = useMemo(() => getProductColumns({ onEdit, onDelete }), [
+    onDelete,
+    onEdit,
+  ]);
   return (
-    <div >
-       <div className="mt-10 ml-4 text-3xl font-bold"> Manage Products</div>
-       {loading ? (
-        <div>Loading...</div>
-      ) : (
-        <div className="-mt-12">
-        <DataTable columns={columns} data={data} />
-      </div>
-      )}
-    </div>
+    <TableCard className="h-full">
+            <Toaster/>
+      <CardHeader>
+        <CardTitle>Bank Accounts</CardTitle>
+        <div className="flex justify-between">
+          <div />
+          <div className="flex-nowrap">
+            <UpdateProductForm
+              isOpen={isDialogOpen}
+              product={selectedProduct}
+              onOpenChange={(value:any) => {
+                setIsDialogOpen(value);
+                if (!value) {
+                  setSelectedProduct(null);
+                }
+              }}
+            />
+          </div>
+        </div>
+      </CardHeader>
+      <CardContent>
+        {isFetching && <span>Loading</span>}
+        {!isFetching && <DataTable data={data} columns={columns} />}
+      </CardContent>
+    </TableCard>
   );
 };
 
