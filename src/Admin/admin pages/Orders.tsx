@@ -47,7 +47,8 @@ const OrderList = () => {
   const data: Order[] = showOrder?.map((order:any) => ({
     customerId: order?.CustomerId,
     id: order?.id,
-    Name: order?.OrderItem[0]?.logObject?.name,
+    Name: order?.Address?.billToName
+,
     city: order?.Address?.city,
     email: order?.Customer?.email,
     mobileNumber: order?.Customer?.phoneNum,
