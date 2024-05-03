@@ -16,9 +16,16 @@ export const getProductColumns = ({ onEdit, onDelete }: any) => [
   {
     accessorKey: "id",
     header: "Product ID",
-    meta: {
-      type: "number",
-    },
+    cell: ({row}:any) => {
+      const result = row.getValue('id');
+      const hyphenIndex = result.indexOf('-');
+      const formattedResult = hyphenIndex !== -1 ? result.substring(0, hyphenIndex) : result;
+      return (
+          <div>
+              {formattedResult}
+          </div>
+      );
+  }
   },
   { accessorKey: "images", header: "images" },
   { accessorKey: "name", header: "Name" },

@@ -22,6 +22,8 @@ import { useAdminLogoutMutation, useUserLogoutMutation } from "@/features/api/au
 import { useDispatch } from "react-redux";
 import { logOut } from "@/features/redux_toolkit/authSlice";
 import { userlogOut } from "@/features/redux_toolkit/userAuthSlice";
+import { Cookies } from "react-cookie";
+import { salogOut } from "@/features/redux_toolkit/saSlice";
 
 type Props = {};
 
@@ -52,18 +54,30 @@ const isUserDashboard = location.pathname.startsWith("/user/order-details");
   // }
   const [adminLogoutTrigger] = useAdminLogoutMutation(); // Destructure the trigger function from the tuple
 const [userLogoutTrigger] = useUserLogoutMutation(); 
+const cookies = new Cookies()
 const clickHandler = async () => {
   try {
     let userData: any;
     if (location.pathname.startsWith("/admin")) {
-      const adminLogout = await adminLogoutTrigger(); // Call the trigger function
+      const adminLogout = await adminLogoutTrigger({}); // Call the trigger function
       console.log('hi admin');
+      cookies.remove(`auth`) 
       dispatch(logOut());
       navigate('/admin/login');
     } else if (location.pathname.startsWith("/user")) {
-      const userLogout = await userLogoutTrigger(); // Call the trigger function
+      const userLogout = await userLogoutTrigger({});
+      
+      
+      cookies.remove(`auth`) // Call the trigger function
       dispatch(userlogOut());
       navigate('/user/login');
+    }  else if (location.pathname.startsWith("/super-admin")) {
+      const saLogout = await userLogoutTrigger({});
+      
+      
+      cookies.remove(`auth`) // Call the trigger function
+      dispatch(salogOut());
+      navigate('/super-admin/login');
     } else {
       throw new Error('Invalid login path');
     }

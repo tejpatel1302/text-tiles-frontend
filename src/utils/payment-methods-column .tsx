@@ -277,9 +277,16 @@ export const getPaymentColumns = ({ onEdit, onDelete }: any) => [
   {
     accessorKey: "id",
     header: "ID",
-    meta: {
-      type: "number",
-    },
+    cell: ({row}:any) => {
+      const result = row.getValue('id');
+      const hyphenIndex = result.indexOf('-');
+      const formattedResult = hyphenIndex !== -1 ? result.substring(0, hyphenIndex) : result;
+      return (
+          <div>
+              {formattedResult}
+          </div>
+      );
+  }
   },
   {
     accessorKey: "cardType",

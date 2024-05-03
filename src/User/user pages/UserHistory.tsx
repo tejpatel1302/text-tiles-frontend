@@ -22,6 +22,7 @@ const UserHistory = () => {
       };
       
       const res = await getOrderHistoryApi(payload);
+      console.log(res,'llll')
       console.log(res?.data, 'getOrderHistory')
       setShowHistory(res?.data);
       setLoading(false);
@@ -36,16 +37,17 @@ const UserHistory = () => {
     fetchCategoryData();
     
   }, []);
- 
+  function convertDateFormat(dateString: any) {
+    if (!dateString) return "";
+    const datePart = dateString.split("T")[0];
+    return datePart;
+  }
   const data: Order[] = showHistory?.map((order: any) => ({
     id: order?.id,
-    orderDate: order?.orderDate,
+    orderDate: convertDateFormat(order?.orderDate),
     Name: order?.Address?.billToName,
     total: order?.totalAmount,
     city: order?.Address?.city,
-
-
-    
     orderDetails: 'View',
     orderstatus: order.status,
   }));

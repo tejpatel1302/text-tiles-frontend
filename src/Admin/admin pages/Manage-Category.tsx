@@ -128,8 +128,10 @@ console.log(selectedCategory,'data che')
         </div>
       </CardHeader>
       <CardContent>
-        {isFetching && <span>Loading</span>}
+       <div className="-mt-20">
+       {isFetching && <span>Loading</span>}
         {!isFetching && <DataTable data={data} columns={columns} />}
+       </div>
       </CardContent>
     </TableCard>
   );

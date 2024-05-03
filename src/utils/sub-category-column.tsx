@@ -36,9 +36,16 @@ export const getSubCategoryColumns = ({ onEdit, onDelete }: any) => [
   {
     accessorKey: "subcategoryID",
     header: "Subcategory ID",
-    meta: {
-      type: "number",
-    },
+    cell: ({row}:any) => {
+      const result = row.getValue('subcategoryID');
+      const hyphenIndex = result.indexOf('-');
+      const formattedResult = hyphenIndex !== -1 ? result.substring(0, hyphenIndex) : result;
+      return (
+          <div>
+              {formattedResult}
+          </div>
+      );
+  }
   },
   {
     accessorKey: "images",

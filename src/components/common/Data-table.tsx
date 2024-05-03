@@ -9,15 +9,7 @@ import {
   ColumnFiltersState,
   getFilteredRowModel,
 } from "@tanstack/react-table";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuRadioGroup,
-  DropdownMenuRadioItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+
 import { Button } from "../ui/button";
 import {
   Table,
@@ -145,13 +137,13 @@ const isAdminReport = location.pathname === "/admin/order-report";
 const isUserReport = location.pathname === "/user/order-report";
 const isUserPM = location.pathname === "/user/payment-methods";
 const isUserA = location.pathname === "/user/address-book";
-const [position, setPosition]:any = useState("bottom")
+
 const isAdminDashboard = location.pathname.startsWith("/admin/order-details");
 const isSuperAdminDashboard = location.pathname.startsWith("/super-admin/order-details");
 const isUserDashboard = location.pathname.startsWith("/user/order-details");
 
 
-  const [placeholder, setPlaceholder] = useState(isUser ? "Search Order History" : isWishList ? "Search Wishlist"  : isSuperAdminDetails ? "Search Order Details" : isAdminProducts ? "Search Products" : isAdminOrders ? "Search Orders" : isSuperAdminOrders ? "Search Orders": isOrderDetails ? "Search Order Details" : isCategory ? "Search Categories" : isSubCategory ? "Search Sub-Categories" : isCart ? "Search Order" : isAdminDetails ? 'Search Admin Order Details' : '' );
+  const [placeholder, setPlaceholder] = useState(isUser ? "Search Order History" : isWishList ? "Search Wishlist"  : isSuperAdminDashboard ? "Search Order Details" : isAdminProducts ? "Search Products" : isAdminOrders ? "Search Orders" : isSuperAdminOrders ? "Search Orders": isUserDashboard ? "Search Order Details" : isCategory ? "Search Categories" : isSubCategory ? "Search Sub-Categories" : isCart ? "Search Order" : isAdminDashboard ? 'Search Admin Order Details' : '' );
 
 
   function clickHandler() {
@@ -168,6 +160,7 @@ const isUserDashboard = location.pathname.startsWith("/user/order-details");
     console.log(`Date range applied from ${startDate?.getTime()} to ${endDate?.toISOString()}`);
     setD(() => [...filteredData]); // Apply the date filter upon date picker apply
   }
+  
 
   function setStartDate(date: Date | null): void {
     setStartDateState(date);
@@ -180,17 +173,17 @@ const isUserDashboard = location.pathname.startsWith("/user/order-details");
     dispatch(addId(id))
   }
   const totalPrice = useMemo(() => {
-    return d.reduce((total, row) => total + row.totalPrice, 0);
+    return d.reduce((total, row) => total + (row.totalPrice*row.quantity), 0);
   }, [d]);
   const totalPrice2 = useMemo(() => {
-    return d.reduce((total, row) => total + row.price, 0);
+    return d.reduce((total, row) => total + (row.price*row.quantity), 0);
   }, [d]);
   return (
     <>
       <div className={`${isWishList || isCart ? 'rounded-md ' : 'rounded-md'}`}>
         <div className="text-3xl font-bold flex items-center gap-5 ">
-          {!isOrderDetails && !isWishList && !isCheckout && !isSuperAdminReport && !isUserReport &&  !isAdminReport && !isUserPM && !isUserA && (
-            <div className={`flex justify-between relative ${isAdminOrders || isUser || isSuperAdminOrders || isSubCategory || isCategory || isAdminProducts || isSuperAdminOrders ? '-top-[125px]': isCart  ? '-top-[95px] left-[350px]' : '-top-[100px]'} left-[160px]  py-4`}>
+          {!isUserDashboard && !isWishList && !isCheckout && !isSuperAdminReport && !isUserReport &&  !isAdminReport && !isUserPM && !isUserA && (
+            <div className={`flex justify-between relative ${  isSubCategory || isCategory || isAdminProducts  ? '-top-[94px]': isCart  ? '-top-[112px] left-[450px]' : isUser || isAdminOrders || isSuperAdminOrders ? '-top-[125px]': '-top-[100px]'} left-[160px]  py-4`}>
               <Input
                 placeholder={placeholder}
                 value={globalFilter} // Changed to use globalFilter state
@@ -199,7 +192,7 @@ const isUserDashboard = location.pathname.startsWith("/user/order-details");
               />
             </div>
           )}
-          {(!isOrderDetails &&
+          {(!isUserDashboard &&
             !isSubCategory &&
             !isCategory &&
             !isAdminProducts &&
@@ -208,7 +201,7 @@ const isUserDashboard = location.pathname.startsWith("/user/order-details");
           !isCheckout && !isAdminDashboard && !isUserDashboard  && !isSuperAdminDashboard && 
           !isSuperAdminDetails && !isUserPM && !isUserA) && (
               <div
-                className={`${isUser || isSuperAdminReport  ? "mb-10 " : "relative -top-[15px] right-[50px]"
+                className={`${isUser || isSuperAdminReport  ? "mb-10" : "relative -top-[15px] right-[50px]"
                   } `}
               >
                 <DatePickerForm
@@ -219,29 +212,12 @@ const isUserDashboard = location.pathname.startsWith("/user/order-details");
               </div>
             )}
         </div>
-        {isSuperAdminReport && 
-      (<div className="relative left-[900px]">
-        <DropdownMenu>
-          
-      <DropdownMenuTrigger asChild>
-        <div className="cursor-pointer border-2 border-black w-2/12 rounded-lg p-4 ">Status</div>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56">
-        
-        <DropdownMenuSeparator />
-        <DropdownMenuRadioGroup value={position} onValueChange={setPosition}>
-          <DropdownMenuRadioItem value="top">Reviewed</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="bottom" >Production</DropdownMenuRadioItem>
-          <DropdownMenuRadioItem value="right">Completed</DropdownMenuRadioItem>
-        </DropdownMenuRadioGroup>
-      </DropdownMenuContent>
-    </DropdownMenu>
-        </div>)}
+       
         <div className="">
           <Table className="">
             <TableHeader >
               {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id} className={`${isWishList || isCart ? 'flex space-x-[108px]' : ''}`}>
+                <TableRow key={headerGroup.id} >
                   {headerGroup.headers.map((header) => {
                     return (
                       <TableHead key={header.id}>
@@ -267,11 +243,11 @@ const isUserDashboard = location.pathname.startsWith("/user/order-details");
                   onClick={()=>{clickHandler2(row.original.id)}}
                     key={row.id}
                     data-state={row.getIsSelected() && "selected"}
-                    className={`${isWishList || isCart ? 'flex space-x-[36px]' : ''}`}
+                
                   >
                     {row.getVisibleCells().map((cell) => (
 
-                      <TableCell key={cell.id}  className={`${isWishList || isCart ? 'w-[150px]' : ''}`}>
+                      <TableCell key={cell.id} >
                         {(isAdminProducts || isCart || isCheckout || isSubCategory || isCategory || isSuperAdminDetails || isOrderDetails || isUserDashboard || isAdminDashboard || isSuperAdminDashboard ) && 
                         cell.column.columnDef.header === "images" ? (
 
@@ -310,7 +286,7 @@ const isUserDashboard = location.pathname.startsWith("/user/order-details");
       { isCart && <div className="absolute left-[1100px] text-2xl font-bold">
        Total Price: {totalPrice} 
        </div>}
-       { isAdminDetails && <div className="absolute left-[1100px] text-2xl font-bold">
+       { isAdminDashboard && <div className="absolute left-[950px] text-2xl font-bold">
        Total Price: {totalPrice2} 
        </div>}
       </div>

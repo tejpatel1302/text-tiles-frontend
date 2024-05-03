@@ -109,9 +109,9 @@ const UpdateSubCategoryForm = ({ isOpen, onOpenChange, subcategory }: any) => {
         <DialogTrigger asChild></DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Edit Products</DialogTitle>
+            <DialogTitle>Edit SubCategory</DialogTitle>
             <DialogDescription>
-              Make changes to your product here. Click save when you're done.
+              Make changes to your subcategory here. Click save when you're done.
             </DialogDescription>
           </DialogHeader>
           <Form {...form}>
@@ -124,7 +124,7 @@ const UpdateSubCategoryForm = ({ isOpen, onOpenChange, subcategory }: any) => {
                   render={({ field }) => (
                     <FormItem>
                       <div className="flex items-center">
-                        <FormLabel className="w-36">Name:</FormLabel>
+                        <FormLabel className="w-20">Name:</FormLabel>
                         <FormControl>
                         <Input
                         type="text"
@@ -144,7 +144,7 @@ const UpdateSubCategoryForm = ({ isOpen, onOpenChange, subcategory }: any) => {
                   render={({ field }) => (
                     <FormItem>
                       <div className="flex items-center">
-                        <FormLabel className="w-36">Image:</FormLabel>
+                        <FormLabel className="w-20">Image:</FormLabel>
                         <FormControl>
                         <Input
                           type="file"

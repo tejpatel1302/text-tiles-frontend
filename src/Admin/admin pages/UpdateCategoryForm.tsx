@@ -110,9 +110,9 @@ const UpdateCategoryForm = ({ isOpen, onOpenChange, category }: any) => {
         <DialogTrigger asChild></DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Edit Products</DialogTitle>
+            <DialogTitle>Edit Category</DialogTitle>
             <DialogDescription>
-              Make changes to your product here. Click save when you're done.
+              Make changes to your category here. Click save when you're done.
             </DialogDescription>
           </DialogHeader>
           <Form {...form}>
@@ -125,7 +125,7 @@ const UpdateCategoryForm = ({ isOpen, onOpenChange, category }: any) => {
                   render={({ field }) => (
                     <FormItem>
                       <div className="flex items-center">
-                        <FormLabel className="w-36">Name:</FormLabel>
+                        <FormLabel className="w-20">Name:</FormLabel>
                         <FormControl>
                         <Input
                         type="text"
@@ -145,7 +145,7 @@ const UpdateCategoryForm = ({ isOpen, onOpenChange, category }: any) => {
                   render={({ field }) => (
                     <FormItem>
                       <div className="flex items-center">
-                        <FormLabel className="w-36">Image:</FormLabel>
+                        <FormLabel className="w-20">Image:</FormLabel>
                         <FormControl>
                         <Input
                           type="file"

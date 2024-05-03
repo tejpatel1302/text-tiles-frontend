@@ -150,7 +150,7 @@ const UpdateProductForm = ({ isOpen, onOpenChange, product }: any) => {
                   render={({ field }) => (
                     <FormItem>
                       <div className="flex items-center">
-                        <FormLabel className="w-36">Product Name:</FormLabel>
+                        <FormLabel className="w-24">Product Name:</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
@@ -170,7 +170,7 @@ const UpdateProductForm = ({ isOpen, onOpenChange, product }: any) => {
                   render={({ field }) => (
                     <FormItem>
                       <div className="flex items-center">
-                        <FormLabel className="w-36">Description:</FormLabel>
+                        <FormLabel className="w-24">Description:</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
@@ -190,7 +190,7 @@ const UpdateProductForm = ({ isOpen, onOpenChange, product }: any) => {
                   render={({ field }) => (
                     <FormItem>
                       <div className="flex items-center ">
-                        <FormLabel className="w-36">Price:</FormLabel>
+                        <FormLabel className="w-24">Price:</FormLabel>
                         <FormControl>
                           <Input
                             {...field}
@@ -211,9 +211,9 @@ const UpdateProductForm = ({ isOpen, onOpenChange, product }: any) => {
                   render={() => (
                     <FormItem className="flex ">
                       <div className="mb-4">
-                        <FormLabel className="mr-28">Sizes</FormLabel>
+                        <FormLabel className="mr-16">Sizes</FormLabel>
                       </div>
-                      <div className="flex gap-5">
+                      <div className="flex flex-col gap-5">
                         {items.map((item) => (
                           <FormField
                             key={item.id}
@@ -261,7 +261,7 @@ const UpdateProductForm = ({ isOpen, onOpenChange, product }: any) => {
                   render={({ field }) => (
                     <FormItem>
                       <div className="flex items-center">
-                        <FormLabel className="w-36">Material</FormLabel>
+                        <FormLabel className="w-24">Material:</FormLabel>
                         <FormControl>
                           <Input
                             {...field}

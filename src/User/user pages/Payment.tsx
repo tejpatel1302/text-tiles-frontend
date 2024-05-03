@@ -59,8 +59,8 @@ const Payment = ({ selectedAddressId}: any) => {
         cardType: selectedCard,
         cardNumber: data.cardNumber,
         cardHolderName: data.cardHolderName,
-        expiryDate: data. expiryDate,
-        cvv: data. cvv,
+        expiryDate: data.expiryDate,
+        cvv: data.cvv,
       };
   
       const config = {
@@ -117,7 +117,7 @@ const Payment = ({ selectedAddressId}: any) => {
  
   useEffect(() => {
     // Calculate total price whenever showProducts changes
-    const calculatedTotalPrice = showProducts.reduce((acc, cd) => acc + cd.totalPrice, 0);
+    const calculatedTotalPrice = showProducts.reduce((acc, cd) => acc + cd.totalPrice*cd.quantity, 0);
     setTotalPrice(calculatedTotalPrice);
   }, [showProducts]);
   async function fetchCartProductsData() {

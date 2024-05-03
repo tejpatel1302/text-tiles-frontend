@@ -126,8 +126,10 @@ const onEdit = useCallback((category: any) => {
 </div>
 </CardHeader>
 <CardContent>
-{isFetching && <span>Loading</span>}
-{!isFetching && <DataTable data={data} columns={columns} />}
+<div className="-mt-20">
+       {isFetching && <span>Loading</span>}
+        {!isFetching && <DataTable data={data} columns={columns} />}
+       </div>
 </CardContent>
 </TableCard>
   );

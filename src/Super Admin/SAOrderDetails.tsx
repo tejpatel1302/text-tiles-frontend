@@ -72,14 +72,14 @@ const SAOrderDetails= () => {
     
     
   }));
-  async function Reveiwed() {
+  async function Reveiwed(status1:any) {
     try {
       const payload = {
         Authorization: `Bearer ${cookie.auth}`,
-       
+        
       };
       const status = {
-        status: "REVIEWED",
+        status: status1,
       };
       const res = await productionApi(
         payload,
@@ -96,8 +96,8 @@ const SAOrderDetails= () => {
       setLoading(false);
     }
   }
-function reviewClickHandler (){
-  Reveiwed()
+function reviewClickHandler (status1:any){
+  Reveiwed(status1)
 }
 
 
@@ -109,8 +109,8 @@ function reviewClickHandler (){
     <div className="flex justify-between">
     <div className="text-3xl font-bold mt-10">Order Details</div>
     <div className="mt-10 mr-6  space-x-4 p-2">
-    <Button variant={'green'} onClick={reviewClickHandler}>Production</Button>
-    <Button variant={"green"}>Complete</Button>
+    <Button variant={'green'} onClick={() => {reviewClickHandler('REVIEWED')}}>Production</Button>
+    <Button variant={"green"} onClick={() => {reviewClickHandler('COMPLETE')}}>Complete</Button>
     </div>
     </div>
   {loading ? (

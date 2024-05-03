@@ -25,6 +25,16 @@ export type UserView = {
     {
         accessorKey: "id",
         header: "Product ID",
+        cell: ({row}:any) => {
+          const result = row.getValue('id');
+          const hyphenIndex = result.indexOf('-');
+          const formattedResult = hyphenIndex !== -1 ? result.substring(0, hyphenIndex) : result;
+          return (
+              <div>
+                  {formattedResult}
+              </div>
+          );
+      }
       },
       {
         accessorKey: "images",
@@ -70,8 +80,8 @@ export type UserView = {
         cell: ({row})=>{
           return ( 
           <div className={cn('font-medium w-fit  rounded-lg',{
-              'text-red-500' : row.getValue('status') === 'Not Reviewed',
-              'text-green-500' : row.getValue('status') === 'Reviewed'
+              'text-red-500' : row.getValue('status') === 'REJECTED',
+              'text-green-500' : row.getValue('status') === 'APPROVED'
   
           })}>
               {row.getValue('status')}

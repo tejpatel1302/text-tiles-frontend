@@ -105,7 +105,7 @@ const UpdateAddressForm = ({ isOpen, onOpenChange, address }: any) => {
         <DialogTrigger asChild></DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Edit Products</DialogTitle>
+            <DialogTitle>Edit Address</DialogTitle>
             <DialogDescription>
               Make changes to your address here. Click save when you're done.
             </DialogDescription>

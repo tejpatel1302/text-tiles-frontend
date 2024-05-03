@@ -18,7 +18,8 @@ import { useSelector } from "react-redux"
 // import { selectAdminCurrentToken } from "@/features/redux_toolkit/authSlice"
 import { getUserApi } from "@/features/api/apicall"
 import { selectUserCurrentToken } from "@/features/redux_toolkit/userAuthSlice"
-import { useCookies } from "react-cookie";
+import { Cookies, useCookies } from "react-cookie";
+import { useAdminLogoutMutation, useUserLogoutMutation } from "@/features/api/authApiSlice"
 
 export function UserDropDown() {
   const navigate = useNavigate()
@@ -58,7 +59,37 @@ export function UserDropDown() {
     navigate('/user/details')
   }
   
-
+  const [adminLogoutTrigger] = useAdminLogoutMutation(); // Destructure the trigger function from the tuple
+  const [userLogoutTrigger] = useUserLogoutMutation(); 
+  const cookies = new Cookies()
+  const logOutHandler = async () => {
+    try {
+      let userData: any;
+      if (location.pathname.startsWith("/admin")) {
+        const adminLogout = await adminLogoutTrigger({}); // Call the trigger function
+        console.log('hi admin');
+        cookies.remove(`auth`) 
+        // dispatch(logOut());
+        navigate('/admin/login');
+      } else if (location.pathname.startsWith("/user")) {
+        const userLogout = await userLogoutTrigger({});
+        
+        
+        cookies.remove(`auth`) // Call the trigger function
+        // dispatch(userlogOut());
+        navigate('/user/login');
+      } else {
+        throw new Error('Invalid login path');
+      }
+  
+      console.log(userData);
+  
+      // navigate(state.from ? state.from : redirect); something wrong
+  
+    } catch (err) {
+      console.log(err);
+    }
+  };
   // if (user.user === undefined) {
   //   
   // }
@@ -78,7 +109,7 @@ export function UserDropDown() {
 
               <DropdownMenuRadioItem value="top" onClick={clickHandler2}>My Account</DropdownMenuRadioItem>
               <DropdownMenuRadioItem value="bottom" onClick={clickHandler}>Order History</DropdownMenuRadioItem>
-              <DropdownMenuRadioItem value="right">Logout</DropdownMenuRadioItem>
+              <DropdownMenuRadioItem value="right" onClick={logOutHandler}>Logout</DropdownMenuRadioItem>
             </DropdownMenuRadioGroup>
           </>
         )}

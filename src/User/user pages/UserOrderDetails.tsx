@@ -7,6 +7,8 @@ import { useSelector } from "react-redux";
 import { useCookies } from "react-cookie";
 import { getUserOrderDetailsApi } from "@/features/api/apicall";
 import { useParams } from "react-router-dom";
+import { toast } from "sonner";
+import { Toaster } from "sonner";
 
 const UserOrderDetails= () => {
 
@@ -59,26 +61,34 @@ const UserOrderDetails= () => {
   }
 console.log(showOrderDetails, 'Finaldetaisl')
 
-  const data: UserView[] = showOrderDetails?.map((order:any) => ({
-    
-      id: order?.id,
 
-      name: order?.CartItem?.colorRelation?.Product?.name,
-      images: order?.CartItem?.colorRelation?.image ? createBlobFromBuffer(order?.CartItem?.colorRelation?.image.buffer, order?.CartItem?.colorRelation?.image.mimetype) : null,
-      color: order?.color,
-      size: order?.logObject?.size,
-      price: order?.logObject?.price,
-      quantity: order?.CartItem?.quantity,
-      status: order?.status
-      
-    
-    
+  const status = showOrderDetails?.map((order) => ({
+    status: order?.status === 'REJECTED' ? `${order?.CartItem?.quantity * order?.logObject?.price} will be refunded` : '' 
   }));
+console.log(status,'status.....')
+  const rejectedOrders = status.filter((order) => order.status!== '');
+  const totalRefundAmount = rejectedOrders.reduce((acc, order) => acc + parseFloat(order.status.split(' ')[0]), 0);
+console.log(totalRefundAmount,'ammout......')
+  if (totalRefundAmount > 0) {
+    toast.error(`Total of ${totalRefundAmount} will be refunded`);
+  }
+const data: UserView[] = showOrderDetails?.map((order: any) => ({
+  id: order?.id,
+  name: order?.CartItem?.colorRelation?.Product?.name || "",
+  images: order?.CartItem?.colorRelation?.image ? createBlobFromBuffer(order?.CartItem?.colorRelation?.image.buffer, order?.CartItem?.colorRelation?.image.mimetype) : null,
+  color: order?.CartItem?.colorRelation?.color?.name || "",
+  size: order?.logObject?.size || "",
+  price: order?.logObject?.price || 0,
+  quantity: order?.CartItem?.quantity || 0,
+ 
+  status: order?.status
+}));
 
 
 
   return (
     <div className="bg-white">
+      <Toaster richColors  />
       <div className=" m-4 text-3xl font-bold">Order Details:</div>
       {loading ? (
         <div>Loading...</div>

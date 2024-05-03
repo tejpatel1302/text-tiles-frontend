@@ -28,33 +28,31 @@ import { toast } from "sonner";
 import { useCookies } from "react-cookie";
 import { updatePaymentCardApi, updateProductApi } from "@/features/api/apicall";
 
-
-const UpdatePaymentForm = ({ isOpen, onOpenChange,payment }: any) => {
+const UpdatePaymentForm = ({ isOpen, onOpenChange, payment }: any) => {
   const [cookie] = useCookies(["auth"]);
   const queryClient = useQueryClient();
   const form = useForm<z.infer<typeof CardSchema>>({
     resolver: zodResolver(CardSchema),
     defaultValues: {
-        cardType: '',
-        cardNumber: '',
-        cardHolderName: '',
-        expiryDate: '',
-        cvv: '',
-       
+      cardType: "",
+      cardNumber: "",
+      cardHolderName: "",
+      expiryDate: "",
+      cvv: "",
     },
     mode: "all",
   });
   //   function handleProductUpdate(){
 
   //   }
-  const handleProductUpdate = async (paymentData:any) => {
+  const handleProductUpdate = async (paymentData: any) => {
     try {
       const req = {
-        cardType:paymentData.cardType,
-        cardNumber:paymentData.cardNumber,
-        cardHolderName:paymentData.cardHolderName,
-        expiryDate:paymentData.expiryDate,
-        cvv:paymentData.cvv,
+        cardType: paymentData.cardType,
+        cardNumber: paymentData.cardNumber,
+        cardHolderName: paymentData.cardHolderName,
+        expiryDate: paymentData.expiryDate,
+        cvv: paymentData.cvv,
         // Add other fields here
       };
 
@@ -62,9 +60,8 @@ const UpdatePaymentForm = ({ isOpen, onOpenChange,payment }: any) => {
         Authorization: `Bearer ${cookie.auth}`,
       };
 
-      const res = await updatePaymentCardApi(payload, paymentData?.id , req);
+      const res = await updatePaymentCardApi(payload, paymentData?.id, req);
       toast.success("User details updated successfully");
-   
     } catch (error) {
       console.error("Error updating user details:", error);
       toast.error("Failed to update user details");
@@ -89,36 +86,36 @@ const UpdatePaymentForm = ({ isOpen, onOpenChange,payment }: any) => {
         cardType: payment.cardType,
         cardNumber: payment.cardNumber,
         cardHolderName: payment.cardHolderName,
-        expiryDate: payment. expiryDate,
-        cvv: payment. cvv,
+        expiryDate: payment.expiryDate,
+        cvv: payment.cvv,
       });
     } else {
       form.reset();
     }
-  }, [isOpen,payment]);
+  }, [isOpen, payment]);
   const onSubmit: any = (values: any) => {
-    console.log(values)
+    console.log(values);
     const req = {
-        cardType: values.cardType,
-        cardNumber: values.cardNumber,
-        cardHolderName: values.cardHolderName,
-        expiryDate: values. expiryDate,
-        cvv: values. cvv,
+      cardType: values.cardType,
+      cardNumber: values.cardNumber,
+      cardHolderName: values.cardHolderName,
+      expiryDate: values.expiryDate,
+      cvv: values.cvv,
       // Add other fields here
     };
 
-    updateMutation.mutate({ ...req, id:payment.id });
+    updateMutation.mutate({ ...req, id: payment.id });
   };
- 
+
   return (
     <div>
       <Dialog open={isOpen} onOpenChange={onOpenChange}>
         <DialogTrigger asChild></DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Editpayments</DialogTitle>
+            <DialogTitle>Edit Payment Method</DialogTitle>
             <DialogDescription>
-              Make changes to yourpayment here. Click save when you're done.
+              Make changes to your payment method here. Click save when you're done.
             </DialogDescription>
           </DialogHeader>
           <Form {...form}>
@@ -130,17 +127,15 @@ const UpdatePaymentForm = ({ isOpen, onOpenChange,payment }: any) => {
                   render={({ field }) => (
                     <FormItem>
                       <div className="flex items-center">
-                      <FormLabel htmlFor="name">cardType:</FormLabel>
-                      <FormControl>
-<Input
-  type="text"
-  id="name"
-
-  placeholder="Enterpayment name"
-  {...field}
- 
-  className="p-4 w-60"
-/>
+                        <FormLabel htmlFor="name" className="w-24">cardType:</FormLabel>
+                        <FormControl>
+                          <Input
+                            type="text"
+                            id="name"
+                            placeholder="Enterpayment name"
+                            {...field}
+                            className="p-4 w-60"
+                          />
                         </FormControl>
                       </div>
                       <FormMessage className="relative left-[105px]" />
@@ -153,17 +148,15 @@ const UpdatePaymentForm = ({ isOpen, onOpenChange,payment }: any) => {
                   render={({ field }) => (
                     <FormItem>
                       <div className="flex items-center">
-                       
-                        <FormLabel htmlFor="description">cardNumber:</FormLabel>
+                        <FormLabel htmlFor="description" className="w-24">cardNumber:</FormLabel>
                         <FormControl>
-<Input
-  type="text"
-  id="description"
-
-  placeholder="Enterpayment cardNumber"
-  {...field}
-  className="p-4 w-60"
-/>
+                          <Input
+                            type="text"
+                            id="description"
+                            placeholder="Enterpayment cardNumber"
+                            {...field}
+                            className="p-4 w-60"
+                          />
                         </FormControl>
                       </div>
                       <FormMessage className="relative left-[105px]" />
@@ -176,17 +169,15 @@ const UpdatePaymentForm = ({ isOpen, onOpenChange,payment }: any) => {
                   render={({ field }) => (
                     <FormItem>
                       <div className="flex items-center ">
-                        
-                        <FormLabel htmlFor="price">cardHolder:</FormLabel>
+                        <FormLabel htmlFor="price" className="w-24">cardHolder:</FormLabel>
                         <FormControl>
-<Input
-  type="text"
-  id="price"
-
-  placeholder="Enterpayment cardHolderName"
-  {...field}
-  className="p-4 w-60"
-/>
+                          <Input
+                            type="text"
+                            id="price"
+                            placeholder="Enterpayment cardHolderName"
+                            {...field}
+                            className="p-4 w-60"
+                          />
                         </FormControl>
                       </div>
                       <FormMessage className="relative left-[105px]" />
@@ -194,47 +185,42 @@ const UpdatePaymentForm = ({ isOpen, onOpenChange,payment }: any) => {
                   )}
                 />
 
-             
                 <FormField
                   control={form.control}
                   name="expiryDate"
                   render={({ field }) => (
                     <FormItem>
                       <div className="flex items-center">
-                       
-                        <FormLabel htmlFor="size">expiryDate:</FormLabel>
+                        <FormLabel htmlFor="size" className="w-24">expiryDate:</FormLabel>
                         <FormControl>
-<Input
-  type="text"
-  id="size"
-
-  {...field}
-  placeholder="Enterpayment expiryDate"
-  className="p-4 w-60"
-/>
+                          <Input
+                            type="text"
+                            id="size"
+                            {...field}
+                            placeholder="Enterpayment expiryDate"
+                            className="p-4 w-60"
+                          />
                         </FormControl>
                       </div>
                       <FormMessage className="relative left-[105px]" />
                     </FormItem>
                   )}
                 />
-                  <FormField
+                <FormField
                   control={form.control}
                   name="cvv"
                   render={({ field }) => (
                     <FormItem>
                       <div className="flex items-center">
-                        
-                        <FormLabel htmlFor="material">cvv:</FormLabel>
+                        <FormLabel htmlFor="material" className="w-24">cvv:</FormLabel>
                         <FormControl>
-<Input
-  type="text"
-  id="material"
- 
-  placeholder="Enterpayment cvv"
-  {...field}
-  className="p-4 w-60"
-/>
+                          <Input
+                            type="text"
+                            id="material"
+                            placeholder="Enterpayment cvv"
+                            {...field}
+                            className="p-4 w-60"
+                          />
                         </FormControl>
                       </div>
                       <FormMessage className="relative left-[105px]" />
@@ -242,13 +228,16 @@ const UpdatePaymentForm = ({ isOpen, onOpenChange,payment }: any) => {
                   )}
                 />
 
-                <Button
+              <div className="w-full flex justify-center">
+              <Button
                   variant={"green"}
                   // disabled={!form.formState.isValid}
                   onClick={form.handleSubmit(onSubmit)}
+                  className="w-20 px-24 py-2"
                 >
                   Save
                 </Button>
+              </div>
               </div>
             </form>
           </Form>

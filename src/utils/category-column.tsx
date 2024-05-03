@@ -185,9 +185,16 @@ export const getCategoryColumns = ({ onEdit, onDelete }: any) => [
   {
     accessorKey: "categoryID",
     header: "Category ID",
-    meta: {
-      type: "number",
-    },
+    cell: ({row}:any) => {
+      const result = row.getValue('categoryID');
+      const hyphenIndex = result.indexOf('-');
+      const formattedResult = hyphenIndex !== -1 ? result.substring(0, hyphenIndex) : result;
+      return (
+          <div>
+              {formattedResult}
+          </div>
+      );
+  }
   },
   {
     accessorKey: "images",

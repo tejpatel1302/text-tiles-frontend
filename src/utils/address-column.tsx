@@ -14,6 +14,16 @@ export const getAddressColumns = ({ onEdit, onDelete }: any) => [
   {
     header: "Address ID",
     accessorKey: "id",
+    cell: ({row}:any) => {
+      const result = row.getValue('id');
+      const hyphenIndex = result.indexOf('-');
+      const formattedResult = hyphenIndex !== -1 ? result.substring(0, hyphenIndex) : result;
+      return (
+          <div>
+              {formattedResult}
+          </div>
+      );
+  }
   },
   {
     header: "Bill To Name",

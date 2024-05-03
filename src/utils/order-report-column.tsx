@@ -11,6 +11,7 @@ import { Button } from "@/components/ui/button";
 export type OrderReportc = {
   ordertotal:string
   totalmoney:string
+  orderDate: any
   };
   
 
@@ -25,5 +26,9 @@ export type OrderReportc = {
       accessorKey: "totalmoney",
       header: "Total Money",
     },
+    // {
+    //   accessorKey: "orderDate",
+     
+    // },
   ];
   

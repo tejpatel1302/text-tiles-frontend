@@ -55,26 +55,29 @@ const Login = ({ redirect }: any) => {
       let userData: any;
       if (location.pathname === '/admin/login') {
         userData = await login(data);
+       
         dispatch(setCredentials(cookie.auth));
-        toast.success('Logged In');
+      
       } else if (location.pathname === '/user/login' || location.pathname === '/') {
         userData = await userLogin(data);
-        toast.success('Logged In');
+        
         dispatch(setCredentials(userData));
         // navigate(redirect);
       } else if (location.pathname === '/super-admin/login') {
         userData = await saLogin(data);
-        toast.success('Logged In');
+        
         dispatch(setCredentials(userData));
         
       } else {
         throw new Error('Invalid login path');
       }
  
+     
       // Set cookie only if the request is successful
       if (userData?.data?.token) {
         setCookie(`auth`, userData.data.token);
-        setMessage("Logged In Successfully");
+        toast.success('Logged In');
+        // setMessage("Logged In Successfully");
       } else {
         throw new Error('Token not received');
       }
@@ -188,7 +191,18 @@ const Login = ({ redirect }: any) => {
                       >
                         {loading ? 'Loading...' : 'Login'}
                       </Button>
-                      <Button
+                      <Link
+                        to={`${
+                          isUserLoginPage || isDefaultPage
+                            ? "/user/forgot-password"
+                            : isAdminLoginPage
+                            ? "/admin/forgot-password"
+                            : isSuperAdminLogin
+                            ? "/super-admin/forgot-password"
+                            : ""
+                        }`}
+                      >
+                    { !isSuperAdminLogin && <Button
                         variant={
                           isUserLoginPage || isDefaultPage
                             ? "purple"
@@ -200,20 +214,9 @@ const Login = ({ redirect }: any) => {
                         }
                         className="px-2"
                       >
-                        <Link
-                          to={`${
-                            isUserLoginPage || isDefaultPage
-                              ? "/user/forgot-password"
-                              : isAdminLoginPage
-                              ? "/admin/forgot-password"
-                              : isSuperAdminLogin
-                              ? "/super-admin/forgot-password"
-                              : ""
-                          }`}
-                        >
                           Forgot Password ?
+                      </Button>}
                         </Link>
-                      </Button>
                     </div>
                   </FormItem>
                 )}
@@ -221,7 +224,7 @@ const Login = ({ redirect }: any) => {
             </div>
           </form>
         </Form>
-        <div className="text-red-500">{message}</div> 
+        <div className="text-red-500 text-center">{message}</div> 
       </CardWrapper>
    
     </div>

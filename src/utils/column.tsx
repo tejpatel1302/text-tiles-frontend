@@ -107,7 +107,7 @@ export type Order = {
       cell: ({row}:any)=>{
         return ( 
         <div className={cn('font-medium w-fit px-4 py-2 rounded-lg',{
-            'text-red-500' : row.getValue('status') === 'pending',
+            'text-red-500' : row.getValue('status') === 'REJECTED',
             'text-green-500' : row.getValue('status') === 'REVIEWED'
 
         })}>

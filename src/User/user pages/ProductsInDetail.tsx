@@ -193,12 +193,22 @@ const ProductInDetail = () => {
                 alt={product?.title}
                 className="h-96"
               />
-             <div className="cursor-pointer relative right-[30px] top-[190px]">
-             <Heart
+             <div className="cursor-pointer relative -right-[20px] top-[145px]" >
+             {/* <Heart
                 className={`${wishlistColor === product?.product?.id ? 'text-red-500  ': 'text-gray-600'}  inline-block h-6 w-6  hover: `
                 }
                 onClick={() => clickHandler(product?.product?.id)}
-              />
+              /> */}
+              <div
+          className="absolute h-12 w-12 right-0 rounded-full p-1 mr-2 bg-gray-300 hover:bg-gray-700 cursor-pointer"
+          // onClick={toggleWishlist} 
+        >
+        <div id="heart-container" className='relative -left-[40px] -top-[38px]' onClick={() => clickHandler(product?.product?.id)}>
+  <input type="checkbox" id="toggle">
+  </input>
+    <div id="twitter-heart"></div>
+</div>
+        </div>
              </div>
             </div>
             <div className="flex flex-col justify-center max-w-[500px]">
@@ -216,7 +226,7 @@ const ProductInDetail = () => {
           <div
             onClick={() => clickHandler1(color?.color?.id, color?.image)}
             key={index}
-            className={`h-8 w-8 rounded-full ${color?.color?.id === colorId ? 'border-4 border-black' : ''}`}
+            className={`h-8 w-8 rounded-full ${color?.color?.id === colorId ? 'border-4 border-purple-500' : ''}`}
             style={{ backgroundColor: color?.color?.hexCode }}
           ></div>
         ))}

@@ -7,6 +7,7 @@ import { fetchProducts, setProducts } from "@/features/redux_toolkit/productSlic
 import { useDispatch, useSelector } from "react-redux";
 import { Heart, Search, ShoppingCart, UserRound } from "lucide-react";
 import { UserDropDown } from "@/User/user pages/UserDropDown";
+import SearchBar from "./SearchBar";
 
 const CommonNavBar = () => {
   const dispatch = useDispatch();
@@ -78,43 +79,15 @@ const isUserDashboard = location.pathname.startsWith("/user/order-details");
           <div className="h-20 w-20" onClick={navigateClickHandler}>
             <img src={image} alt="" />
           </div>
-          {selectedCategories &&
+          {/* {selectedCategories &&
             !isUser &&
             !isCart &&
             !isCheckout &&
             !isPayment &&
             !isMyAccount &&
             !isMyAddressBook && !isMyPaymentMethods && (
-              <div className="flex items-center justify-center gap-5">
-                <div>
-                  <input
-                    type="text"
-                    name=""
-                    id=""
-                    className="border border-customSkyBlue h-10 w-[600px] p-8 placeholder-gray-400 rounded-full"
-                    placeholder="What you are Looking for ?"
-                    value={searchInput}
-                    onChange={(e) => {
-                      setSearchInput(e.target.value);
-                    }}
-                  />
-                </div>
-                <div
-                  className="absolute right-[530px]"
-                  onClick={() => {
-                    const filteredResult = products.filter((fproduct: any) => {
-                      if (fproduct.title.includes(searchInput)) {
-                        return fproduct;
-                      }
-                    });
-
-                    setFilteredGlasses(filteredResult);
-                  }}
-                >
-                  <Search />
-                </div>
-              </div>
-            )}
+             <SearchBar/>
+            )} */}
 
           
 {!isMyAccount && !isMyAddressBook && !isSuperAdminOrders && !isSuperAdminDashboard && !isSuperAdminReport && !isUserA && !isUserPM && (

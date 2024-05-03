@@ -23,6 +23,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { PasswordInput } from "../ui/password-input";
 import { useAdminForgotPassMutation, useUserForgotPassMutation } from "@/features/api/authApiSlice";
+import { Toaster, toast } from "sonner";
 
 
 
@@ -71,28 +72,54 @@ const ForgotPassword = () => {
       let userData: any;
       if (location.pathname === '/admin/forgot-password') {
         userData = await adminFP(FilteredData);
-        navigate('/admin/login')
+        if(userData?.data?.
+          password
+          ){
+            
+            navigate('/admin/login')
+            toast.success('Password Updated');
+          }
+          else{
+            navigate('/user/forgot-password')
+            toast.error('Failed To Update Password');
+          }
+        
       } else if (location.pathname === '/user/forgot-password') {
         userData = await userFP(FilteredData);
-        navigate('/user/login')
+        if(userData?.data?.
+          password
+          ){
+            
+            navigate('/user/login')
+            toast.success('Password Updated');
+          }
+          else{
+            navigate('/user/forgot-password')
+            toast.error('Failed To Update Password');
+          }
+        
       // } else if (location.pathname === '/super-admin/login') {
       //   userData = await saLogin(data);
       } 
       else {
         throw new Error('Invalid login path');
+       
       }
   
       console.log(userData);
       
       // navigate(state.from ? state.from : redirect); something wrong
-     
+      
     } catch (err) {
       console.log(err);
+     
+     
     }
   };
-
+  
   return (
     <div className="z-10 absolute left-[20%]">
+      <Toaster/>
       <div className="h-screen flex justify-center items-center">
         <CardWrapper
           headerLabel="Forgot Password ?"
@@ -147,7 +174,7 @@ const ForgotPassword = () => {
       {...form.register("password")}
       className="px-10"
       placeholder="Enter New Password"
-      type="password"
+    
     />
   ) : (
     <Input

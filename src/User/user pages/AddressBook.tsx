@@ -64,10 +64,10 @@ const AddressBook = () => {
     const onDelete = useCallback((address: any) => {
       deleteMutation.mutate(address.id, {
         onSuccess: () => {
-          toast('success');
+          toast('Deleted Successfully');
         },
         onError: () => {
-          toast('error');
+          toast('Something went wrong');
         },
       });
     }, []);
@@ -87,7 +87,7 @@ const AddressBook = () => {
     <TableCard className="h-full">
             <Toaster/>
       <CardHeader>
-        <CardTitle>Bank Accounts</CardTitle>
+        <CardTitle className="font-bold">Address Book</CardTitle>
         <div className="flex justify-between">
           <div />
           <div className="flex-nowrap">

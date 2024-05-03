@@ -196,6 +196,16 @@ export const getCartColumns = ({ onEdit, onDelete }: any) => [
   {
       accessorKey: "id",
       header: "Product ID",
+      cell: ({row}:any) => {
+        const result = row.getValue('id');
+        const hyphenIndex = result.indexOf('-');
+        const formattedResult = hyphenIndex !== -1 ? result.substring(0, hyphenIndex) : result;
+        return (
+            <div>
+                {formattedResult}
+            </div>
+        );
+    }
   },
   {
       accessorKey: "images",

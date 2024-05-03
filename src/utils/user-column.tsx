@@ -93,8 +93,8 @@ export type Order = {
           return (
             <div
               className={cn("font-medium w-fit px-4 py-2 rounded-lg", {
-                "text-red-500": row.getValue("orderstatus") === "Shipped",
-                "text-green-500": row.getValue("orderstatus") === "Delivered",
+                "text-red-500": row.getValue("orderstatus") === "REJECTED",
+                "text-green-500": row.getValue("orderstatus") === "REVIEWED",
               })}
             >
               {row.getValue("orderstatus")}

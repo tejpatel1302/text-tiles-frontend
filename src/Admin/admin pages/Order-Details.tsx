@@ -45,13 +45,28 @@ const AdminOrderDetails= () => {
     queryKey: ["orderDetailData"],
     queryFn: getOrderDetails
   });
- 
+  function createBlobFromBuffer(bufferString: string, mimetype: string): string | null {
+    try {
+      const binary = atob(bufferString);
+      const buffer = new ArrayBuffer(binary.length);
+      const view = new Uint8Array(buffer);
+      for (let i = 0; i < binary.length; i++) {
+        view[i] = binary.charCodeAt(i);
+      }
+      const blob = new Blob([view], { type: mimetype });
+      return URL.createObjectURL(blob);
+    } catch (error) {
+      console.error("Error creating Blob:", error);
+      return null;
+    }
+  }
   const data: View[] =  OrderDetailData?.map((order:any) => ({
     
       id: order?.id,
-      image: '',
+      image: order?.CartItem?.colorRelation?.image,
+      images:order?.CartItem?.colorRelation?.image ? createBlobFromBuffer(order?.CartItem?.colorRelation?.image?.buffer, order?.CartItem?.colorRelation?.image.mimetype) : null,
       name: order?.logObject?.name,
-      color: '',
+      color: order?.CartItem?.colorRelation?.color.name,
       size: order?.logObject?.size,
       price: order?.logObject?.price,
       quantity: order?.CartItem?.quantity,
@@ -61,8 +76,33 @@ const AdminOrderDetails= () => {
     
     
   }));
+  console.log(OrderDetailData,'hiihi')
   
   async function Reveiwed(status:any) {
+    try {
+      const payload = {
+        Authorization: `Bearer ${cookie.auth}`,
+       
+      };
+      const status1 = {
+        status: status?.status,
+      };
+      const res = await ReviewedApi(
+        payload,
+      status.id,
+        status1
+      );
+      console.log(res,"Response from Review")
+     
+      setLoading(false);
+      
+      
+    } catch (error) {
+      console.error("Error fetching product data:", error);
+      setLoading(false);
+    }
+  }
+  async function Rejected(status:any) {
     try {
       const payload = {
         Authorization: `Bearer ${cookie.auth}`,
@@ -92,6 +132,12 @@ const AdminOrderDetails= () => {
       await queryClient.invalidateQueries({ queryKey:  ["orderDetailData"] });
     },
   });
+  const rejectedMutation = useMutation({
+    mutationFn: Rejected,
+    onSuccess: async () => {
+      await queryClient.invalidateQueries({ queryKey:  ["orderDetailData"] });
+    },
+  });
   const onReview = useCallback(() => {
     const status = {
       status: "REVIEWED",
@@ -99,7 +145,21 @@ const AdminOrderDetails= () => {
     };
     reviwedMutation.mutate(status, {
       onSuccess: () => {
-        toast('success');
+        toast('REVIEWED');
+      },
+      onError: () => {
+        toast('error');
+      },
+    });
+  }, []);
+  const onReject = useCallback(() => {
+    const status = {
+      status: "REJECTED",
+      id: id
+    };
+    reviwedMutation.mutate(status, {
+      onSuccess: () => {
+        toast('REJECTED');
       },
       onError: () => {
         toast('error');
@@ -117,7 +177,7 @@ const AdminOrderDetails= () => {
       <div className="text-3xl font-bold mt-10">Order Details</div>
       <div className="mt-10 mr-6  space-x-4 p-2">
       <Button variant={'green'} onClick={onReview}>Review</Button>
-      <Button variant={"red"}>Reject</Button>
+      <Button variant={"red"} onClick={onReject}>Reject</Button>
       </div>
       </div>
       <div className="-mt-24">

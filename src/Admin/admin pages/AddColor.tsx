@@ -123,7 +123,7 @@ const AddColor = ({row}:any) => {
                     render={({ field }) => (
                       <FormItem >
                         <div className="flex items-center">
-                          <FormLabel className="w-36">Color:</FormLabel>
+                          <FormLabel className="w-16">Color:</FormLabel>
                           <Select onValueChange={field.onChange} defaultValue={field.value}>
                             <FormControl>
                               <SelectTrigger>
@@ -156,7 +156,7 @@ const AddColor = ({row}:any) => {
                       <div>
                         <FormItem >
                           <div className="flex items-center">
-                            <FormLabel className="w-36">Image:</FormLabel>
+                            <FormLabel className="w-16">Image:</FormLabel>
                             <FormControl>
                               <Input {...fileRef} type="file" className="w-[300px]" />
                             </FormControl>

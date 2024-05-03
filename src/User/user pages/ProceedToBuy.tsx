@@ -146,7 +146,7 @@ console.log(showProducts,'jijiji')
   return (
    <div> 
    <div className="text-3xl font-bold bg-[#f3f4f6] text-black w-full p-3 text-center">CheckOut</div>
-    <div className=" flex gap-4  ">
+    <div className=" flex gap-4 w-10/12 mx-auto ">
    <div className="w-[50%] min-h-[100px] border-2 border-purple-400 rounded-md flex flex-col items-center">
      <div className="my-10 w-full">
        <div className="w-full">
@@ -347,7 +347,7 @@ console.log(showProducts,'jijiji')
    <div className="ml-4">
      <div className="font-bold text-xl">{`€${cd?.totalPrice}`}</div>
      <div className="text-sm">{cd.title}</div>
-     <div className="text-sm text-gray-600">Quantity: 1</div>
+     <div className="text-sm text-gray-600">{cd?.quantity}</div>
    </div>
  </div>
 ))}
@@ -358,7 +358,7 @@ console.log(showProducts,'jijiji')
  <div className="font-bold text-xl">Total to Pay</div>
  <div className="font-bold text-xl">
    {/* Dynamically calculate total price */}
-   €{showProducts.reduce((acc, cd) => acc + cd.totalPrice, 0).toFixed(2)}
+   €{showProducts.reduce((acc, cd) => acc + cd?.totalPrice*cd?.quantity, 0).toFixed(2)}
  </div>
 </div>
 </div>

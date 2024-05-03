@@ -39,7 +39,11 @@ const OrderList = () => {
     fetchOrderData();
     
   }, []);
- 
+  function convertDateFormat(dateString: any) {
+    if (!dateString) return "";
+    const datePart = dateString.split("T")[0];
+    return datePart;
+  }
   const data: Order[] = showOrder?.map((order:any) => ({
     customerId: order?.CustomerId,
     id: order?.id,
@@ -47,7 +51,7 @@ const OrderList = () => {
     city: order?.Address?.city,
     email: order?.Customer?.email,
     mobileNumber: order?.Customer?.phoneNum,
-    orderDate: order?.orderDate,
+    orderDate: convertDateFormat(order?.orderDate),
   
     orderDetails: 'View',
     status: order.status,

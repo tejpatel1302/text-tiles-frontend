@@ -12,6 +12,7 @@ import { Toaster, toast } from "sonner";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
 
+
 const Products = () => {
   const [cookie] = useCookies(["auth"]);
   const [isDialogOpen, setIsDialogOpen]:any = useState(false);
@@ -95,10 +96,10 @@ const Products = () => {
   const onDelete = useCallback((product: any) => {
     deleteMutation.mutate(product.id, {
       onSuccess: () => {
-        toast('success');
+        // toast('success');
       },
       onError: () => {
-        toast('error');
+        // toast('error');
       },
     });
   }, []);
@@ -116,7 +117,7 @@ const Products = () => {
     <TableCard className="h-full">
             <Toaster/>
       <CardHeader>
-        <CardTitle>Bank Accounts</CardTitle>
+        <CardTitle className="text-2xl font-semibold">Manage Products</CardTitle>
         <div className="flex justify-between">
           <div />
           <div className="flex-nowrap">
@@ -134,8 +135,10 @@ const Products = () => {
         </div>
       </CardHeader>
       <CardContent>
-        {isFetching && <span>Loading</span>}
+      <div className="-mt-24">
+      {isFetching && <span>Loading</span>}
         {!isFetching && <DataTable data={data} columns={columns} />}
+      </div>
       </CardContent>
     </TableCard>
   );

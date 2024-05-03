@@ -27,6 +27,16 @@ export type Order = {
     {
       accessorKey: "id",
       header: "Customer ID",
+      cell: ({row}:any) => {
+        const result = row.getValue('id');
+        const hyphenIndex = result.indexOf('-');
+        const formattedResult = hyphenIndex !== -1 ? result.substring(0, hyphenIndex) : result;
+        return (
+            <div>
+                {formattedResult}
+            </div>
+        );
+    }
     },
     // {
     //   accessorKey: "id",
@@ -96,8 +106,8 @@ export type Order = {
       cell: ({row})=>{
         return ( 
         <div className={cn('font-medium w-fit px-4 py-2 rounded-lg',{
-            'text-red-500' : row.getValue('status') === 'Not Reviewed',
-            'text-green-500' : row.getValue('status') === 'Reviewed'
+            'text-red-500' : row.getValue('status') === 'REJECTED',
+            'text-green-500' : row.getValue('status') === 'REVIEWED'
 
         })}>
             {row.getValue('status')}

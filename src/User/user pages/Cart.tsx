@@ -89,10 +89,10 @@ const Cart = () => {
       const res = await deleteCartIndividualApi(payload, id);
       
       console.log(res, "Product deleted successfully");
-      toast.success('Product deleted successfully');
+ 
     } catch (error) {
       console.error("Error deleting product:", error);
-      toast.error("Error deleting product. Please try again later.");
+
     }
   };
   const deleteMutation = useMutation({
@@ -105,10 +105,10 @@ const Cart = () => {
   const onDelete = useCallback((cart: any) => {
     deleteMutation.mutate(cart.id, {
       onSuccess: () => {
-        toast('success');
+        toast('Deleted Successfully');
       },
       onError: () => {
-        toast('error');
+        toast('Something went wrong');
       },
     });
   }, []);
@@ -127,15 +127,15 @@ const columns = useMemo(() => getCartColumns({ onEdit, onDelete }), [
     <TableCard className="h-full">
     <Toaster/>
 <CardHeader>
-<CardTitle>Cart</CardTitle>
-<div className={`${isCheckout ? "flex items-center gap-8" : "my-4 mr-24"}`}>
+<div className={`${isCheckout ? "flex items-center gap-8" : "my-4 mr-24 flex justify-between"}`}>
           {/* {!isCheckout ? (
             <div></div>
           ) : (
             <div className="flex items-center justify-end space-x-2 py-4">
-              <Button>Total: 1000</Button>
+            <Button>Total: 1000</Button>
             </div>
           )} */}
+          <CardTitle className="text-3xl mx-4 -mt-3">Cart</CardTitle>
           <Button variant={"green"} onClick={clickHandler}>
             {`${isCheckout ? "Edit" : "Proceed To Buy"}`}
           </Button>
@@ -157,8 +157,10 @@ const columns = useMemo(() => getCartColumns({ onEdit, onDelete }), [
 </div>
 </CardHeader>
 <CardContent>
+<div className="-mt-28">
 {isFetching && <span>Loading</span>}
 {!isFetching && <DataTable data={data} columns={columns} />}
+</div>
 </CardContent>
 </TableCard>
   );

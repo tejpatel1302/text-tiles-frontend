@@ -9,6 +9,7 @@
     import { useCookies } from "react-cookie";
     import { Toaster, toast } from "sonner";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { cn } from "@/lib/utils";
 
 
     // This type is used to define the shape of our data.
@@ -42,7 +43,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
         },
         {
             accessorKey: "images",
-            header: 'image'
+            header: 'images'
         },
         {
             accessorKey: "name",
@@ -80,7 +81,18 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
         {
             accessorKey: "status",
             header: "Status",
-        },
+            cell: ({row})=>{
+              return ( 
+              <div className={cn('font-medium w-fit  rounded-lg',{
+                  'text-red-500' : row.getValue('status') === 'REJECTED',
+                  'text-green-500' : row.getValue('status') === 'APPROVED'
+      
+              })}>
+                  {row.getValue('status')}
+              </div>
+              )
+            }
+          },
         {
             accessorKey: "Actions",
             header: 'Actions',
@@ -108,8 +120,37 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
                         toast.error('Failed to approve item');
                     } 
                 };
+                const handleReject = async (status:any) => {
+                    try {
+                   
+                        const payload = {
+                            Authorization: `Bearer ${cookie.auth}`,
+                        };
+                        const req  ={
+                            orderItemId: status.id,
+                            status: status?.status
+                        };
+                        const res = await actionApi(payload, req);
+                        console.log(res, 'getApproval');    
+                        // Update UI or state based on response if needed
+                        const currentQuantity = row.getValue('quantity');
+                            const currentPrice = row.getValue('price');
+                            console.log(currentQuantity,'quantity')
+                            console.log(currentPrice,'price')
+                        toast.success('Item Rejected');
+                    } catch (error) {
+                        console.error("Error approving item:", error);
+                        toast.error('Failed to approve item');
+                    } 
+                };
                 const approveMutation = useMutation({
                     mutationFn: handleApprove,
+                    onSuccess: async () => {
+                      await queryClient.invalidateQueries({ queryKey:  ["orderDetailData"] });
+                    },
+                  });
+                  const rejectMutation = useMutation({
+                    mutationFn: handleReject,
                     onSuccess: async () => {
                       await queryClient.invalidateQueries({ queryKey:  ["orderDetailData"] });
                     },
@@ -128,16 +169,30 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
                       },
                     });
                   }, []);
-                const handleReject = () => {
-                    const currentQuantity = row.getValue('quantity');
-                    const currentPrice = row.getValue('price');
-                    const currentTotal = currentQuantity * currentPrice;
+                  const onReject = useCallback(() => {
+                    const status = {
+                      status: "REJECTED",
+                      id: row.getValue('id')
+                    };
+                    rejectMutation.mutate(status, {
+                      onSuccess: () => {
+                        toast('success');
+                      },
+                      onError: () => {
+                        toast('error');
+                      },
+                    });
+                  }, []);
+                // const handleReject = () => {
+                //     const currentQuantity = row.getValue('quantity');
+                //     const currentPrice = row.getValue('price');
+                //     const currentTotal = currentQuantity * currentPrice;
                     
 
-                    const updatedTotal = currentTotal - currentPrice;
+                //     const updatedTotal = currentTotal - currentPrice;
                     
-                    toast.error(`Order Total    ${updatedTotal}`);
-                };
+                //     toast.error(`Order Total    ${updatedTotal}`);
+                // };
                 
 
                 return (
@@ -146,7 +201,7 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
             <Toaster position="top-center" />
         </div>
                         <Button variant={"green"} onClick={onApprove} disabled={loading}>Approve</Button>
-                        <Button variant={'red'} onClick={handleReject}>Reject</Button>
+                        <Button variant={'red'} onClick={onReject}>Reject</Button>
                     </div>
                 );
             },

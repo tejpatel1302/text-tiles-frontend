@@ -46,6 +46,7 @@ import SAOrderDetails from "./Super Admin/SAOrderDetails.tsx";
 import UserProtected from "./components/common/UserProtected.tsx";
 import SAOrderReport from "./Super Admin/super-admin-pages/SAOrderReport.tsx";
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+import SAProtected from "./components/common/SAProtected .tsx";
 
 const appRoutes = createBrowserRouter([
   {
@@ -66,11 +67,11 @@ const appRoutes = createBrowserRouter([
       },
       {
         path: "/super-admin/order-details",
-        element: <SAOrderDetails/>,
+        element: <SAProtected><SAOrderDetails/></SAProtected>,
       },
       {
         path: "/user/checkout",
-        element: <ProceedToBuy />,
+        element: <UserProtected><ProceedToBuy /></UserProtected>,
       },
       {
         path: "/user/forgot-password",
@@ -78,31 +79,31 @@ const appRoutes = createBrowserRouter([
       },
       {
         path: "/user/order-report",
-        element: <UserOrderReport/>,
+        element: <UserProtected><UserOrderReport/></UserProtected>,
       },
-      {
-        path: "/admin/order-report",
-        element: <UserOrderReport/>,
-      },
+      // {
+      //   path: "/admin/order-report",
+      //   element: <UserOrderReport/>,
+      // },
       {
         path: "/super-admin/order-report",
-        element: <SAOrderReport/>,
+        element:<SAProtected><SAOrderReport/></SAProtected>,
       },
       {
         path: "/user/payment-methods",
-        element: <PaymentMethods/>,
+        element: <UserProtected><PaymentMethods/></UserProtected>,
       },
-      {
-        path: "/super-admin/forgot-password",
-        element: <ForgotPassword />,
-      },
+      // {
+      //   path: "/super-admin/forgot-password",
+      //   element: <ForgotPassword />,
+      // },
       {
         path: "/user/payment",
-        element: <Payment />,
+        element: <UserProtected><Payment/></UserProtected>
       },
       {
         path: "/user/details",
-        element: <MyDetails />,
+        element: <UserProtected><MyDetails /></UserProtected>,
       },
      
       {
@@ -111,7 +112,7 @@ const appRoutes = createBrowserRouter([
       },
       {
         path: "/user/order-details",
-        element: <UserOrderDetails />,
+        element:<UserProtected><UserOrderDetails /></UserProtected>,
       },
       // {
       //   path: "/admin/order-details",
@@ -120,22 +121,22 @@ const appRoutes = createBrowserRouter([
       {
         path: "/admin/order-details/:id",
 
-        element: <AdminOrderDetails />,
+        element: <Protected><AdminOrderDetails /></Protected>,
       },
       {
         path: "/user/order-details/:id",
 
-        element: <UserOrderDetails />,
+        element: <UserProtected><UserOrderDetails /></UserProtected>,
       },
       {
         path: "/super-admin/order-details/:id",
 
-        element: <SAOrderDetails />,
+        element: <SAProtected><SAOrderDetails /></SAProtected>,
       },
       
       {
         path: "/user/selected-categories",
-        element: <SelectedCategories />,
+        element: <UserProtected><SelectedCategories /></UserProtected>,
       },
       {
         path: "/user/login",
@@ -143,11 +144,11 @@ const appRoutes = createBrowserRouter([
       },
       {
         path: "/user/address-book",
-        element: <AddressBook />,
+        element: <UserProtected><AddressBook /></UserProtected>,
       },
       {
         path: "/super-admin/orders",
-        element: <SAOrders />,
+        element: <SAProtected><SAOrders /></SAProtected>,
       },
       {
         path: "/super-admin/login",
@@ -159,29 +160,29 @@ const appRoutes = createBrowserRouter([
       },
       {
         path: "/user/sub-category",
-        element: <SubCategory />,
+        element: <UserProtected><SubCategory /></UserProtected>,
       },
       {
         path: "/user/cart",
-        element: <Cart />,
+        element: <UserProtected><Cart /></UserProtected>,
       },
       {
         path: "/user/products",
-        element: <UserWebsite title={"See What We Have to Offer"} />,
+        element: <UserProtected><UserWebsite title={"See What We Have to Offer"} /></UserProtected>,
       },
       {
         path: "/user/products/:productId",
 
-        element: <ProductInDetail />,
+        element: <UserProtected><ProductInDetail /></UserProtected>,
       },
       {
         path: "/user/wishlist",
 
-        element: <UserWishList />,
+        element: <UserProtected><UserWishList /></UserProtected>,
       },
       {
         path: "/user/order-history",
-        element: <UserHistory />,
+        element: <UserProtected><UserHistory /></UserProtected>,
       },
       {
         path: "/admin/orders",
@@ -201,27 +202,27 @@ const appRoutes = createBrowserRouter([
       },
       {
         path: "/user/cart",
-        element: <Cart />,
+        element: <UserProtected><Cart /></UserProtected>,
       },
       {
         path: "/admin/add-products",
-        element: <AddProducts />,
+        element: <Protected><AddProducts /></Protected>,
       },
       {
         path: "/admin/add-category",
-        element: <AddCategory />,
+        element: <Protected><AddCategory /></Protected>,
       },
       {
         path: "/admin/add-sub-category",
-        element: <AddSubCategory />,
+        element: <Protected><AddSubCategory /></Protected>,
       },
       {
         path: "/admin/manage-sub-category",
-        element: <ManageSubCategory />,
+        element: <Protected><ManageSubCategory /></Protected>,
       },
       {
         path: "/admin/manage-category",
-        element: <ManageCategory />,
+        element: <Protected><ManageCategory /></Protected>,
       },
     ],
   },

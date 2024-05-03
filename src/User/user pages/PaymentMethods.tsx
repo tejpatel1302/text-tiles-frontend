@@ -79,10 +79,10 @@ const ManagePaymentMethods = () => {
   const onDelete = useCallback((payment: any) => {
     deleteMutation.mutate(payment.id, {
       onSuccess: () => {
-        toast('success');
+        toast('Deleted Successfully');
       },
       onError: () => {
-        toast('error');
+        toast('Something went wrong');
       },
     });
   }, []);
@@ -100,7 +100,7 @@ const ManagePaymentMethods = () => {
     <TableCard className="h-full">
             <Toaster/>
       <CardHeader>
-        <CardTitle>Bank Accounts</CardTitle>
+        <CardTitle>Payment Methods</CardTitle>
         <div className="flex justify-between">
           <div />
           <div className="flex-nowrap">

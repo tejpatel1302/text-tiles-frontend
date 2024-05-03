@@ -65,7 +65,7 @@ const UpdateCartForm = ({ isOpen, onOpenChange, cart }: any) => {
   
 
   
-      toast.success("Product updated successfully");
+      toast.success("Product quantity updated successfully");
     } catch (error) {
       console.error("Error updating product:", error);
       toast.error("Error updating product. Please try again later.");
@@ -111,9 +111,9 @@ const UpdateCartForm = ({ isOpen, onOpenChange, cart }: any) => {
         <DialogTrigger asChild></DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
           <DialogHeader>
-            <DialogTitle>Edit Products</DialogTitle>
+            <DialogTitle>Edit Product Quantity</DialogTitle>
             <DialogDescription>
-              Make changes to your product here. Click save when you're done.
+              Make changes to your product quantity here. Click save when you're done.
             </DialogDescription>
           </DialogHeader>
           <Form {...form}>
@@ -127,7 +127,7 @@ const UpdateCartForm = ({ isOpen, onOpenChange, cart }: any) => {
                     <FormItem>
                       <div className="flex items-center">
                        
-                      <FormLabel htmlFor="name">Product Quantity:</FormLabel>
+                      <FormLabel htmlFor="name" className="w-24">Product Quantity:</FormLabel>
                         <FormControl>
                         
 <Input
