@@ -37,14 +37,14 @@ const UserHistory = () => {
     fetchCategoryData();
     
   }, []);
-  function convertDateFormat(dateString: any) {
-    if (!dateString) return "";
-    const datePart = dateString.split("T")[0];
-    return datePart;
-  }
+  // function convertDateFormat(dateString: any) {
+  //   if (!dateString) return "";
+  //   const datePart = dateString.split("T")[0];
+  //   return datePart;
+  // }
   const data: Order[] = showHistory?.map((order: any) => ({
     id: order?.id,
-    orderDate: convertDateFormat(order?.orderDate),
+    orderDate: order?.orderDate,
     Name: order?.Address?.billToName,
     total: order?.totalAmount,
     city: order?.Address?.city,

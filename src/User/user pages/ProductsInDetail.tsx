@@ -136,6 +136,7 @@ const ProductInDetail = () => {
   }, [productId, cookie.auth]);
 
   const submitData = async (data: any) => {
+    console.log('daad',data)
     try {
       const FilteredData = {
         productId: product?.product?.id,

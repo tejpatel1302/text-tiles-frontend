@@ -63,7 +63,7 @@ console.log(subcategoryId,'jiiijij')
     <div className="mx-auto ml-24">
              <div className="container">
    <div className="search-box">
-      <input type="text" className="search-input" placeholder="Search.." onChange={(e)=>{setSearchText(e.target.value)}}/>
+      <input type="text" className="search-input" placeholder="Search Product" onChange={(e)=>{setSearchText(e.target.value)}}/>
 
       <button className="search-button">
         <i className="fas fa-search" onClick={()=>{

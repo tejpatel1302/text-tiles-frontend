@@ -84,7 +84,7 @@ const AddProducts = ({ redirect }: any) => {
     },
   ] as const
   const submitData = async (data: any) => {
-    console.log(data)
+    console.log(data,'istsdata')
     try {
       const formData = new FormData();
       formData.append('name', data.name);

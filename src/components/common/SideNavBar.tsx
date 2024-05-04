@@ -57,39 +57,33 @@ const [userLogoutTrigger] = useUserLogoutMutation();
 const cookies = new Cookies()
 const clickHandler = async () => {
   try {
-    let userData: any;
     if (location.pathname.startsWith("/admin")) {
-      const adminLogout = await adminLogoutTrigger({}); // Call the trigger function
-      console.log('hi admin');
-      cookies.remove(`auth`) 
-      dispatch(logOut());
-      navigate('/admin/login');
+      const adminLogout = await adminLogoutTrigger({});
+      removeAndRedirect('/admin/login');
     } else if (location.pathname.startsWith("/user")) {
       const userLogout = await userLogoutTrigger({});
-      
-      
-      cookies.remove(`auth`) // Call the trigger function
-      dispatch(userlogOut());
-      navigate('/user/login');
+      removeAndRedirect('/user/login');
     }  else if (location.pathname.startsWith("/super-admin")) {
       const saLogout = await userLogoutTrigger({});
-      
-      
-      cookies.remove(`auth`) // Call the trigger function
-      dispatch(salogOut());
-      navigate('/super-admin/login');
+      removeAndRedirect('/super-admin/login');
     } else {
       throw new Error('Invalid login path');
     }
-
-    console.log(userData);
-
-    // navigate(state.from ? state.from : redirect); something wrong
-
   } catch (err) {
-    console.log(err);
+    console.error(err);
   }
 };
+
+const removeAndRedirect = (redirectPath:any) => {
+  try {
+    cookies.remove(`auth`);
+    console.log('Cookie removed');
+    navigate(redirectPath);
+  } catch (error) {
+    console.error('Error removing cookie:', error);
+  }
+};
+
 
   // Define links array based on userOrderHistory
   const links: any = (userOrderHistory || userSelected || userHistory || isUserDashboard || isUserReport)

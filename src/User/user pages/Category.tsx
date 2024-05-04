@@ -71,7 +71,7 @@ const Category = () => {
     <div className=" max-w-[90%] flex flex-col flex-wrap mx-auto ">
    <div className="container">
    <div className="search-box">
-      <input type="text" className="search-input" placeholder="Search.." onChange={(e)=>{setSearchText(e.target.value)}}/>
+      <input type="text" className="search-input " placeholder="Search Category" onChange={(e)=>{setSearchText(e.target.value)}}/>
 
       <button className="search-button">
         <i className="fas fa-search" onClick={()=>{

@@ -59,7 +59,7 @@ console.log(showSubCategory, 'why')
     <div className="max-w-[90%] mx-auto mr-10">
          <div className="container">
    <div className="search-box">
-      <input type="text" className="search-input" placeholder="Search.." onChange={(e)=>{setSearchText(e.target.value)}}/>
+      <input type="text" className="search-input" placeholder="Search Sub-Category" onChange={(e)=>{setSearchText(e.target.value)}}/>
 
       <button className="search-button">
         <i className="fas fa-search" onClick={()=>{

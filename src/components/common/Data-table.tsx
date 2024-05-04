@@ -39,33 +39,37 @@ export function DataTable<TData extends OrderDetails, TValue>({
   columns,
   data,
 }: DataTableProps<OrderDetails, TValue>) {
-  const [sorting, setSorting] = useState<SortingState>([]);
+  const [sorting, setSorting] = useState<SortingState>([
+    { id: 'orderDate', desc: true }, // Set default descending sorting for "Order Date" column
+  ]);
+ 
   const [editedRows, setEditedRows] = useState({});
   const [originalData, setOriginalData] = useState(() => [...data]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState(""); // Added state for global filter
   const [startDate, setStartDateState] = useState<Date | null>(null);
   const [endDate, setEndDateState] = useState<Date | null>(null);
-
   const filteredData = useMemo(() => {
     if (!startDate || !endDate) return data;
-    const start = startDate.getTime();
-    const end = endDate.getTime();
-    return data.filter((item: any) => {
-      const itemDate = new Date(item.orderDate).getTime();
+    const start = startDate.getTime(); // Get start date in milliseconds
+    const end = endDate.getTime(); // Get end date in milliseconds
+    // Filter the data based on date range (disregarding time)
+    return data.filter((item) => {
+      const itemDate = new Date(item.orderDate).setHours(0, 0, 0, 0); // Set time to midnight
       return itemDate >= start && itemDate <= end;
     });
   }, [data, startDate, endDate]);
+  
 
   const [d, setD] = useState(() => [...filteredData]);
-console.log('hiiiiiiiiiiiiiiiiiiiiiiiiiii')
+
   const table = useReactTable({
     state: {
       sorting,
       columnFilters,
-      globalFilter, // Added globalFilter to state
+      globalFilter,
     },
-    data: d, // Use 'd' state variable as data
+    data: d,
     columns,
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
@@ -74,7 +78,7 @@ console.log('hiiiiiiiiiiiiiiiiiiiiiiiiiii')
     getPaginationRowModel: getPaginationRowModel(),
     onColumnFiltersChange: setColumnFilters,
     getFilteredRowModel: getFilteredRowModel(),
-    onGlobalFilterChange: setGlobalFilter, // Added handler for global filter change
+    onGlobalFilterChange: setGlobalFilter,
     meta: {
       editedRows,
       setEditedRows,
@@ -106,12 +110,8 @@ console.log('hiiiiiiiiiiiiiiiiiiiiiiiiiii')
       },
       removeRow: (rowIndex: number) => {
         const newData = [...d];
-        newData.splice(rowIndex, 1); // Remove the row at the specified index
-
-        // Update the state using the setD function
+        newData.splice(rowIndex, 1);
         setD(newData);
-
-        // If you also want to update the original data, do it here as well
         setOriginalData(newData);
       },
     },
@@ -157,10 +157,14 @@ const isUserDashboard = location.pathname.startsWith("/user/order-details");
   }
 
   function handleDatePickerApply(): void {
-    console.log(`Date range applied from ${startDate?.getTime()} to ${endDate?.toISOString()}`);
-    setD(() => [...filteredData]); // Apply the date filter upon date picker apply
+    console.log(`Date range applied from ${startDate} to ${endDate}`);
+    // Apply the date filter upon date picker apply
+    const filteredByDate = data.filter(item => {
+      const itemDate = new Date(item.orderDate).setHours(0, 0, 0, 0); // Set time to midnight
+      return itemDate >= startDate && itemDate <= endDate;
+    });
+    setD(filteredByDate);
   }
-  
 
   function setStartDate(date: Date | null): void {
     setStartDateState(date);
@@ -204,11 +208,11 @@ const isUserDashboard = location.pathname.startsWith("/user/order-details");
                 className={`${isUser || isSuperAdminReport  ? "mb-10" : "relative -top-[15px] right-[50px]"
                   } `}
               >
-                <DatePickerForm
-                  setStartDate={(date: Date | null) => setStartDate(date)}
-                  setEndDate={(date: Date | null) => setEndDate(date)}
-                  onApply={handleDatePickerApply}
-                />
+               <DatePickerForm
+  setStartDate={(date: Date | null) => setStartDate(date)}
+  setEndDate={(date: Date | null) => setEndDate(date)}
+  onApply={handleDatePickerApply}
+/>
               </div>
             )}
         </div>

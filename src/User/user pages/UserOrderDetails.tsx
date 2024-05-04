@@ -77,7 +77,7 @@ const data: UserView[] = showOrderDetails?.map((order: any) => ({
   name: order?.CartItem?.colorRelation?.Product?.name || "",
   images: order?.CartItem?.colorRelation?.image ? createBlobFromBuffer(order?.CartItem?.colorRelation?.image.buffer, order?.CartItem?.colorRelation?.image.mimetype) : null,
   color: order?.CartItem?.colorRelation?.color?.name || "",
-  size: order?.logObject?.size || "",
+  size: order?.CartItem?.itemSize || "",
   price: order?.logObject?.price || 0,
   quantity: order?.CartItem?.quantity || 0,
  

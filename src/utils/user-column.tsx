@@ -1,6 +1,6 @@
 
 import { ColumnDef } from "@tanstack/react-table";
-import {  ArrowUpDown } from "lucide-react";
+import {  ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import OrderTableRowView from "@/Admin/admin pages/OrderTableRowView";
@@ -38,20 +38,38 @@ export type Order = {
         );
     }
     },
-      {
-        accessorKey: "orderDate",
-        header: ({ column }) => {
-          return (
-            <Button
-              variant="ghost"
-              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            >
-              Order Date
+    {
+      accessorKey: "orderDate",
+      header: ({ column }) => {
+        const isSorted = column.isSorted;
+        const isSortedDesc = column.isSortedDesc;
+        
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => {
+              // If the column is not sorted or is currently sorted in descending order, toggle to ascending order
+              // Otherwise, toggle to descending order
+              const nextSortDesc = !isSorted || isSortedDesc ? false : true;
+              column.toggleSorting(nextSortDesc);
+            }}
+          >
+            Order Date
+            {isSorted ? (
+              isSortedDesc ? (
+                <ArrowDown className="ml-2 h-4 w-4" />
+              ) : (
+                <ArrowUp className="ml-2 h-4 w-4" />
+              )
+            ) : (
               <ArrowUpDown className="ml-2 h-4 w-4" />
-            </Button>
-          );
-        },
+            )}
+          </Button>
+        );
       },
+    },
+    
+    
       {
         accessorKey: "Name",
         header: "Name",
@@ -77,17 +95,7 @@ export type Order = {
       },
       {
         accessorKey: "orderstatus",
-        header: ({ column }) => {
-          return (
-            <Button
-              variant="ghost"
-              onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-            >
-              Status
-              <ArrowUpDown className="ml-2 h-4 w-4" />
-            </Button>
-          );
-        },
+        header: 'Status',
         cell: ({ row }) => {
           return (
             <div
