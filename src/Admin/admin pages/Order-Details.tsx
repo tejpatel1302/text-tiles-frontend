@@ -1,7 +1,5 @@
 import { View, columns } from "@/utils/view-column";
 import { DataTable } from "@/components/common/Data-table";
-
-import { ViewDetails } from "@/utils/View-details";
 import { Button } from "@/components/ui/button";
 import { useDispatch, useSelector } from "react-redux";
 import { selectAdminCurrentToken } from "@/features/redux_toolkit/authSlice";
@@ -12,39 +10,33 @@ import { useParams } from "react-router-dom";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { Toaster, toast } from "sonner";
 
-const AdminOrderDetails= () => {
+const AdminOrderDetails = () => {
   const [cookie] = useCookies(["auth"]);
   const queryClient = useQueryClient();
   const params = useParams();
   const { id } = params;
-  // const token = useSelector(selectAdminCurrentToken);
-  // const { orderItemId} = useSelector((state: any) => state.orderItemId);
-  // console.log(orderItemId,'idthrough')
 
   const [loading, setLoading] = useState(true);
+  const [reviewed, setReviewed] = useState(false);
+  const [rejected, setRejected] = useState(false);
+
   async function getOrderDetails() {
     try {
       const payload = {
         Authorization: `Bearer ${cookie.auth}`,
-       
       };
-      
-      const res = await  getOrderDetailsApi(payload, id);
-      return res?.order?.OrderItem;
-
-      
-      
-      
+      const res = await getOrderDetailsApi(payload, id);
+      return res;
     } catch (error) {
       console.error("Error fetching product data:", error);
-    
     }
   }
 
-  const { isFetching,  data: OrderDetailData} = useQuery({
+  const { isFetching, data: OrderDetailData } = useQuery({
     queryKey: ["orderDetailData"],
-    queryFn: getOrderDetails
+    queryFn: getOrderDetails,
   });
+
   function createBlobFromBuffer(bufferString: string, mimetype: string): string | null {
     try {
       const binary = atob(bufferString);
@@ -60,129 +52,135 @@ const AdminOrderDetails= () => {
       return null;
     }
   }
-  const data: View[] =  OrderDetailData?.map((order:any) => ({
-    
-      id: order?.id,
-      image: order?.CartItem?.colorRelation?.image,
-      images:order?.CartItem?.colorRelation?.image ? createBlobFromBuffer(order?.CartItem?.colorRelation?.image?.buffer, order?.CartItem?.colorRelation?.image.mimetype) : null,
-      name: order?.logObject?.name,
-      color: order?.CartItem?.colorRelation?.color.name,
-      size: order?.logObject?.size,
-      price: order?.logObject?.price,
-      quantity: order?.CartItem?.quantity,
-      status: order?.status
 
-      
-    
-    
+  const status = OrderDetailData?.order?.OrderItem?.map((order) => ({
+    status:
+      order?.status === "REJECTED"
+        ? `${order?.CartItem?.quantity * order?.logObject?.price} will be refunded`
+        : "",
   }));
-  console.log(OrderDetailData,'hiihi')
-  
-  async function Reveiwed(status:any) {
+  const rejectedOrders = status?.filter((order) => order.status !== "");
+  const totalRefundAmount = rejectedOrders?.reduce((acc, order) => acc + parseFloat(order.status.split(" ")[0]), 0);
+  console.log(OrderDetailData,'KKKKKKKKKK')
+
+  const data: View[] = OrderDetailData?.order?.OrderItem?.map((order: any) => ({
+    id: order?.id,
+    productId: order?.logObject?.id,
+    image: order?.CartItem?.colorRelation?.image,
+    Image: order?.CartItem?.colorRelation?.image ? createBlobFromBuffer(order?.CartItem?.colorRelation?.image?.buffer, order?.CartItem?.colorRelation?.image.mimetype) : null,
+    name: order?.logObject?.name,
+    color: order?.CartItem?.colorRelation?.color.name,
+    size: order?.CartItem?.itemSize,
+    price: order?.logObject?.price,
+    quantity: order?.CartItem?.quantity,
+    status: order?.status,
+  }));
+
+  async function Reviewed(status: any) {
     try {
       const payload = {
         Authorization: `Bearer ${cookie.auth}`,
-       
       };
       const status1 = {
         status: status?.status,
       };
-      const res = await ReviewedApi(
-        payload,
-      status.id,
-        status1
-      );
-      console.log(res,"Response from Review")
-     
+      const res = await ReviewedApi(payload, status.id, status1);
+      console.log(res, "Response from Review");
+      if (totalRefundAmount > 0) {
+        toast.error(`Total of ${totalRefundAmount} will be refunded`);
+      }
       setLoading(false);
-      
-      
+      setReviewed(true);
+      setRejected(true); // both reviewed and rejected buttons should be disabled after one of them is clicked
     } catch (error) {
       console.error("Error fetching product data:", error);
       setLoading(false);
     }
   }
-  async function Rejected(status:any) {
+
+  async function Rejected(status: any) {
     try {
       const payload = {
         Authorization: `Bearer ${cookie.auth}`,
-       
       };
       const status1 = {
         status: status?.status,
       };
-      const res = await ReviewedApi(
-        payload,
-      status.id,
-        status1
-      );
-      console.log(res,"Response from Review")
-     
+      const res = await ReviewedApi(payload, status.id, status1);
+      console.log(res, "Response from Review");
       setLoading(false);
-      
-      
+      setRejected(true);
+      setReviewed(true); // both reviewed and rejected buttons should be disabled after one of them is clicked
     } catch (error) {
       console.error("Error fetching product data:", error);
       setLoading(false);
     }
   }
+
   const reviwedMutation = useMutation({
-    mutationFn: Reveiwed,
+    mutationFn: Reviewed,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey:  ["orderDetailData"] });
+      await queryClient.invalidateQueries({ queryKey: ["orderDetailData"] });
     },
   });
+
   const rejectedMutation = useMutation({
     mutationFn: Rejected,
     onSuccess: async () => {
-      await queryClient.invalidateQueries({ queryKey:  ["orderDetailData"] });
+      await queryClient.invalidateQueries({ queryKey: ["orderDetailData"] });
     },
   });
+
   const onReview = useCallback(() => {
     const status = {
       status: "REVIEWED",
-      id: id
+      id: id,
     };
     reviwedMutation.mutate(status, {
       onSuccess: () => {
-        toast('REVIEWED');
+        toast("REVIEWED");
       },
       onError: () => {
-        toast('error');
+        toast("error");
       },
     });
   }, []);
+
   const onReject = useCallback(() => {
     const status = {
       status: "REJECTED",
-      id: id
+      id: id,
     };
-    reviwedMutation.mutate(status, {
+    rejectedMutation.mutate(status, {
       onSuccess: () => {
-        toast('REJECTED');
+        toast("REJECTED");
       },
       onError: () => {
-        toast('error');
+        toast("error");
       },
     });
   }, []);
-// function reviewClickHandler (){
-//   Reveiwed()
-// }
 
   return (
-    <div className="bg-white">
-      <Toaster/>
+    <div className="bg-white overflow-x-hidden">
+      <Toaster />
       <div className="flex justify-between">
-      <div className="text-3xl font-bold mt-10">Order Details</div>
-      <div className="mt-10 mr-6  space-x-4 p-2">
-      <Button variant={'green'} onClick={onReview}>Review</Button>
-      <Button variant={"red"} onClick={onReject}>Reject</Button>
-      </div>
+        <div className="text-3xl font-bold mt-10">Order Details</div>
+        <div className="mt-10 mr-6  space-x-4 p-2">
+          <Button variant={"green"} onClick={onReview} disabled={reviewed || rejected}>
+            Review
+          </Button>
+          <Button variant={"red"} onClick={onReject} disabled={reviewed || rejected}>
+            Reject
+          </Button>
+        </div>
       </div>
       <div className="-mt-24">
-      {isFetching && <span>Loading</span>}
+        {isFetching && <span>Loading</span>}
         {!isFetching && <DataTable data={data} columns={columns} />}
+      </div>
+      <div className=" relative left-[650px] -top-[60px] text-2xl font-bold">
+        Total Amount : {OrderDetailData?.order?.totalAmount}
       </div>
     </div>
   );

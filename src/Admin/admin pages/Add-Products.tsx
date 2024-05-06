@@ -191,7 +191,7 @@ const AddProducts = ({ redirect }: any) => {
        <Toaster position="top-center" />
       <div className="min-h-screen flex border border-black w-9/12 rounded-md bg-white justify-center mx-auto p-10 my-4">
         <div className="text-3xl font-bold relative top-0 right-20">
-          Add Products
+          Add Product
         </div>
         <div>
           <div >

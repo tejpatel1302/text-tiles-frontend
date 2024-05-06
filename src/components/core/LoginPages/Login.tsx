@@ -76,12 +76,14 @@ const Login = ({ redirect }: any) => {
       // Set cookie only if the request is successful
       if (userData?.data?.token) {
         setCookie(`auth`, userData.data.token);
-        toast.success('Logged In');
+        toast.success('Logged In SuccessFully');
         // setMessage("Logged In Successfully");
       } else {
         throw new Error('Token not received');
       }
-       navigate(redirect);
+      setTimeout(() => {
+        navigate(redirect);
+      }, 3000); 
     } catch (err) {
       console.log(err, 'hiiiiii');
       toast.error('Invalid Email and Password');

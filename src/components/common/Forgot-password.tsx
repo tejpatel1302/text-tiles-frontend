@@ -76,8 +76,8 @@ const ForgotPassword = () => {
           password
           ){
             
-            navigate('/admin/login')
             toast.success('Password Updated');
+            navigate('/admin/login')
           }
           else{
             navigate('/user/forgot-password')
@@ -90,12 +90,14 @@ const ForgotPassword = () => {
           password
           ){
             
-            navigate('/user/login')
             toast.success('Password Updated');
+            setTimeout(() => {
+              navigate('/user/login');
+            }, 3000); 
           }
           else{
             navigate('/user/forgot-password')
-            toast.error('Failed To Update Password');
+            toast.error('Invalid Email');
           }
         
       // } else if (location.pathname === '/super-admin/login') {
@@ -119,7 +121,7 @@ const ForgotPassword = () => {
   
   return (
     <div className="z-10 absolute left-[20%]">
-      <Toaster/>
+      <Toaster richColors/>
       <div className="h-screen flex justify-center items-center">
         <CardWrapper
           headerLabel="Forgot Password ?"
@@ -211,11 +213,12 @@ const ForgotPassword = () => {
                         <FormControl>
                           <PasswordInput {...field} className="px-10" />
                         </FormControl>
-                        <FormMessage className="relative left-[1px] -top-[24px]" />
+                        <FormMessage className="absolute left-[320px] w-40 top-[224px]" />
                       </FormItem>
                     )}
                   />
                 )}
+               
                 {displayResetForm && (
                   <Button
                     size={"lg"}

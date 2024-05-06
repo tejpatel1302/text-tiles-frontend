@@ -23,10 +23,11 @@ import DataTableRowActions from "./DataTableRowAction";
 export type UserCart = {
   id: string,
   quantity: any,
-  images: any,
+  Image: any,
   name: any,
   itemSize: any,
   totalPrice: any,
+  price:any
 };
 
 const EditCell = ({ row, table }: any) => {
@@ -193,23 +194,10 @@ const EditCell = ({ row, table }: any) => {
 };
 
 export const getCartColumns = ({ onEdit, onDelete }: any) => [
+ 
   {
-      accessorKey: "id",
-      header: "Product ID",
-      cell: ({row}:any) => {
-        const result = row.getValue('id');
-        const hyphenIndex = result.indexOf('-');
-        const formattedResult = hyphenIndex !== -1 ? result.substring(0, hyphenIndex) : result;
-        return (
-            <div>
-                {formattedResult}
-            </div>
-        );
-    }
-  },
-  {
-      accessorKey: "images",
-      header: "images",
+      accessorKey: "Image",
+      header: "Image",
   },
   {
       accessorKey: "name",
@@ -220,28 +208,32 @@ export const getCartColumns = ({ onEdit, onDelete }: any) => [
       header: "Size",
   },
   {
+    accessorKey: "price",
+    header: "Price",
+},
+  {
       accessorKey: "quantity",
       header: "Quantity",
   },
   {
       accessorKey: "totalPrice",
-      header: "Price",
-  },
-  {
-      accessorKey: "total",
       header: "Total",
-      cell: ({row}:any) => {
-          const result = row.getValue('quantity') * row.getValue('totalPrice');
-          const formattedResult = result.toFixed(2); // Limit to 2 decimal places
-          console.log(formattedResult,'ko')
-          return (
-              <div>
-                  {formattedResult}
-              </div>
-          );
-      }
   },
-  {
+  // {
+  //     accessorKey: "total",
+  //     header: "Total",
+  //     cell: ({row}:any) => {
+  //         const result = row.getValue('quantity') * row.getValue('totalPrice');
+  //         const formattedResult = result.toFixed(2); // Limit to 2 decimal places
+  //         console.log(formattedResult,'ko')
+  //         return (
+  //             <div>
+  //                 {formattedResult}
+  //             </div>
+  //         );
+  //     }
+  // },
+  {  accessorKey: "Actions",
       id: "edit",
       cell: ({ row }: any) => (
         <DataTableRowActions row={row} onEdit={onEdit} onDelete={onDelete} />

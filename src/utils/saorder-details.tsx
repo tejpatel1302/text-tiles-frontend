@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 // You can use a Zod schema here if you want.
 export type View = {
     id: number;
-    images: string;
+    Image: string;
     name: string;
     color: string;
     size: string;
@@ -31,8 +31,8 @@ export const columns: ColumnDef<View>[] = [
         }
     },
     {
-        accessorKey: "images",
-        header: 'images'
+        accessorKey: "Image",
+        header: 'Image'
     },
     {
         accessorKey: "name",

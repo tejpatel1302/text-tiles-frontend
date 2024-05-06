@@ -4,7 +4,7 @@ import DataTableRowActions from "./DataTableRowAction";
 export type Category = {
   categoryID: number;
   categoryName: string;
-  images: string;
+  Image: string;
 };
 
 // const EditCell = ({ row, table }: any) => {
@@ -197,8 +197,8 @@ export const getCategoryColumns = ({ onEdit, onDelete }: any) => [
   }
   },
   {
-    accessorKey: "images",
-    header: "images",
+    accessorKey: "Image",
+    header: "Image",
   },
   {
     accessorKey: "categoryName",

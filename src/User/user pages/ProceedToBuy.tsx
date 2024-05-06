@@ -26,12 +26,15 @@ import { useEffect, useState } from "react";
 import { useCookies } from "react-cookie";
 import Payment from "./Payment";
 import AddressCard from "./AddressCard";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
 
 
 const ProceedToBuy = ({ redirect }: any) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [cookie] = useCookies(["auth"]);
+  const queryClient = useQueryClient();
   // const token = useSelector(selectUserCurrentToken);
   const [showProducts, setShowProducts]:any = useState([]);
   const [showAddress, setShowAddress]:any = useState([]);
@@ -50,10 +53,86 @@ const ProceedToBuy = ({ redirect }: any) => {
       eir: ''
     },
   });
+const addAddress = async(data:any) => {
+  try {
+    // const formData = new FormData();
+    // formData.append("address1", data.address1); // corrected field name
+    // formData.append("address2", data.address2); // corrected field name
+    // formData.append("billToName", data.billToName); // corrected field name
+    // formData.append("city", data.city);
+    // formData.append("county", data.county); // corrected field name
+    // formData.append("eir", data.eir); // corrected field name
+    
+    
+    
 
+    const config = {
+        headers: {
+            Authorization: `Bearer ${cookie.auth}`,
+          
+        }
+    };
+
+    const res = await addAddressApi   (data, config);
+    console.log(res, 'addedsubmitData');
+   setShowAddressForm(false)
+    
+    
+
+} catch (error) {
+    console.error("Error fetching product data:", error);
+}
+
+};
+  
+  function cancelButton(){
+    setShowAddressForm(false)
+  }
+  async function fetchAddressData() {
+    try {
+      const payload = {
+        Authorization: `Bearer ${cookie.auth}`,
+       
+      };
+      
+      const res = await getAddressApi(payload);
+      console.log(res, 'getaddress')
+      return res?.data
+      // setShowAddress(res?.data);
+      
+      
+    } catch (error) {
+      console.error("Error fetching product data:", error);
+    }
+  }
+  // useEffect(() => {
+  //   fetchCategoryData();
+    
+  // }, []);
+  // const loginClickHanlder = () => {
+  //   navigate('/user/payment');
+    
+  // };
+  const { isFetching,  data: AddressData } = useQuery({
+    queryKey: ["addressData"],
+    queryFn: fetchAddressData ,
+  });
+  const onUpdateSuccess = async () => {
+    await queryClient.invalidateQueries({ queryKey: ["addressData"] });
+
+   
+  };
+  const onRequestError = () => {
+    toast("Error");
+  };
+  const updateMutation = useMutation({
+    mutationFn: addAddress,
+    onSuccess: onUpdateSuccess,
+    onError: onRequestError,
+  });
   const submitData = async (data: any) => {
     console.log(data)
-    try {
+  
       // const formData = new FormData();
       // formData.append("address1", data.address1); // corrected field name
       // formData.append("address2", data.address2); // corrected field name
@@ -72,51 +151,15 @@ const ProceedToBuy = ({ redirect }: any) => {
       };
       
 
-      const config = {
-          headers: {
-              Authorization: `Bearer ${cookie.auth}`,
-            
-          }
-      };
+    
 
-      const res = await addAddressApi   (FilteredData, config);
-      console.log(res, 'addedsubmitData');
-     setShowAddressForm(false)
+      updateMutation.mutate({ ...FilteredData });
       
       
 
-  } catch (error) {
-      console.error("Error fetching product data:", error);
-  }
+
 
   };
-  function cancelButton(){
-    setShowAddressForm(false)
-  }
-  async function fetchCategoryData() {
-    try {
-      const payload = {
-        Authorization: `Bearer ${cookie.auth}`,
-       
-      };
-      
-      const res = await getAddressApi(payload);
-      console.log(res, 'getaddress')
-      setShowAddress(res?.data);
-      
-      
-    } catch (error) {
-      console.error("Error fetching product data:", error);
-    }
-  }
-  useEffect(() => {
-    fetchCategoryData();
-    
-  }, []);
-  // const loginClickHanlder = () => {
-  //   navigate('/user/payment');
-    
-  // };
   async function fetchCartProductsData() {
     try {
       const payload = {
@@ -143,6 +186,9 @@ console.log(showProducts,'jijiji')
   function addressFormClickHandler(){
     setShowAddressForm(true)
   }
+  function clickHandler(){
+    navigate('/user/cart')
+  }
   return (
    <div> 
    <div className="text-3xl font-bold bg-[#f3f4f6] text-black w-full p-3 text-center">CheckOut</div>
@@ -153,14 +199,14 @@ console.log(showProducts,'jijiji')
          <div className="w-full">
          <div className="text-2xl font-bold bg-[#f3f4f6] text-black w-full p-3 text-center -mt-10">Delivery Address</div>
                <Button variant={"purple"} onClick={addressFormClickHandler} className="float-right relative -top-12 mr-2">Add New Address</Button>
-         {showAddress.length > 0 && (<div className=" p-6 rounded-lg shadow-md">
+         {AddressData?.length > 0 && (<div className=" p-6 rounded-lg shadow-md">
            <div className="flex justify-between items-center mb-4">
              
              <div>
              </div>
            </div>
            <div className="flex gap-5">
-{showAddress.map((address:any, index:any) => (
+{ AddressData?.map((address:any, index:any) => (
  <div key={index} className="flex gap-5 items-center bg-gray-100 p-4 rounded-lg shadow-md">
  <div>
    <input
@@ -172,12 +218,12 @@ console.log(showProducts,'jijiji')
    />
  </div>
  <div>
-   <div className="mb-2 font-semibold  text-gray-800">Name: {address.billToName}</div>
-   <div className="mb-2 font-semibold text-gray-700">Address 1: {address.address1}</div>
-   <div className="mb-2 font-semibold text-gray-700">Address 2: {address.address2}</div>
-   <div className="mb-2 font-semibold text-gray-700">City: {address.city}</div>
-   <div className="mb-2 font-semibold text-gray-700">County: {address.county}</div>
-   <div className="mb-2 font-semibold text-gray-700">Eir: {address.eir}</div>
+   <div className="mb-2 font-semibold  text-gray-800">{address.billToName}</div>
+   <div className="mb-2 font-semibold text-gray-700">{address.address1}</div>
+   <div className="mb-2 font-semibold text-gray-700"> {address.address2}</div>
+   <div className="mb-2 font-semibold text-gray-700">{address.city}</div>
+   <div className="mb-2 font-semibold text-gray-700">{address.county}</div>
+   <div className="mb-2 font-semibold text-gray-700">{address.eir}</div>
  </div>
 </div>
 
@@ -333,7 +379,7 @@ console.log(showProducts,'jijiji')
  <div className="flex justify-between items-center mb-4 border-b-2 border-purple-400 p-2">
    <div className="font-semibold text-lg">{`${showProducts.length} Items`}</div>
    <div>
-   <Button variant={'purple'}>
+   <Button variant={'purple'} onClick={clickHandler}>
      Edit
    </Button>
    </div>
@@ -344,10 +390,13 @@ console.log(showProducts,'jijiji')
    <div className="w-20 h-20 border-2 border-gray-300 rounded-lg overflow-hidden">
      <img src={`data:image/jpeg;base64,${cd?.colorRelation?.image?.buffer}`} alt={cd.title} className="w-full h-full object-cover" />
    </div>
+  
    <div className="ml-4">
-     <div className="font-bold text-xl">{`€${cd?.totalPrice}`}</div>
+   <div className="font-bold text-xl">{cd?.colorRelation?.Product?.name}</div>
+     <div className="">{`Price : €${cd?.colorRelation?.Product?.price
+}`}</div>
      <div className="text-sm">{cd.title}</div>
-     <div className="text-sm text-gray-600">{cd?.quantity}</div>
+     <div className="text-sm text-gray-600">Quantity : {cd?.quantity}</div>
    </div>
  </div>
 ))}
@@ -358,7 +407,7 @@ console.log(showProducts,'jijiji')
  <div className="font-bold text-xl">Total to Pay</div>
  <div className="font-bold text-xl">
    {/* Dynamically calculate total price */}
-   €{showProducts.reduce((acc, cd) => acc + cd?.totalPrice*cd?.quantity, 0).toFixed(2)}
+   €{showProducts.reduce((acc, cd) => acc + cd?.totalPrice, 0).toFixed(2)}
  </div>
 </div>
 </div>

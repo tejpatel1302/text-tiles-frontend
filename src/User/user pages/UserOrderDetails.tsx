@@ -29,7 +29,7 @@ const UserOrderDetails= () => {
       
       const res = await  getUserOrderDetailsApi(payload, id);
       console.log(res, 'getOrdersdetailsypoooojii')
-      setShowOrderDetails(res?.order?.OrderItem || [])
+      setShowOrderDetails(res || [])
 
       setLoading(false);
       
@@ -62,20 +62,21 @@ const UserOrderDetails= () => {
 console.log(showOrderDetails, 'Finaldetaisl')
 
 
-  const status = showOrderDetails?.map((order) => ({
+  const status = showOrderDetails?.order?.OrderItem?.map((order) => ({
     status: order?.status === 'REJECTED' ? `${order?.CartItem?.quantity * order?.logObject?.price} will be refunded` : '' 
   }));
 console.log(status,'status.....')
-  const rejectedOrders = status.filter((order) => order.status!== '');
-  const totalRefundAmount = rejectedOrders.reduce((acc, order) => acc + parseFloat(order.status.split(' ')[0]), 0);
+  const rejectedOrders = status?.filter((order) => order.status!== '');
+  const totalRefundAmount = rejectedOrders?.reduce((acc, order) => acc + parseFloat(order?.status.split(' ')[0]), 0);
 console.log(totalRefundAmount,'ammout......')
   if (totalRefundAmount > 0) {
     toast.error(`Total of ${totalRefundAmount} will be refunded`);
   }
-const data: UserView[] = showOrderDetails?.map((order: any) => ({
+const data: UserView[] = showOrderDetails?.order?.OrderItem?.map((order: any) => ({
   id: order?.id,
+  productId: order?.logObject?.id,
   name: order?.CartItem?.colorRelation?.Product?.name || "",
-  images: order?.CartItem?.colorRelation?.image ? createBlobFromBuffer(order?.CartItem?.colorRelation?.image.buffer, order?.CartItem?.colorRelation?.image.mimetype) : null,
+  Image: order?.CartItem?.colorRelation?.image ? createBlobFromBuffer(order?.CartItem?.colorRelation?.image.buffer, order?.CartItem?.colorRelation?.image.mimetype) : null,
   color: order?.CartItem?.colorRelation?.color?.name || "",
   size: order?.CartItem?.itemSize || "",
   price: order?.logObject?.price || 0,
@@ -87,9 +88,9 @@ const data: UserView[] = showOrderDetails?.map((order: any) => ({
 
 
   return (
-    <div className="bg-white">
+    <div className="bg-white overflow-x-hidden">
       <Toaster richColors  />
-      <div className=" m-4 text-3xl font-bold">Order Details:</div>
+      <div className=" m-4 text-3xl font-bold">Order Details</div>
       {loading ? (
         <div>Loading...</div>
       ) : (
@@ -97,6 +98,9 @@ const data: UserView[] = showOrderDetails?.map((order: any) => ({
         <DataTable columns={columns} data={data} />
       </div>
       )}
+         <div className=" relative left-[650px] -top-[60px] text-2xl font-bold">
+        Total Amount : { showOrderDetails?.order?.totalAmount}
+      </div>
     </div>
   );
 };

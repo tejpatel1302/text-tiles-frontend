@@ -16,19 +16,20 @@ import { cn } from "@/lib/utils";
     // You can use a Zod schema here if you want.
     export type View = {
         id: number;
-        images: string;
+        Image: string;
         name: string;
         color: string;
         size: string;
         price: number;
         quantity: number;
-        status:any
+        status:any;
+        productId:any
     };
 
     export const columns: ColumnDef<View>[] = [
         {
             accessorKey: "id",
-            header: "Product ID",
+            header: "Order Detail ID",
             cell: ({row}:any) => {
                 const result = row.getValue('id');
                 const hyphenIndex = result.indexOf('-');
@@ -42,8 +43,23 @@ import { cn } from "@/lib/utils";
             
         },
         {
-            accessorKey: "images",
-            header: 'images'
+            accessorKey: "productId",
+            header: "Product ID",
+            cell: ({row}:any) => {
+                const result = row.getValue('productId');
+                const hyphenIndex = result.indexOf('-');
+                const formattedResult = hyphenIndex !== -1 ? result.substring(0, hyphenIndex) : result;
+                return (
+                    <div>
+                        {formattedResult}
+                    </div>
+                );
+            }
+            
+        },
+        {
+            accessorKey: "Image",
+            header: 'Image'
         },
         {
             accessorKey: "name",

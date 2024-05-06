@@ -7,11 +7,23 @@ import { getProductsApi, getProductsWithSubIDApi } from '@/features/api/apicall'
 import { selectUserCurrentToken } from '@/features/redux_toolkit/userAuthSlice';
 import { useCookies } from "react-cookie";
 import { Search } from 'lucide-react';
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
+
 
 const UserWebsite = ({ title }: { title: string }) => {
   const dispatch = useDispatch();
   const [cookie] = useCookies(["auth"]);
   const [filteredProduct, setFilteredProduct] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [postsPerPage, setPostsPerPage] = useState(6);
   const[searchText, setSearchText] = useState('')
 //   const { subId } = useSelector((state: any) => state.subId);
 // console.log(subId ,'hihellocho')
@@ -58,7 +70,9 @@ console.log(subcategoryId,'jiiijij')
   const handleAdd = (product: any) => {
     dispatch(add(product));
   };
-
+  const lastPostIndex = currentPage * postsPerPage;
+  const firstPostIndex = lastPostIndex - postsPerPage;
+  const currentProducts = filteredProduct.slice(firstPostIndex, lastPostIndex);
   return (
     <div className="mx-auto ml-24">
              <div className="container">
@@ -78,14 +92,115 @@ console.log(subcategoryId,'jiiijij')
 </div>
       <div className='text-2xl font-semibold mt-10'>{title}</div>
       <div className='flex flex-wrap gap-10'>
-        {filteredProduct?.map((product: any) => (
+        {currentProducts?.map((product: any) => (
           <div key={product?.title}>
             <ProductCard image={subcategoryId  ? product?.colorRelation[0]?.image : product?.colorRelation[0]?.image} title={subcategoryId  ? product?.name : product.title} price={subcategoryId  ? product?.price :product.price} id={subcategoryId  ? product?.id :product.id} productid={subcategoryId  ? product?.id : product?.colorRelation[0]?.productId}/>
           </div>
         ))}
+      </div>
+      <div>
+      <PaginationSection
+            totalPosts={filteredProduct.length}
+            postsPerPage={postsPerPage}
+            currentPage={currentPage}
+            setCurrentPage={setCurrentPage}
+          />
       </div>
     </div>
   );
 };
 
 export default UserWebsite;
+
+function PaginationSection({
+  totalPosts,
+  postsPerPage,
+  currentPage,
+  setCurrentPage,
+}: {
+  totalPosts: any;
+  postsPerPage: any;
+  currentPage: any;
+  setCurrentPage: any;
+}) {
+  const pageNumbers = [];
+  for (let i = 1; i <= Math.ceil(totalPosts / postsPerPage); i++) {
+    pageNumbers.push(i);
+  }
+
+  const maxPageNum = 5; // Maximum page numbers to display at once
+  const pageNumLimit = Math.floor(maxPageNum / 2); // Current page should be in the middle if possible
+
+  let activePages = pageNumbers.slice(
+    Math.max(0, currentPage - 1 - pageNumLimit),
+    Math.min(currentPage - 1 + pageNumLimit + 1, pageNumbers.length)
+  );
+
+  const handleNextPage = () => {
+    if (currentPage < pageNumbers.length) {
+      setCurrentPage(currentPage + 1);
+    }
+  };
+
+  const handlePrevPage = () => {
+    if (currentPage > 1) {
+      setCurrentPage(currentPage - 1);
+    }
+  };
+
+  // Function to render page numbers with ellipsis
+  const renderPages = () => {
+    const renderedPages = activePages.map((page, idx) => (
+      <PaginationItem
+        key={idx}
+        className={currentPage === page ? "bg-neutral-100 rounded-md" : ""}
+      >
+        <PaginationLink onClick={() => setCurrentPage(page)}>
+          {page}
+        </PaginationLink>
+      </PaginationItem>
+    ));
+
+    // Add ellipsis at the start if necessary
+    if (activePages[0] > 1) {
+      renderedPages.unshift(
+        <PaginationEllipsis
+          key="ellipsis-start"
+          onClick={() => setCurrentPage(activePages[0] - 1)}
+        />
+      );
+    }
+
+    // Add ellipsis at the end if necessary
+    if (activePages[activePages.length - 1] < pageNumbers.length) {
+      renderedPages.push(
+        <PaginationEllipsis
+          key="ellipsis-end"
+          onClick={() =>
+            setCurrentPage(activePages[activePages.length - 1] + 1)
+          }
+        />
+      );
+    }
+
+    return renderedPages;
+  };
+
+  return (
+    <div>
+      <Pagination>
+        <PaginationContent>
+          <PaginationItem>
+            <PaginationPrevious onClick={handlePrevPage} />
+          </PaginationItem>
+
+          {renderPages()}
+
+          <PaginationItem>
+            <PaginationNext onClick={handleNextPage} />
+          </PaginationItem>
+        </PaginationContent>
+      </Pagination>
+    </div>
+  );
+}

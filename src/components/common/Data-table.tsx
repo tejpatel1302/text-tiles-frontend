@@ -23,9 +23,10 @@ import { useState, useMemo } from "react";
 import { Input } from "@/components/ui/input";
 import { DatePickerForm } from "./DatePicker";
 import { useLocation, useNavigate } from "react-router-dom";
-import { Divide } from "lucide-react";
+import { Divide, EyeIcon } from "lucide-react";
 import { useDispatch } from "react-redux";
 import { addId } from "@/features/redux_toolkit/orderItemIdSlice";
+import ImageColorDialog from "@/Admin/admin pages/ImageColorDialog";
 
 interface DataTableProps<TData extends OrderDetails, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -33,7 +34,7 @@ interface DataTableProps<TData extends OrderDetails, TValue> {
 }
 interface OrderDetails {
   id: any;
-  images: any; 
+  Image: any; 
 }
 export function DataTable<TData extends OrderDetails, TValue>({
   columns,
@@ -42,7 +43,7 @@ export function DataTable<TData extends OrderDetails, TValue>({
   const [sorting, setSorting] = useState<SortingState>([
     { id: 'orderDate', desc: true }, // Set default descending sorting for "Order Date" column
   ]);
- 
+
   const [editedRows, setEditedRows] = useState({});
   const [originalData, setOriginalData] = useState(() => [...data]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -177,11 +178,17 @@ const isUserDashboard = location.pathname.startsWith("/user/order-details");
     dispatch(addId(id))
   }
   const totalPrice = useMemo(() => {
-    return d.reduce((total, row) => total + (row.totalPrice*row.quantity), 0);
+    return d.reduce((total, row) => {
+      console.log(total,"hoemucj")
+      return total + (row.totalPrice)}, 0);
+  }, [d]);
+  const totalPrice3 = useMemo(() => {
+    return d.reduce((total, row) => total + (row.price*row.quantity), 0);
   }, [d]);
   const totalPrice2 = useMemo(() => {
     return d.reduce((total, row) => total + (row.price*row.quantity), 0);
   }, [d]);
+ 
   return (
     <>
       <div className={`${isWishList || isCart ? 'rounded-md ' : 'rounded-md'}`}>
@@ -250,27 +257,19 @@ const isUserDashboard = location.pathname.startsWith("/user/order-details");
                 
                   >
                     {row.getVisibleCells().map((cell) => (
-
-                      <TableCell key={cell.id} >
-                        {(isAdminProducts || isCart || isCheckout || isSubCategory || isCategory || isSuperAdminDetails || isOrderDetails || isUserDashboard || isAdminDashboard || isSuperAdminDashboard ) && 
-                        cell.column.columnDef.header === "images" ? (
-
-                          <img
-                            src={
-                              (cell.row.original as { images: string })
-                                .images
-                            }
-                            alt="Product image"
-                            style={{ width: 70, height: 70 }}
-                          />
-                        ) : (
-                          // For any other paths or headers, display cell content using flexRender
-                          flexRender(
-                            cell.column.columnDef.cell,
-                            cell.getContext()
-                          )
-                        )}
-                      </TableCell>
+  <TableCell key={cell.id}>
+  {isAdminProducts && cell.column.columnDef.header === "Image" ? (
+     <>
+     <ImageColorDialog colorRelation={cell.row.original.Image}/>
+   </>
+  ) : (
+    cell.column.columnDef.header === "Image" ? (
+      <img src={(cell.row.original as { Image: string }).Image} alt="Product image" style={{ width: 70, height: 70 }} />
+    ) : (
+      flexRender(cell.column.columnDef.cell, cell.getContext())
+    )
+  )}
+</TableCell>
                     ))}
                   </TableRow>
                 ))
@@ -290,9 +289,14 @@ const isUserDashboard = location.pathname.startsWith("/user/order-details");
       { isCart && <div className="absolute left-[1100px] text-2xl font-bold">
        Total Price: {totalPrice} 
        </div>}
-       { isAdminDashboard && <div className="absolute left-[950px] text-2xl font-bold">
+       {/* { isAdminDashboard && <div className="absolute left-[950px] text-2xl font-bold">
        Total Price: {totalPrice2} 
-       </div>}
+       </div>} */}
+       {/* {
+        isUserDashboard  && <div className="absolute left-[1170px] text-2xl font-bold">
+        Total Price: {totalPrice3} 
+        </div>
+       } */}
       </div>
      {!isCheckout && !isUserReport && !isAdminReport && !isSuperAdminReport ? <div className="flex items-center justify-end space-x-2 py-4">
         <Button

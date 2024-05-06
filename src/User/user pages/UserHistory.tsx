@@ -22,8 +22,8 @@ const UserHistory = () => {
       };
       
       const res = await getOrderHistoryApi(payload);
-      console.log(res,'llll')
-      console.log(res?.data, 'getOrderHistory')
+      
+      console.log(res, 'getOrderHistory')
       setShowHistory(res?.data);
       setLoading(false);
       
@@ -42,6 +42,7 @@ const UserHistory = () => {
   //   const datePart = dateString.split("T")[0];
   //   return datePart;
   // }
+  console.log(showHistory[0]?.totalAmount,'total')
   const data: Order[] = showHistory?.map((order: any) => ({
     id: order?.id,
     orderDate: order?.orderDate,
@@ -50,6 +51,7 @@ const UserHistory = () => {
     city: order?.Address?.city,
     orderDetails: 'View',
     orderstatus: order.status,
+    email: order?.Customer?.email
   }));
 
 

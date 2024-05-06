@@ -3,6 +3,7 @@ export const LoginSchema = z.object({
     email: z.string().email({ message: 'Invalid email format' }),
     password: z.string().min(8, { message: 'Password must be at least 8 characters long' })
 });
+const strongPasswordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[^a-zA-Z0-9]).{8,}$/;
 export const RegisterSchema = z.object({
     firstName: z.string().min(1).max(50),
     lastName: z.string().min(1).max(50),
@@ -11,12 +12,13 @@ export const RegisterSchema = z.object({
     email: z.string().email(),
     gender: z.enum(["Male", "Female", "Others"]),
     password: z.string().min(8),
-    confirm_password: z.string()
-      .min(8)
-      .refine(({ confirm_password, password }:any) => confirm_password === password, {
-        message: "Passwords do not match",
-        path: ["confirm_password"],
-      }),
+    confirm_password: z.string().min(8)
+}).refine((data) => strongPasswordRegex.test(data.password), {
+    message: "Password must contain at least one digit, one lowercase letter, one uppercase letter, one special character, and be at least 8 characters long",
+    path: ["confirm_password"],
+}).refine((data) => data.password === data.confirm_password, {
+    message: "Passwords do not match",
+    path: ["confirm_password"], // path of error
 });
 
 export const AddressSchema = z.object({
@@ -25,7 +27,7 @@ export const AddressSchema = z.object({
     address2: z.string(),
     city: z.string(),
     county: z.string(),
-    eir: z.string().regex(/^\d{5}$/) // Assuming postcode is 5 digits
+    eir: z.any() // Assuming postcode is 5 digits
 });
 export const CardSchema = z.object({
     cardType: z.string(),
@@ -156,13 +158,19 @@ export const UpdateUserDetailsSchema = z.object({
     dob: z.any(),
     gender:z.any()
 });
+
+
+
 export const ResetSchema = z.object({
     email: z.string().email(),
     password: z.string().min(8),
-    confirm_password: z.string()
-      .min(8)
-      .refine(({ confirm_password, password }:any) => confirm_password === password, {
-        message: "Passwords do not match",
-        path: ["confirm_password"],
-      }),
+       
+    confirm_password: z.string().min(8)
+}).refine((data) => strongPasswordRegex.test(data.password), {
+    message: "Password must contain at least one digit, one lowercase letter, one uppercase letter, one special character, and be at least 8 characters long",
+    path: ["confirm_password"],
+}).refine((data) => data.password === data.confirm_password, {
+    message: "Passwords do not match",
+    path: ["confirm_password"], // path of error
 });
+

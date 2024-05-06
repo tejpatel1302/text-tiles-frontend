@@ -84,9 +84,9 @@ const UpdateCategoryForm = ({ isOpen, onOpenChange, category }: any) => {
     onError: onRequestError,
   });
   useEffect(() => {
-    if (category ) {
+    if (category) {
         form.reset({
-            name: category?.name,
+            name: category?.categoryName,
             file: category?.file
           });
     } else {

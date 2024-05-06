@@ -1,5 +1,5 @@
 import { ColumnDef } from "@tanstack/react-table";
-import {  ArrowUpDown } from "lucide-react";
+import {  ArrowDown, ArrowUp, ArrowUpDown } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import DataTableRowActionsP from "./DataTableRowActionP";
@@ -26,14 +26,73 @@ export type Order = {
 
   export const columns: ColumnDef<Order>[] = [
     {
-      accessorKey: "id",
-      header: "Customer ID",
+      accessorKey:'id',
+      header:'Order ID',
       cell: ({row}:any) => {
         const result = row.getValue('id');
         const hyphenIndex = result.indexOf('-');
         const formattedResult = hyphenIndex !== -1 ? result.substring(0, hyphenIndex) : result;
         return (
             <div>
+                {formattedResult}
+            </div>
+        );
+    }
+    },
+    {
+      accessorKey: "customerId",
+      header: "Customer ID",
+      cell: ({row}:any) => {
+        const result = row.getValue('customerId');
+        const hyphenIndex = result.indexOf('-');
+        const formattedResult = hyphenIndex !== -1 ? result.substring(0, hyphenIndex) : result;
+        return (
+            <div>
+                {formattedResult}
+            </div>
+        );
+    }
+   
+    },
+    {
+      accessorKey: "orderDate",
+      header: ({ column }) => {
+        const isSorted = column.isSorted;
+        const isSortedDesc = column.isSortedDesc;
+        
+        return (
+          <Button
+            variant="ghost"
+            onClick={() => {
+              // If the column is not sorted or is currently sorted in descending order, toggle to ascending order
+              // Otherwise, toggle to descending order
+              const nextSortDesc = !isSorted || isSortedDesc ? false : true;
+              column.toggleSorting(nextSortDesc);
+            }}
+          >
+            Order Date
+            {isSorted ? (
+              isSortedDesc ? (
+                <ArrowDown className="ml-2 h-4 w-4" />
+              ) : (
+                <ArrowUp className="ml-2 h-4 w-4" />
+              )
+            ) : (
+              <ArrowUpDown className="ml-2 h-4 w-4" />
+            )}
+          </Button>
+        );
+      },
+      cell: ({row}:any) => {
+        function convertDateFormat(dateString: any) {
+          if (!dateString) return "";
+          const datePart = dateString.split("T")[0];
+          return datePart;
+        }
+        const result = row.getValue('orderDate');
+        const formattedResult = convertDateFormat(result)
+        return (
+            <div className="ml-4">
                 {formattedResult}
             </div>
         );
@@ -69,20 +128,7 @@ export type Order = {
       accessorKey: "mobileNumber",
       header: "Mobile Number",
     },
-    {
-      accessorKey: "orderDate",
-      header: ({ column }:any) => {
-        return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-          >
-            Order Date
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
-        );
-      },
-    },
+   
 
     {
       accessorKey: "orderDetails",
@@ -93,28 +139,23 @@ export type Order = {
     },
     {
       accessorKey: "status",
-      header: ({ column }:any) => {
+      header: 'Status',
+      cell: ({ row }:any) => {
+        const capitalizedStatus:any = row.getValue("status").toUpperCase();
         return (
-          <Button
-            variant="ghost"
-            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+          <div
+            className={cn("font-medium w-fit  py-2 rounded-lg", {
+              "text-red-500": capitalizedStatus === "REJECTED",
+              "text-[#5295f1]": capitalizedStatus === "REVIEWED",
+              "text-[#6531df]": capitalizedStatus === "PENDING",
+              "text-green-500": capitalizedStatus === "COMPLETED",
+              "text-orange-500": capitalizedStatus === "PRODUCTION"
+            })}
           >
-            Status
-            <ArrowUpDown className="ml-2 h-4 w-4" />
-          </Button>
+            {capitalizedStatus}
+          </div>
         );
       },
-      cell: ({row}:any)=>{
-        return ( 
-        <div className={cn('font-medium w-fit px-4 py-2 rounded-lg',{
-            'text-red-500' : row.getValue('status') === 'REJECTED',
-            'text-green-500' : row.getValue('status') === 'REVIEWED'
-
-        })}>
-            {row.getValue('status')}
-        </div>
-        )
-      }
     },
   ];
   

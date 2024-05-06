@@ -28,6 +28,7 @@ import { ArrowBigDown, CalendarRange, LockIcon, Mail, Phone, UserRound } from "l
 
 import { PasswordInput } from "../ui/password-input";
 import { useAdminregisterMutation, useUserregisterMutation } from "@/features/api/authApiSlice";
+import { Toaster, toast } from "sonner";
 
 const Register = ({ redirect }: any) => {
   const navigate = useNavigate();
@@ -76,6 +77,7 @@ const Register = ({ redirect }: any) => {
       let userData: any;
       if (location.pathname === '/admin/register') {
         userData = await register(adminFilteredData);
+        
         console.log(userData, 'admin reg');
       } else if (location.pathname === '/user/register') {
         userData = await userRegister(userFilteredData);
@@ -83,10 +85,11 @@ const Register = ({ redirect }: any) => {
       } else {
         throw new Error('Invalid registration path');
       }
-
+      toast.success('Registered SuccessFully')
       navigate(redirect);
     } catch (error) {
       console.error('Error occurred during registration:', error);
+      toast.error('Something went wrong. Please Try Again ')
       // Handle error here, such as displaying an error message to the user
     }
   };
@@ -95,6 +98,9 @@ const Register = ({ redirect }: any) => {
 
   return (
     <div className="h-screen flex flex-col justify-center items-center">
+      <div>
+        <Toaster/>
+      </div>
       <CardWrapper
         headerLabel="Register"
         backButtonHref={

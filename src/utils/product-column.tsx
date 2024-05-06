@@ -9,7 +9,7 @@ export type Product = {
   size: string;
   material: string;
   colors: any;
-  images: any;
+  Image: any;
 };
 
 export const getProductColumns = ({ onEdit, onDelete }: any) => [
@@ -27,10 +27,10 @@ export const getProductColumns = ({ onEdit, onDelete }: any) => [
       );
   }
   },
-  { accessorKey: "images", header: "images" },
+  { accessorKey: "Image", header: "Image" },
   { accessorKey: "name", header: "Name" },
   { accessorKey: "description", header: "Description" },
-  { accessorKey: "colors", header: "Colors" },
+  // { accessorKey: "colors", header: "Colors" },
   {
     accessorKey: "price",
     header: "Price",

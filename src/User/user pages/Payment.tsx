@@ -95,15 +95,20 @@ const Payment = ({ selectedAddressId}: any) => {
       };
   
       const res = await OrderApi(FilteredData2, config);
-      console.log(res, 'addedordertddsf ,fsdData');
-      toast.success('The order has been successfully made');
-      navigate('/user/checkout');
+  
+      toast.success('The order has been successfully sent');
+  
+      // Delayed navigation after 3 seconds
+      setTimeout(() => {
+        navigate('/user/category');
+      }, 3000); // 3000 milliseconds = 3 seconds
     } catch (error) {
       console.error("Error submitting data:", error);
       
       // Handle error appropriately, like showing a user-friendly message
     }
   };
+  
   useEffect(() => {
     OrderData();
     
@@ -117,7 +122,7 @@ const Payment = ({ selectedAddressId}: any) => {
  
   useEffect(() => {
     // Calculate total price whenever showProducts changes
-    const calculatedTotalPrice = showProducts.reduce((acc, cd) => acc + cd.totalPrice*cd.quantity, 0);
+    const calculatedTotalPrice = showProducts.reduce((acc, cd) => acc + cd.totalPrice, 0);
     setTotalPrice(calculatedTotalPrice);
   }, [showProducts]);
   async function fetchCartProductsData() {
@@ -240,10 +245,12 @@ console.log(showProducts,'jijiji')
                     <div className="flex justify-center gap-5 mt-24">
                       <Button
                         type="submit"
+                        className="w-28"
                         
                         variant={"purple"}
                       >
-                        Use This Card
+                        
+                        Pay
                       </Button>
                     </div>
                   </div>

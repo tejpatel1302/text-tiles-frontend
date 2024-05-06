@@ -41,14 +41,15 @@ const SAOrders = () => {
     return datePart;
   }
   const data: Order[] = showOrder?.map((order) => ({
+    customerid: order?.CustomerId?.id,
     id: order?.id,
-    // OrderID: order?.id,
+    OrderID: order?.orderId?.id,
     Name: order?.addressId?.billToName,
     city: order?.addressId?.city,
     email: order?.orderId?.Customer?.email,
     mobileNumber: order?.orderId?.Customer?.phoneNum,
     orderDate: convertDateFormat( order.orderDate),
-  
+    total: order?.totalAmount,
     orderDetails: 'View',
     status: order?.status,
   }));
@@ -57,7 +58,7 @@ const SAOrders = () => {
 
   return (
     <div className="bg-white">
-    <div className="text-3xl font-bold mt-10 ml-4 ">Orders History</div>
+    <div className="text-3xl font-bold mt-10 ml-4 ">Orders</div>
     {loading ? (
       <div>Loading...</div>
     ) : (

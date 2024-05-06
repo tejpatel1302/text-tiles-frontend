@@ -147,7 +147,7 @@ const removeAndRedirect = (redirectPath:any) => {
     ] : (isSuperAdminOrders || isSuperAdminDashboard || isSuperAdminReport)? [
     
       {
-        title: "My Orders",
+        title: "Orders",
         href: "/super-admin/orders",
         icon: ShoppingCart,
         variant: "purple",
@@ -167,7 +167,7 @@ const removeAndRedirect = (redirectPath:any) => {
         variant: "purple",
       },
       {
-        title: "Products",
+        title: "Manage Products",
         href: "/admin/products",
         icon: PackageSearch,
         variant: "ghost",

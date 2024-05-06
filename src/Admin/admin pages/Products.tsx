@@ -77,7 +77,8 @@ const Products = () => {
     price : parseFloat(product?.price),
     colors : product?.colorRelation[0]?.color?.name,
     size : product?.size[0],
-    images: product?.colorRelation[0]?.image ? createBlobFromBuffer(product?.colorRelation[0]?.image.buffer, product?.colorRelation[0]?.image.mimetype) : null,
+    Image: product?.colorRelation,
+    // Image: product?.colorRelation[0]?.image ? createBlobFromBuffer(product?.colorRelation[0]?.image.buffer, product?.colorRelation[0]?.image.mimetype) : null,
     description: product?.description,
     material: product?.material,
    

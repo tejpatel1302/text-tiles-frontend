@@ -59,7 +59,7 @@ const ManageSubCategory: React.FC<ManageSubCategoryProps> = () => {
   const data: SubCategory[] = SubCategoryData?.map((item: any) => ({
     subcategoryID: item?.id,
     name: item.name,
-    images: item.image ? createBlobFromBuffer(item.image.buffer, item.image.mimetype) : null,
+    Image: item.image ? createBlobFromBuffer(item.image.buffer, item.image.mimetype) : null,
   }));
   const handleDeleteSubCategory = async (id:any) => {
     try {

@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import { getSAOrderDetailsApi, productionApi } from "@/features/api/apicall";
 import { useCookies } from "react-cookie";
 import { useParams } from "react-router-dom";
+import { Toaster, toast } from "sonner";
 
 const SAOrderDetails= () => {
   const [cookie] = useCookies(["auth"]);
@@ -61,11 +62,12 @@ const SAOrderDetails= () => {
   const data: View[] = showOrderDetails?.map((order:any) => ({
     
       id:order?.colorRelationId?.Product?.id,
-      images: order?.colorRelationId?.image ? createBlobFromBuffer(order?.colorRelationId?.image?.buffer, order?.colorRelationId?.image?.mimetype) : null,
+      Image: order?.colorRelationId?.image ? createBlobFromBuffer(order?.colorRelationId?.image?.buffer, order?.colorRelationId?.image?.mimetype) : null,
       name: order?.logObject?.name,
       color:  order?.colorRelationId?.color?.name,
-      size: order?.logObject?.size,
-      price: order?.totalPrice,
+      size: order?.orderItemId?.CartItem?.itemSize,
+      price: order?.colorRelationId?.Product?.price,
+      // totalPrice: order?.totalPrice,
       quantity: order?.quantity,
     
       
@@ -87,7 +89,11 @@ const SAOrderDetails= () => {
         status
       );
       console.log(res,"Response from Review")
-     
+   if(status1 === 'PRODUCTION'){
+    toast('Order is in Production')
+   }else{
+    toast('Order is Completed')
+   }
       setLoading(false);
       
       
@@ -106,11 +112,12 @@ function reviewClickHandler (status1:any){
 
   return (
     <div className="bg-white">
+      <Toaster/>
     <div className="flex justify-between">
     <div className="text-3xl font-bold mt-10">Order Details</div>
     <div className="mt-10 mr-6  space-x-4 p-2">
-    <Button variant={'green'} onClick={() => {reviewClickHandler('REVIEWED')}}>Production</Button>
-    <Button variant={"green"} onClick={() => {reviewClickHandler('COMPLETE')}}>Complete</Button>
+    <Button variant={'green'} onClick={() => {reviewClickHandler('PRODUCTION')}}>Production</Button>
+    <Button variant={"green"} onClick={() => {reviewClickHandler('COMPLETED')}}>Complete</Button>
     </div>
     </div>
   {loading ? (

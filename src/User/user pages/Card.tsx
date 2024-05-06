@@ -7,6 +7,15 @@ import { useCookies } from 'react-cookie';
 import { WishListApi } from '@/features/api/apicall';
 import { addWishListId } from '@/features/redux_toolkit/wishlistDeleteSlice';
 import './Card.css'
+import {
+  Pagination,
+  PaginationContent,
+  PaginationEllipsis,
+  PaginationItem,
+  PaginationLink,
+  PaginationNext,
+  PaginationPrevious,
+} from "@/components/ui/pagination"
 
 
 const ProductCard = ({ image, title, productid, isInWishlist, price, id }:any) => {
@@ -43,12 +52,20 @@ const ProductCard = ({ image, title, productid, isInWishlist, price, id }:any) =
         setLoading(false);
     }
 };
+
+const scrollUp = () =>{
+  window.scrollTo({
+    top:0,
+    behavior: "smooth"
+  })
+} 
+
   return (
     <div className="flex mt-10">
       <div className="rounded-lg border border-gray-300 overflow-hidden shadow-lg relative h-[550px] w-[300px] transition duration-300 ease-in-out transform hover:scale-105 flex flex-col items-center justify-center">
-      <Link to={`/user/products/${id}`}>  <img className="rounded-t h-96 p-4" src={`data:image/jpeg;base64,${image?.buffer}`} alt="men's wear" /></Link>
+      <Link to={`/user/products/${id}`}>  <img onClick={scrollUp}  className="rounded-t h-96 p-4" src={`data:image/jpeg;base64,${image?.buffer}`} alt="men's wear" /></Link>
         <div
-          className="absolute top-[370px] h-12 w-12 right-0 rounded-full p-1 mr-2 bg-gray-300 hover:bg-gray-700 cursor-pointer"
+          className="absolute top-[360px] left-[220px] h-12 w-12 right-0 rounded-full p-1 mr-2 bg-gray-300 hover:bg-gray-700 cursor-pointer"
           // onClick={toggleWishlist} 
         >
         <div id="heart-container" className='relative -left-[40px] -top-[38px]' onClick={()=>{clickHandler(productid)}}>
@@ -60,10 +77,12 @@ const ProductCard = ({ image, title, productid, isInWishlist, price, id }:any) =
         <div className="px-6">
           <div className="font-semibold text-xl mb-2">{title}</div>
         </div>
-          <div className="font-bold text-xl mb-2 float-left w-full ml-10">{`${price} €`}</div>
+          <div className="font-bold text-xl mb-2 float-left w-full ml-10">{`€ ${price} `}</div>
       </div>
     </div>
   );
 };
 
 export default ProductCard;
+
+

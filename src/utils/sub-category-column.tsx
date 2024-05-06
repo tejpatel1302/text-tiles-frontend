@@ -26,7 +26,7 @@ import DataTableRowActions from "./DataTableRowAction";
 export type SubCategory = {
   subcategoryID: string,
   name: string,
-  images: string,
+  Image: string,
 };
 
 
@@ -48,8 +48,8 @@ export const getSubCategoryColumns = ({ onEdit, onDelete }: any) => [
   }
   },
   {
-    accessorKey: "images",
-    header: "images",
+    accessorKey: "Image",
+    header: "Image",
   },
   {
     accessorKey: "name",

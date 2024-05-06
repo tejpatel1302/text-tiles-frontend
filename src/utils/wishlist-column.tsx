@@ -10,7 +10,7 @@ export type WishList = {
   category: string; 
   name: string;
   price: string;
-  images: string
+  Image: string
   productId:string
   
 };
@@ -58,8 +58,8 @@ export const columns = [
         header: "Product ID",
         
     }),
-    columnHelper.accessor("images", {
-        header: "images",
+    columnHelper.accessor("Image", {
+        header: "Image",
         
     }),
     columnHelper.accessor("name", {

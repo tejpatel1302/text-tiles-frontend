@@ -46,7 +46,7 @@ const CardWrapper = ({ children,
         <div >
           <img src={image} alt="" className={`lg:h-24 lg:ml-10 lg:mt-2  h-16 m-4`} />
         </div>
-      <div className={`${isUserRegisterPage || isAdminRegister ? 'lg:w-10/12 lg:-top-[7px] lg:left-[80px]' : 'lg:w-4/12'} lg:mx-auto absolute lg:top-10 lg:left-80 left-30 top-16`}>
+      <div className={`${isUserRegisterPage || isAdminRegister ? 'lg:w-10/12 lg:-top-[6.5px] lg:left-[80px]' : 'lg:w-4/12'} lg:mx-auto absolute lg:top-10 lg:left-80 left-30 top-16`}>
         <CardHeader >
           <Header label={headerLabel} />
         </CardHeader>

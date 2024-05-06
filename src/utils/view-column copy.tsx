@@ -8,13 +8,15 @@ import { ColumnDef } from "@tanstack/react-table";
 // You can use a Zod schema here if you want.
 export type UserView = {
     id: number;
-    images: string;
+    Image: string;
     name: string;
     color: string;
     size: string;
     price: number;
     quantity: number;
     status: string;
+    productId:any
+
     
   };
   
@@ -23,9 +25,9 @@ export type UserView = {
 
   export const columns: ColumnDef<UserView>[] = [
     {
-        accessorKey: "id",
-        header: "Product ID",
-        cell: ({row}:any) => {
+      accessorKey: "id",
+      header: "Order Detail ID",
+      cell: ({row}:any) => {
           const result = row.getValue('id');
           const hyphenIndex = result.indexOf('-');
           const formattedResult = hyphenIndex !== -1 ? result.substring(0, hyphenIndex) : result;
@@ -35,10 +37,26 @@ export type UserView = {
               </div>
           );
       }
-      },
+      
+  },
+  {
+      accessorKey: "productId",
+      header: "Product ID",
+      cell: ({row}:any) => {
+          const result = row.getValue('productId');
+          const hyphenIndex = result.indexOf('-');
+          const formattedResult = hyphenIndex !== -1 ? result.substring(0, hyphenIndex) : result;
+          return (
+              <div>
+                  {formattedResult}
+              </div>
+          );
+      }
+      
+  },
       {
-        accessorKey: "images",
-        header: 'images'
+        accessorKey: "Image",
+        header: 'Image'
       },
       {
         accessorKey: "name",
@@ -81,7 +99,8 @@ export type UserView = {
           return ( 
           <div className={cn('font-medium w-fit  rounded-lg',{
               'text-red-500' : row.getValue('status') === 'REJECTED',
-              'text-green-500' : row.getValue('status') === 'APPROVED'
+              'text-green-500' : row.getValue('status') === 'APPROVED',
+              "text-purple-500": row.getValue("status") === "PENDING",
   
           })}>
               {row.getValue('status')}

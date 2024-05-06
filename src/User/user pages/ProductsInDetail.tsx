@@ -39,6 +39,7 @@ import { z } from "zod";
 import { selectUserCurrentToken } from "@/features/redux_toolkit/userAuthSlice";
 import { useCookies } from "react-cookie";
 import { addId } from "@/features/redux_toolkit/orderItemIdSlice";
+import { Toaster, toast } from "sonner";
 
 const ProductInDetail = () => {
   const dispatch = useDispatch();
@@ -152,6 +153,7 @@ const ProductInDetail = () => {
       };
 
       const res = await addToCartApi(FilteredData, config);
+      toast.success('Item added to cart')
       console.log(res, "addedsubmitCartData");
     } catch (error) {
       console.error("Error adding to cart:", error);
@@ -182,9 +184,12 @@ const ProductInDetail = () => {
     setColorId(colorId);
     setColorImage(colorImage);
   };
-
+  let sizes = product?.product?.size;
+  let cleanedSizes = sizes && sizes.length > 0 ? sizes[0].replace(/"/g, '').split(',') : [];
+ 
   return (
     <div>
+      <Toaster richColors/>
       <div className="flex justify-center items-center w-10/12 mx-auto py-8">
         {product && (
           <div className="flex gap-8">
@@ -201,7 +206,7 @@ const ProductInDetail = () => {
                 onClick={() => clickHandler(product?.product?.id)}
               /> */}
               <div
-          className="absolute h-12 w-12 right-0 rounded-full p-1 mr-2 bg-gray-300 hover:bg-gray-700 cursor-pointer"
+          className="absolute -left-[70px] -top-[5px] h-12 w-12 right-0 rounded-full p-1 mr-2 bg-gray-300 hover:bg-gray-700 cursor-pointer"
           // onClick={toggleWishlist} 
         >
         <div id="heart-container" className='relative -left-[40px] -top-[38px]' onClick={() => clickHandler(product?.product?.id)}>
@@ -217,7 +222,7 @@ const ProductInDetail = () => {
                 {product?.product?.name}
               </h2>
               <div className="text-xl mb-4 ">
-                Price: {product?.product?.price} €
+               Price: € {product?.product?.price} 
               </div>
               <div className="mb-4">
                 <div>
@@ -260,7 +265,7 @@ const ProductInDetail = () => {
                                   </SelectTrigger>
                                 </FormControl>
                                 <SelectContent>
-                                  {["S", "M", "L", "XL", "XXL"].map(
+                                  { cleanedSizes.map(
                                     (size: string) => (
                                       <SelectItem key={size} value={size}>
                                         {size}

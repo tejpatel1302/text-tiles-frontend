@@ -67,16 +67,50 @@ export type Order = {
           </Button>
         );
       },
+      cell: ({row}:any) => {
+        function convertDateFormat(dateString: any) {
+          if (!dateString) return "";
+          const datePart = dateString.split("T")[0];
+          return datePart;
+        }
+        const result = row.getValue('orderDate');
+        const formattedResult = convertDateFormat(result)
+        return (
+            <div className="ml-4">
+                {formattedResult}
+            </div>
+        );
+    }
     },
-    
-    
-      {
+        {
         accessorKey: "Name",
         header: "Name",
+        cell: ({row}:any) => {
+          const result = row.getValue('Name');
+         
+          return (
+              <div className="mr-10">
+                  {result}
+              </div>
+          );
+      }
       },
+      // {
+      //   accessorKey: "email",
+      //   header: "Email ID",
+      // },
       {
         accessorKey: "total",
         header: "Total",
+        cell: ({row}:any) => {
+          const result = row.getValue('total');
+         
+          return (
+              <div className="mr-14">
+                  {result}
+              </div>
+          );
+      }
       },
       {
         accessorKey: "city",
@@ -90,25 +124,30 @@ export type Order = {
         accessorKey: "orderDetails",
         header: "Order Details",
         cell: ({ row }: any) => (
-          <OrderTableRowView row={row}/>
+          <OrderTableRowView row={row} />
         ),
       },
       {
         accessorKey: "orderstatus",
         header: 'Status',
-        cell: ({ row }) => {
+        cell: ({ row }:any) => {
+          const capitalizedStatus:any = row.getValue("orderstatus").toUpperCase();
           return (
             <div
-              className={cn("font-medium w-fit px-4 py-2 rounded-lg", {
-                "text-red-500": row.getValue("orderstatus") === "REJECTED",
-                "text-green-500": row.getValue("orderstatus") === "REVIEWED",
+              className={cn("font-medium w-fit  py-2 rounded-lg", {
+                "text-red-500": capitalizedStatus === "REJECTED",
+                "text-[#5295f1]": capitalizedStatus === "REVIEWED",
+                "text-[#6531df]": capitalizedStatus === "PENDING",
+                "text-green-500": capitalizedStatus === "COMPLETED",
+                "text-orange-500": capitalizedStatus === "PRODUCTION"
               })}
             >
-              {row.getValue("orderstatus")}
+              {capitalizedStatus}
             </div>
           );
         },
       },
+      
       
   ];
   

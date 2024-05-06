@@ -54,6 +54,7 @@ const Cart = () => {
       };
 
       const res = await getCartApi(payload);
+      console.log(res,'cart data')
       return res?.data?.cart?.CartItem 
     } catch (error) {
       console.error("Error fetching subcategory data:", error);
@@ -65,13 +66,14 @@ const Cart = () => {
     queryFn: fetchCartProductsData,
   });
 
-
+console.log('CartData', CartData)
   const data: UserCart[] = CartData ? CartData.map((item: any) => ({
     id: item?.id,
     quantity: item?.quantity,
+    price: item?.colorRelation?.Product?.price,
     itemSize: item?.itemSize,
     totalPrice: item?.totalPrice,
-    images: item?.colorRelation?.image?.buffer ? createBlobFromBuffer(item?.colorRelation?.image?.buffer, item?.colorRelation?.image?.mimetype) : null,
+    Image: item?.colorRelation?.image?.buffer ? createBlobFromBuffer(item?.colorRelation?.image?.buffer, item?.colorRelation?.image?.mimetype) : null,
     name: item?.colorRelation?.Product?.name
   }))
   :[];
